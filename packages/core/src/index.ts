@@ -2,6 +2,8 @@ import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import type { Config } from 'svgo'
 import { optimize } from 'svgo'
+import type { HTMLElement } from 'node-html-parser'
+import { parse } from 'node-html-parser'
 import type { DomInject, FileStats, ViteSvgIconsPlugin } from './typing'
 import fg from 'fast-glob'
 import getEtag from 'etag'
@@ -9,7 +11,6 @@ import cors from 'cors'
 import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
-import SVGCompiler from 'svg-baker'
 import { SVG_DOM_ID, SVG_ICONS_CLIENT, SVG_ICONS_REGISTER_NAME, XMLNS, XMLNS_LINK } from './constants'
 
 export * from './typing'
@@ -95,10 +96,6 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
 export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: Config, options: ViteSvgIconsPlugin) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
-  const xmlns = `xmlns="${XMLNS}"`
-  const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
-  const html = insertHtml.replace(new RegExp(xmlns, 'g'), '').replace(new RegExp(xmlnsLink, 'g'), '')
-
   const code = `
        if (typeof window !== 'undefined') {
          function loadSvg() {
@@ -114,7 +111,7 @@ export async function createModuleCode(cache: Map<string, FileStats>, svgoOption
              svgDom.setAttribute('xmlns:link','${XMLNS_LINK}');
              svgDom.setAttribute('aria-hidden',true);
            }
-           svgDom.innerHTML = ${JSON.stringify(html)};
+           svgDom.innerHTML = ${JSON.stringify(insertHtml)};
            ${domInject(options.inject)}
          }
          if(document.readyState === 'loading') {
@@ -211,12 +208,54 @@ export async function compilerIcon(file: string, symbolId: string, svgOptions: C
 
   // fix cannot change svg color  by  parent node problem
   content = content.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
-  const svgSymbol = await new SVGCompiler().addSymbol({
-    id: symbolId,
-    content,
-    path: file,
+  return convertSvgToSymbol(symbolId, content)
+}
+/**
+ * transform SVG to symbol
+ * @param id symbolId
+ * @param content SVG content
+ * @returns modified symbol content
+ */
+function convertSvgToSymbol(id: string, content: string): string {
+  const root = parse(content)
+  const svgElement = root.querySelector('svg') as HTMLElement
+  if (!svgElement) {
+    throw new Error('Invalid SVG content')
+  }
+  // viewBox
+  let viewBox = svgElement.getAttribute('viewBox')
+  const width = svgElement.getAttribute('width')
+  const height = svgElement.getAttribute('height')
+  if (!viewBox && width && height) {
+    const width = svgElement.getAttribute('width')
+    const height = svgElement.getAttribute('height')
+    viewBox = `0 0 ${width} ${height}`
+    svgElement.removeAttribute('width')
+    svgElement.removeAttribute('height')
+  }
+  // symbol id
+  svgElement.querySelectorAll('[id]').forEach((el) => {
+    const originalId = el.getAttribute('id')
+    if (originalId) {
+      const newId = `${id}_${originalId}`
+      el.setAttribute('id', newId) // 添加前缀
+      // use
+      svgElement.querySelectorAll('use').forEach((useEl) => {
+        // xlink:href||href
+        const hrefAttr = useEl.getAttribute('xlink:href') || useEl.getAttribute('href')
+        if (hrefAttr === `#${originalId}`) {
+          useEl.setAttribute('xlink:href', `#${newId}`)
+          useEl.setAttribute('href', `#${newId}`)
+        }
+        // filter
+        const filterAttr = useEl.getAttribute('filter')
+        if (filterAttr === `url(#${originalId})`) {
+          useEl.setAttribute('filter', `url(#${newId})`)
+        }
+      })
+    }
   })
-  return svgSymbol.render()
+  return `<symbol id="${id}" viewBox="${viewBox}">${svgElement.innerHTML}</symbol>`
 }
 
 export function createSymbolId(name: string, options: ViteSvgIconsPlugin) {

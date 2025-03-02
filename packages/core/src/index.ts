@@ -1,6 +1,8 @@
 import type { Plugin } from 'vite'
+import { normalizePath } from 'vite'
 import type { Config } from 'svgo'
-import type { ViteSvgIconsPlugin, FileStats, DomInject } from './typing'
+import { optimize } from 'svgo'
+import type { DomInject, FileStats, ViteSvgIconsPlugin } from './typing'
 import fg from 'fast-glob'
 import getEtag from 'etag'
 import cors from 'cors'
@@ -8,8 +10,6 @@ import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
 import SVGCompiler from 'svg-baker'
-import { optimize } from 'svgo'
-import { normalizePath } from 'vite'
 import { SVG_DOM_ID, SVG_ICONS_CLIENT, SVG_ICONS_REGISTER_NAME, XMLNS, XMLNS_LINK } from './constants'
 
 export * from './typing'
@@ -142,6 +142,7 @@ function domInject(inject: DomInject = 'body-last') {
 /**
  * Preload all icons in advance
  * @param cache
+ * @param svgOptions
  * @param options
  */
 export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: Config, options: ViteSvgIconsPlugin) {

@@ -10,7 +10,6 @@
     "test:br": "npm run build && http-server dist --cors --brotli -c-1"
   },
   "dependencies": {
-    "fast-glob": "^3.2.11",
     "vue": "^3.5.13"
   },
   "devDependencies": {

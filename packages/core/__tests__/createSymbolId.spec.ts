@@ -1,5 +1,5 @@
-import { createSymbolId } from '../src/index'
-import { test, expect } from 'vitest'
+import { createSymbolId } from '../src'
+import { expect, test } from 'vitest'
 
 const TEST_SYMBOL_ID = 'icon-[dir]-[name]'
 // const TEST_SYMBOL_ID = 'icon-[name]';

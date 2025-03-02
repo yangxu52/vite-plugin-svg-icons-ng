@@ -2,27 +2,30 @@
   "name": "vite-plugin-svg-icons",
   "version": "2.0.1",
   "description": "Vite Plugin for fast creating SVG sprites.",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
+  "type": "commonjs",
   "license": "MIT",
   "author": "Vben",
   "files": [
     "dist",
     "client.d.ts"
   ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0"
+  },
   "scripts": {
-    "dev": "pnpm unbuild --stub",
-    "build": "pnpm unbuild",
+    "dev": "unbuild --stub",
+    "build": "unbuild",
     "prepublishOnly": "npm run build",
-    "prepack": "pnpm unbuild"
+    "prepack": "unbuild"
   },
   "keywords": [
     "vite",
@@ -45,6 +48,7 @@
     "cors": "^2.8.5",
     "debug": "^4.4.0",
     "etag": "^1.8.1",
+    "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "pathe": "^2.0.3",
     "svg-baker": "1.7.0",

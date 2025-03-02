@@ -76,6 +76,9 @@ importers:
       etag:
         specifier: ^1.8.1
         version: 1.8.1
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -110,9 +113,6 @@ importers:
 
   packages/playground/basic:
     dependencies:
-      fast-glob:
-        specifier: ^3.2.11
-        version: 3.3.3
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.3)

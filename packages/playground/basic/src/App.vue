@@ -10,12 +10,9 @@
   </div>
 </template>
 
-<script>
-  import { defineComponent, computed } from 'vue';
-
-  import SvgIcon from './components/SvgIcon.vue';
-  export default defineComponent({
-    name: 'App',
-    components: { SvgIcon },
-  });
+<script setup>
+import SvgIcon from './components/SvgIcon.vue'
+defineOptions({
+  name: 'App',
+})
 </script>

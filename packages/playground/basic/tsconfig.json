@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "esnext",
+    "module": "ESNext",
+    "target": "ES2017",
     "moduleResolution": "node",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -15,7 +15,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "experimentalDecorators": true,
-    "lib": ["dom", "esnext"],
+    "lib": ["DOM", "ESNext"],
     "types": ["vite-plugin-svg-icons/client"],
     "incremental": true,
     "skipLibCheck": true

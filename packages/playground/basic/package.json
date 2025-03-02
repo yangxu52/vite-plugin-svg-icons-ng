@@ -9,17 +9,11 @@
     "test:br": "npm run build && http-server dist --cors --brotli -c-1"
   },
   "dependencies": {
-    "etag": "^1.8.1",
     "fast-glob": "^3.2.11",
-    "fs-extra": "^10.0.0",
-    "svgo": "^2.8.0",
     "vue": "^3.2.29"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.1.0",
-    "@vitejs/plugin-vue-jsx": "^1.3.3",
-    "@vue/compiler-sfc": "^3.2.29",
-    "cross-env": "^7.0.3",
     "http-server": "^14.1.0",
     "typescript": "^4.5.5",
     "vite": "^2.7.13",

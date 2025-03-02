@@ -1,9 +1,9 @@
-import { UserConfigExport } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import path from 'path'
+import path from 'node:path'
 
-export default (): UserConfigExport => {
+export default defineConfig(() => {
   return {
     plugins: [
       vue(),
@@ -15,4 +15,4 @@ export default (): UserConfigExport => {
       }),
     ],
   }
-}
+})

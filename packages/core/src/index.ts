@@ -205,13 +205,13 @@ export async function compilerIcons(
         } else {
           svgSymbol = cacheStat.code
           symbolId = cacheStat.symbolId
-          symbolId && idSet.add(symbolId)
+          if (symbolId) idSet.add(symbolId)
         }
       } else {
         await getSymbol()
       }
 
-      svgSymbol &&
+      if (symbolId)
         cache.set(path, {
           mtimeMs,
           relativeName,

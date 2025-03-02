@@ -86,8 +86,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       svgo:
-        specifier: ^2.8.0
-        version: 2.8.0
+        specifier: ^3.3.2
+        version: 3.3.2
       vite:
         specifier: '>=5.0.0'
         version: 6.2.0(@types/node@22.13.8)(jiti@2.4.2)(yaml@2.7.0)
@@ -1372,15 +1372,8 @@ packages:
     peerDependencies:
       postcss: ^8.0.9
 
-  css-select@4.3.0:
-    resolution: { integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ== }
-
   css-select@5.1.0:
     resolution: { integrity: sha512-nwoRF1rvRRnnCqqY7updORDsuqKzqYJ28+oSMaJMMgOauh3fvwHqMS7EZpIPqK8GL+g9mKxF1vP/ZjSeNjEVHg== }
-
-  css-tree@1.1.3:
-    resolution: { integrity: sha512-tRpdppF7TRazZrjJ6v3stzv93qxRcSsFmW6cX0Zm2NVKpxE1WV1HblnghVv9TreireHkqI/VDEsfolRF1p6y7Q== }
-    engines: { node: '>=8.0.0' }
 
   css-tree@2.2.1:
     resolution: { integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA== }
@@ -1416,10 +1409,6 @@ packages:
     engines: { node: ^18.12.0 || ^20.9.0 || >=22.0 }
     peerDependencies:
       postcss: ^8.4.31
-
-  csso@4.2.0:
-    resolution: { integrity: sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA== }
-    engines: { node: '>=8.0.0' }
 
   csso@5.0.5:
     resolution: { integrity: sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ== }
@@ -1528,9 +1517,6 @@ packages:
   dom-serializer@0.2.2:
     resolution: { integrity: sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g== }
 
-  dom-serializer@1.4.1:
-    resolution: { integrity: sha512-VHwB3KfrcOOkelEG2ZOfxqLZdfkil8PtJi4P8N2MMXucZq2yLp75ClViUlOVwyoHEDjYU433Aq+5zWP61+RGag== }
-
   dom-serializer@2.0.0:
     resolution: { integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg== }
 
@@ -1543,19 +1529,12 @@ packages:
   domhandler@2.4.2:
     resolution: { integrity: sha512-JiK04h0Ht5u/80fdLMCEmV4zkNh2BcoMFBmZ/91WtYZ8qVXSKjiw7fXMgFPnHcSZgOo3XdinHvmnDUeMf5R4wA== }
 
-  domhandler@4.3.1:
-    resolution: { integrity: sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ== }
-    engines: { node: '>= 4' }
-
   domhandler@5.0.3:
     resolution: { integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w== }
     engines: { node: '>= 4' }
 
   domutils@1.7.0:
     resolution: { integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg== }
-
-  domutils@2.8.0:
-    resolution: { integrity: sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A== }
 
   domutils@3.2.2:
     resolution: { integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw== }
@@ -2505,9 +2484,6 @@ packages:
     resolution: { integrity: sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g== }
     engines: { node: '>= 0.4' }
 
-  mdn-data@2.0.14:
-    resolution: { integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow== }
-
   mdn-data@2.0.28:
     resolution: { integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g== }
 
@@ -3305,10 +3281,6 @@ packages:
     resolution: { integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg== }
     engines: { node: '>= 10.x' }
 
-  stable@0.1.8:
-    resolution: { integrity: sha512-ji9qxRnOVfcuLDySj9qzhGSEFVobyt1kIOSkj1qZzYLzq7Tos/oUUWvotUPQLlrsidqsK6tBH89Bc9kL5zHA6w== }
-    deprecated: 'Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility'
-
   stackback@0.0.2:
     resolution: { integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw== }
 
@@ -3402,11 +3374,6 @@ packages:
 
   svg-baker@1.7.0:
     resolution: { integrity: sha512-nibslMbkXOIkqKVrfcncwha45f97fGuAOn1G99YwnwTj8kF9YiM6XexPcUso97NxOm6GsP0SIvYVIosBis1xLg== }
-
-  svgo@2.8.0:
-    resolution: { integrity: sha512-+N/Q9kV1+F+UeWYoSiULYo4xYSDQlTgb+ayMobAXPwMnLvop7oxKMo9OzIrX5x3eS4L4f2UHhc9axXwY8DpChg== }
-    engines: { node: '>=10.13.0' }
-    hasBin: true
 
   svgo@3.3.2:
     resolution: { integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw== }
@@ -4946,14 +4913,6 @@ snapshots:
     dependencies:
       postcss: 8.5.3
 
-  css-select@4.3.0:
-    dependencies:
-      boolbase: 1.0.0
-      css-what: 6.1.0
-      domhandler: 4.3.1
-      domutils: 2.8.0
-      nth-check: 2.1.1
-
   css-select@5.1.0:
     dependencies:
       boolbase: 1.0.0
@@ -4961,11 +4920,6 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.2.2
       nth-check: 2.1.1
-
-  css-tree@1.1.3:
-    dependencies:
-      mdn-data: 2.0.14
-      source-map: 0.6.1
 
   css-tree@2.2.1:
     dependencies:
@@ -5024,10 +4978,6 @@ snapshots:
       cssnano-preset-default: 7.0.6(postcss@8.5.3)
       lilconfig: 3.1.3
       postcss: 8.5.3
-
-  csso@4.2.0:
-    dependencies:
-      css-tree: 1.1.3
 
   csso@5.0.5:
     dependencies:
@@ -5131,12 +5081,6 @@ snapshots:
       domelementtype: 2.3.0
       entities: 2.2.0
 
-  dom-serializer@1.4.1:
-    dependencies:
-      domelementtype: 2.3.0
-      domhandler: 4.3.1
-      entities: 2.2.0
-
   dom-serializer@2.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -5151,10 +5095,6 @@ snapshots:
     dependencies:
       domelementtype: 1.3.1
 
-  domhandler@4.3.1:
-    dependencies:
-      domelementtype: 2.3.0
-
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
@@ -5163,12 +5103,6 @@ snapshots:
     dependencies:
       dom-serializer: 0.2.2
       domelementtype: 1.3.1
-
-  domutils@2.8.0:
-    dependencies:
-      dom-serializer: 1.4.1
-      domelementtype: 2.3.0
-      domhandler: 4.3.1
 
   domutils@3.2.2:
     dependencies:
@@ -6247,8 +6181,6 @@ snapshots:
 
   math-intrinsics@1.1.0: {}
 
-  mdn-data@2.0.14: {}
-
   mdn-data@2.0.28: {}
 
   mdn-data@2.0.30: {}
@@ -7091,8 +7023,6 @@ snapshots:
 
   split2@4.2.0: {}
 
-  stable@0.1.8: {}
-
   stackback@0.0.2: {}
 
   static-extend@0.1.2:
@@ -7202,16 +7132,6 @@ snapshots:
       traverse: 0.6.11
     transitivePeerDependencies:
       - supports-color
-
-  svgo@2.8.0:
-    dependencies:
-      '@trysound/sax': 0.2.0
-      commander: 7.2.0
-      css-select: 4.3.0
-      css-tree: 1.1.3
-      csso: 4.2.0
-      picocolors: 1.1.1
-      stable: 0.1.8
 
   svgo@3.3.2:
     dependencies:

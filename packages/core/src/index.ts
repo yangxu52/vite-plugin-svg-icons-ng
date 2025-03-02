@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import type { OptimizedSvg, OptimizeOptions } from 'svgo'
+import type { Config } from 'svgo'
 import type { ViteSvgIconsPlugin, FileStats, DomInject } from './typing'
 import fg from 'fast-glob'
 import getEtag from 'etag'
@@ -10,13 +10,7 @@ import Debug from 'debug'
 import SVGCompiler from 'svg-baker'
 import { optimize } from 'svgo'
 import { normalizePath } from 'vite'
-import {
-  SVG_DOM_ID,
-  SVG_ICONS_CLIENT,
-  SVG_ICONS_REGISTER_NAME,
-  XMLNS,
-  XMLNS_LINK,
-} from './constants'
+import { SVG_DOM_ID, SVG_ICONS_CLIENT, SVG_ICONS_REGISTER_NAME, XMLNS, XMLNS_LINK } from './constants'
 
 export * from './typing'
 
@@ -27,22 +21,18 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
 
   let isBuild = false
   const options = {
-    svgoOptions: true,
+    svgoOptions: {},
     symbolId: 'icon-[dir]-[name]',
     inject: 'body-last' as const,
     customDomId: SVG_DOM_ID,
     ...opt,
   }
 
-  let { svgoOptions } = options
+  const { svgoOptions } = options
   const { symbolId } = options
 
   if (!symbolId.includes('[name]')) {
     throw new Error('SymbolId must contain [name] string!')
-  }
-
-  if (svgoOptions) {
-    svgoOptions = typeof svgoOptions === 'boolean' ? {} : svgoOptions
   }
 
   debug('plugin options:', options)
@@ -70,11 +60,7 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
         return `export default {}`
       }
 
-      const { code, idSet } = await createModuleCode(
-        cache,
-        svgoOptions as OptimizeOptions,
-        options,
-      )
+      const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
       if (isRegister) {
         return code
       }
@@ -92,11 +78,7 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
         if ([clientId, registerId].some((item) => url.endsWith(item))) {
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
-          const { code, idSet } = await createModuleCode(
-            cache,
-            svgoOptions as OptimizeOptions,
-            options,
-          )
+          const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
           const content = url.endsWith(registerId) ? code : idSet
 
           res.setHeader('Etag', getEtag(content, { weak: true }))
@@ -110,18 +92,12 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
   }
 }
 
-export async function createModuleCode(
-  cache: Map<string, FileStats>,
-  svgoOptions: OptimizeOptions,
-  options: ViteSvgIconsPlugin,
-) {
+export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: Config, options: ViteSvgIconsPlugin) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
   const xmlns = `xmlns="${XMLNS}"`
   const xmlnsLink = `xmlns:xlink="${XMLNS_LINK}"`
-  const html = insertHtml
-    .replace(new RegExp(xmlns, 'g'), '')
-    .replace(new RegExp(xmlnsLink, 'g'), '')
+  const html = insertHtml.replace(new RegExp(xmlns, 'g'), '').replace(new RegExp(xmlnsLink, 'g'), '')
 
   const code = `
        if (typeof window !== 'undefined') {
@@ -168,11 +144,7 @@ function domInject(inject: DomInject = 'body-last') {
  * @param cache
  * @param options
  */
-export async function compilerIcons(
-  cache: Map<string, FileStats>,
-  svgOptions: OptimizeOptions,
-  options: ViteSvgIconsPlugin,
-) {
+export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: Config, options: ViteSvgIconsPlugin) {
   const { iconDirs } = options
 
   let insertHtml = ''
@@ -224,11 +196,7 @@ export async function compilerIcons(
   return { insertHtml, idSet }
 }
 
-export async function compilerIcon(
-  file: string,
-  symbolId: string,
-  svgOptions: OptimizeOptions,
-): Promise<string | null> {
+export async function compilerIcon(file: string, symbolId: string, svgOptions: Config): Promise<string | null> {
   if (!file) {
     return null
   }
@@ -236,7 +204,7 @@ export async function compilerIcon(
   let content = fs.readFileSync(file, 'utf-8')
 
   if (svgOptions) {
-    const { data } = (await optimize(content, svgOptions)) as OptimizedSvg
+    const { data } = optimize(content, svgOptions)
     content = data || content
   }
 

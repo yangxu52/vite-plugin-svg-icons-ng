@@ -1,4 +1,4 @@
-# vite-plugin-svg-icons
+# vite-plugin-svg-icons-ng
 
 **English** | [中文](./README.zh_CN.md)
 
@@ -11,16 +11,16 @@ Used to generate svg sprite map.
 
 ## Installation (yarn or npm)
 
-**node version:** >=12.0.0
+**node version:** ^18.3.0, >=20.0.0
 
-**vite version:** >=2.0.0
+**vite version:** >=5.0.0
 
 ```bash
-yarn add vite-plugin-svg-icons -D
+yarn add vite-plugin-svg-icons-ng -D
 # or
-npm i vite-plugin-svg-icons -D
+npm i vite-plugin-svg-icons-ng -D
 # or
-pnpm install vite-plugin-svg-icons -D
+pnpm install vite-plugin-svg-icons-ng -D
 ```
 
 ## Usage
@@ -28,8 +28,8 @@ pnpm install vite-plugin-svg-icons -D
 - Configuration plugin in vite.config.ts
 
 ```ts
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import path from 'node:path'
 
 export default () => {
   return {
@@ -39,13 +39,11 @@ export default () => {
         iconDirs: [path.resolve(process.cwd(), 'src/icons')],
         // Specify symbolId format
         symbolId: 'icon-[dir]-[name]',
-
         /**
          * custom insert position
          * @default: body-last
          */
         inject?: 'body-last' | 'body-first'
-
         /**
          * custom dom id
          * @default: __svg__icons__dom__
@@ -145,16 +143,11 @@ export default defineComponent({
 `/src/components/SvgIcon.jsx`
 
 ```jsx
-export default function SvgIcon({
-  name,
-  prefix = 'icon',
-  color = '#333',
-  ...props
-}) {
+export default function SvgIcon({ name, prefix = 'icon', color = '#333', ...props }) {
   const symbolId = `#${prefix}-${name}`
 
   return (
-    <svg {...props} aria-hidden="true">
+    <svg {...props} aria-hidden='true'>
       <use href={symbolId} fill={color} />
     </svg>
   )
@@ -180,10 +173,10 @@ import SvgIcon from './components/SvgIcon'
 export default function App() {
   return (
     <>
-      <SvgIcon name="icon1"></SvgIcon>
-      <SvgIcon name="icon1"></SvgIcon>
-      <SvgIcon name="icon1"></SvgIcon>
-      <SvgIcon name="dir-icon1"></SvgIcon>
+      <SvgIcon name='icon1'></SvgIcon>
+      <SvgIcon name='icon1'></SvgIcon>
+      <SvgIcon name='icon1'></SvgIcon>
+      <SvgIcon name='dir-icon1'></SvgIcon>
     </>
   )
 }
@@ -241,7 +234,7 @@ If using `Typescript`, you can add in `tsconfig.json`
 // tsconfig.json
 {
   "compilerOptions": {
-    "types": ["vite-plugin-svg-icons/client"]
+    "types": ["vite-plugin-svg-icons-ng/client"]
   }
 }
 ```
@@ -265,10 +258,10 @@ pnpm run build
 
 ```
 
-## Sample project
+## Tanks
 
-[Vben Admin](https://github.com/anncwb/vue-vben-admin)
+[vite-plugin-svg-icons-ng](https://github.com/vbenjs/vite-plugin-svg-icons-ng)
 
 ## License
 
-[MIT © Vben-2020](./LICENSE)
+[MIT © yangxu52-2025](./LICENSE)

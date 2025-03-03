@@ -17,6 +17,6 @@
     "http-server": "^14.1.0",
     "typescript": "~5.7.3",
     "vite": "^6.1.0",
-    "vite-plugin-svg-icons": "workspace:*"
+    "vite-plugin-svg-icons-ng": "workspace:*"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "name": "vite-plugin-svg-icons",
-  "version": "2.0.1",
-  "description": "Vite Plugin for fast creating SVG sprites.",
+  "name": "vite-plugin-svg-icons-ng",
+  "version": "1.0.0",
+  "description": "Vite Plugin for fast creating SVG sprites. All new.",
   "type": "commonjs",
   "license": "MIT",
-  "author": "Vben",
+  "author": "yangxu52",
   "files": [
     "dist",
     "client.d.ts"
@@ -32,18 +32,17 @@
     "vite-plugin",
     "svg",
     "sprite",
-    "svgo",
-    "vben"
+    "svgo"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vbenjs/vite-plugin-svg-icons",
+    "url": "git+https://github.com/yangxu52/vite-plugin-svg-icons-ng.git",
     "directory": "packages/core"
   },
   "bugs": {
-    "url": "https://github.com/vbenjs/vite-plugin-svg-i cons/issues"
+    "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"
   },
-  "homepage": "https://github.com/vbenjs/vite-plugin-svg-icons/tree/master/#readme",
+  "homepage": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/tree/master/#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "debug": "^4.4.0",

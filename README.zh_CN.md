@@ -1,4 +1,4 @@
-# vite-plugin-svg-icons
+# vite-plugin-svg-icons-ng
 
 **中文** | [English](./README.md)
 
@@ -11,16 +11,16 @@
 
 ## 安装
 
-**node version:** >=12.0.0
+**node version:** ^18.3.0, >=20.0.0
 
-**vite version:** >=2.0.0
+**vite version:** >=5.0.0
 
 ```bash
-yarn add vite-plugin-svg-icons -D
+yarn add vite-plugin-svg-icons-ng -D
 # or
-npm i vite-plugin-svg-icons -D
+npm i vite-plugin-svg-icons-ng -D
 # or
-pnpm install vite-plugin-svg-icons -D
+pnpm install vite-plugin-svg-icons-ng -D
 ```
 
 ## 使用
@@ -28,8 +28,8 @@ pnpm install vite-plugin-svg-icons -D
 - vite.config.ts 中的配置插件
 
 ```ts
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
-import path from 'path'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import path from 'node:path'
 
 export default () => {
   return {
@@ -39,15 +39,13 @@ export default () => {
         iconDirs: [path.resolve(process.cwd(), 'src/icons')],
         // 指定symbolId格式
         symbolId: 'icon-[dir]-[name]',
-
         /**
-         * 自定义插入位置
+         * 自定义注入位置
          * @default: body-last
          */
         inject?: 'body-last' | 'body-first'
-
         /**
-         * custom dom id
+         * 自定义注入的DOM id
          * @default: __svg__icons__dom__
          */
         customDomId: '__svg__icons__dom__',
@@ -144,16 +142,11 @@ export default defineComponent({
 `/src/components/SvgIcon.jsx`
 
 ```jsx
-export default function SvgIcon({
-  name,
-  prefix = 'icon',
-  color = '#333',
-  ...props
-}) {
+export default function SvgIcon({ name, prefix = 'icon', color = '#333', ...props }) {
   const symbolId = `#${prefix}-${name}`
 
   return (
-    <svg {...props} aria-hidden="true">
+    <svg {...props} aria-hidden='true'>
       <use href={symbolId} fill={color} />
     </svg>
   )
@@ -212,7 +205,7 @@ svg 文件名
 // tsconfig.json
 {
   "compilerOptions": {
-    "types": ["vite-plugin-svg-icons/client"]
+    "types": ["vite-plugin-svg-icons-ng/client"]
   }
 }
 ```
@@ -228,18 +221,16 @@ svg 文件名
 **运行示例**
 
 ```bash
-
 pnpm install
 cd ./packages/playground/basic
 pnpm run dev
 pnpm run build
-
 ```
 
-## 示例项目
+## 致谢
 
-[Vben Admin](https://github.com/anncwb/vue-vben-admin)
+[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons)
 
 ## License
 
-[MIT © Vben-2020](./LICENSE)
+[MIT © yangxu52-2025](./LICENSE)

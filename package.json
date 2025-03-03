@@ -1,9 +1,9 @@
 {
-  "name": "vite-plugin-svg-icons-monorepo",
+  "name": "vite-plugin-svg-icons-ng-monorepo",
   "private": true,
-  "version": "2.0.1",
+  "version": "1.0.0",
   "license": "MIT",
-  "author": "Vben",
+  "author": "yangxu52",
   "scripts": {
     "stub": "pnpm --filter ./packages run prepack -- --stub",
     "postinstall": "pnpm run stub",
@@ -19,17 +19,16 @@
     "vite-plugin",
     "svg",
     "sprite",
-    "svgo",
-    "vben"
+    "svgo"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/vbenjs/vite-plugin-svg-icons"
+    "url": "git+https://github.com/yangxu52/vite-plugin-svg-icons-ng.git"
   },
   "bugs": {
-    "url": "https://github.com/vbenjs/vite-plugin-svg-icons/issues"
+    "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"
   },
-  "homepage": "https://github.com/vbenjs/vite-plugin-svg-icons/tree/main/#readme",
+  "homepage": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/tree/main/#readme",
   "devDependencies": {
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",

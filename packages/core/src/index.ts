@@ -15,7 +15,7 @@ import { SVG_DOM_ID, SVG_ICONS_CLIENT, SVG_ICONS_REGISTER_NAME, XMLNS, XMLNS_LIN
 
 export * from './typing'
 
-const debug = Debug.debug('vite-plugin-svg-icons')
+const debug = Debug.debug('vite-plugin-svg-icons-ng')
 
 export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
   const cache = new Map<string, FileStats>()

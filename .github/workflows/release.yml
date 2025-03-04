@@ -1,9 +1,8 @@
-name: Create Release
+name: Create Release Tag
 
 on:
   push:
-    tags:
-      - v*
+    tags: ['v*.*.*']
 
 jobs:
   build:
@@ -16,15 +15,14 @@ jobs:
       fail-fast: false
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Create Release for Tag
-        id: release_tag
-        uses: yyx990803/release-tag@master
+      - name: Create release for tag
+        uses: softprops/action-gh-release@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.OPER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          prerelease: ${{contains(github.ref, 'alpha') || contains(github.ref, 'beta')|| contains(github.ref, 'rc')}}
           body: |
-            Please refer to [CHANGELOG.md](https://github.com/anncwb/vite-plugin-svg-icons-ng/blob/main/CHANGELOG.md) for details.
+            Please refer to [CHANGELOG.md](https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/${{ github.ref_name }}/CHANGELOG.md) for details.

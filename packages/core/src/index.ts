@@ -2,7 +2,6 @@ import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import type { Config } from 'svgo'
 import { optimize } from 'svgo'
-import type { HTMLElement } from 'node-html-parser'
 import { parse } from 'node-html-parser'
 import type { DomInject, FileStats, ViteSvgIconsPlugin } from './typing'
 import fg from 'fast-glob'
@@ -210,52 +209,75 @@ export async function compilerIcon(file: string, symbolId: string, svgOptions: C
   content = content.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
   return convertSvgToSymbol(symbolId, content)
 }
+
 /**
- * transform SVG to symbol
+ * transform <svg> to <symbol>
  * @param id symbolId
- * @param content SVG content
- * @returns modified symbol content
+ * @param content svg content
+ * @returns transformed symbol content
  */
-function convertSvgToSymbol(id: string, content: string): string {
+function convertSvgToSymbol(id: string, content: string) {
+  // parse svg
   const root = parse(content)
-  const svgElement = root.querySelector('svg') as HTMLElement
-  if (!svgElement) {
-    throw new Error('Invalid SVG content')
+  const svg = root.querySelector('svg')
+  if (!svg) {
+    throw new Error('Invalid SVG content, missing <svg> element.')
   }
-  // viewBox
-  let viewBox = svgElement.getAttribute('viewBox')
-  const width = svgElement.getAttribute('width')
-  const height = svgElement.getAttribute('height')
+  // if no viewBox, use width and height
+  let viewBox = svg.getAttribute('viewBox')
+  const width = svg.getAttribute('width')
+  const height = svg.getAttribute('height')
   if (!viewBox && width && height) {
-    const width = svgElement.getAttribute('width')
-    const height = svgElement.getAttribute('height')
     viewBox = `0 0 ${width} ${height}`
-    svgElement.removeAttribute('width')
-    svgElement.removeAttribute('height')
+    svg.removeAttribute('width')
+    svg.removeAttribute('height')
   }
-  // symbol id
-  svgElement.querySelectorAll('[id]').forEach((el) => {
-    const originalId = el.getAttribute('id')
-    if (originalId) {
-      const newId = `${id}_${originalId}`
-      el.setAttribute('id', newId) // 添加前缀
-      // use
-      svgElement.querySelectorAll('use').forEach((useEl) => {
-        // xlink:href||href
-        const hrefAttr = useEl.getAttribute('xlink:href') || useEl.getAttribute('href')
-        if (hrefAttr === `#${originalId}`) {
-          useEl.setAttribute('xlink:href', `#${newId}`)
-          useEl.setAttribute('href', `#${newId}`)
-        }
-        // filter
-        const filterAttr = useEl.getAttribute('filter')
-        if (filterAttr === `url(#${originalId})`) {
-          useEl.setAttribute('filter', `url(#${newId})`)
-        }
-      })
+  // reflect oldId -> newId
+  const idMap = new Map()
+  // rename defs id
+  for (const defs of svg.querySelectorAll('defs')) {
+    for (const child of defs.children) {
+      const oldId = child.getAttribute('id')
+      if (oldId) {
+        const newId = `${id}_${oldId}`
+        child.setAttribute('id', newId)
+        idMap.set(oldId, newId)
+        // remove units attrs, it will cause error
+        child.removeAttribute('maskUnits')
+        child.removeAttribute('patternUnits')
+        child.removeAttribute('gradientUnits')
+        child.removeAttribute('clipPathUnits')
+        child.removeAttribute('markerUnits')
+        child.removeAttribute('filterUnits')
+      }
     }
-  })
-  return `<symbol id="${id}" viewBox="${viewBox}">${svgElement.innerHTML}</symbol>`
+  }
+  // replace id reference
+  if (idMap.size > 0) {
+    for (const el of svg.querySelectorAll('*')) {
+      for (const [attrName, attrValue] of Object.entries(el.attributes)) {
+        // xlink:href || href reference, example:`<use xlink:href="#xxx">`
+        if ((attrName === 'xlink:href' || attrName === 'href') && attrValue.startsWith('#')) {
+          const refId = attrValue.slice(1)
+          if (idMap.has(refId)) {
+            el.setAttribute('xlink:href', `#${idMap.get(refId)}`)
+            el.setAttribute('href', `#${idMap.get(refId)}`)
+          }
+        }
+        // url(#xxx) reference, example: mask、clip-path
+        if (attrValue.indexOf('url(#') !== -1) {
+          const newValue = attrValue.replace(/url\(#(.*?)\)/g, (match, refId) => {
+            if (idMap.has(refId)) {
+              return `url(#${idMap.get(refId)})`
+            }
+            return match
+          })
+          el.setAttribute(attrName, newValue)
+        }
+      }
+    }
+  }
+  return `<symbol id="${id}" viewBox="${viewBox}">${svg.innerHTML}</symbol>`
 }
 
 export function createSymbolId(name: string, options: ViteSvgIconsPlugin) {

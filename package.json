@@ -2,17 +2,22 @@
   "name": "vite-plugin-svg-icons-ng-monorepo",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "license": "MIT",
   "author": "yangxu52",
   "scripts": {
-    "stub": "pnpm --filter ./packages run prepack -- --stub",
-    "postinstall": "pnpm run stub",
-    "log": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "lint:pretty": "pretty-quick --staged",
-    "lint:eslint": "eslint \"packages/**/*.{ts,tsx}\" --fix",
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
-    "test": "vitest"
+    "postinstall": "pnpm --filter ./packages/core run dev",
+    "dev": "pnpm -r --filter ./playground/* run dev",
+    "build": "pnpm --filter ./packages/core run build",
+    "build:playground": "pnpm -r --filter ./playground/* run build",
+    "test": "pnpm build &&pnpm test-unit && pnpm test-build",
+    "test-unit": "vitest run",
+    "test-build": "pnpm --filter ./playground/basic run build",
+    "lint": "eslint --cache .",
+    "format": "prettier --write --cache .",
+    "log": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [
     "vite",

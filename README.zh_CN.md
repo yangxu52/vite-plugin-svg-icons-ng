@@ -258,10 +258,12 @@ svg 文件名
 **运行示例**
 
 ```bash
+# install && auto build core
 pnpm install
-cd ./packages/playground/basic
+# run playground dev
 pnpm run dev
-pnpm run build
+# run playground build
+build:playground
 ```
 
 ## 致谢

@@ -12,6 +12,7 @@
 
 <script setup>
 import SvgIcon from './components/SvgIcon.vue'
+
 defineOptions({
   name: 'App',
 })

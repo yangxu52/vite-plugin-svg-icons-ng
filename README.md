@@ -249,7 +249,8 @@ If using `Typescript`, you can add in `tsconfig.json`
 
 **Note**
 
-Although the use of folders to distinguish between them can largely avoid the problem of duplicate names, there will also be svgs with multiple folders and the same file name in `iconDirs`.
+Although the use of folders to distinguish between them can largely avoid the problem of duplicate names, there will also be svgs with multiple folders and the
+same file name in `iconDirs`.
 
 This needs to be avoided by the developer himself
 
@@ -258,12 +259,12 @@ This needs to be avoided by the developer himself
 **Run**
 
 ```bash
-
+# install && auto build core
 pnpm install
-cd ./packages/playground/basic
+# run playground dev
 pnpm run dev
-pnpm run build
-
+# run playground build
+build:playground
 ```
 
 ## Tanks

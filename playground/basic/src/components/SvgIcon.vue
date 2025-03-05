@@ -6,6 +6,7 @@
 
 <script setup>
 import { computed } from 'vue'
+
 defineOptions({
   name: 'SvgIcon',
   inheritAttrs: false,

@@ -1,9 +1,8 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
-import type { Config } from 'svgo'
 import { optimize } from 'svgo'
 import { parse } from 'node-html-parser'
-import type { DomInject, FileStats, ViteSvgIconsPlugin } from './typing'
+import type { FileStats, InjectMode, Options, SvgoConfig } from './typing'
 import fg from 'fast-glob'
 import getEtag from 'etag'
 import cors from 'cors'
@@ -16,7 +15,7 @@ export * from './typing'
 
 const debug = Debug.debug('vite-plugin-svg-icons-ng')
 
-export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
+export function createSvgIconsPlugin(opt: Options): Plugin {
   const cache = new Map<string, FileStats>()
 
   let isBuild = false
@@ -47,9 +46,7 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
       if ([SVG_ICONS_REGISTER_NAME, SVG_ICONS_CLIENT].includes(id)) {
         return id
       }
-      return null
     },
-
     async load(id, ssr) {
       if (!isBuild && !ssr) return null
 
@@ -92,7 +89,7 @@ export function createSvgIconsPlugin(opt: ViteSvgIconsPlugin): Plugin {
   }
 }
 
-export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: Config, options: ViteSvgIconsPlugin) {
+export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Options) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
   const code = `
@@ -126,7 +123,7 @@ export async function createModuleCode(cache: Map<string, FileStats>, svgoOption
   }
 }
 
-function domInject(inject: DomInject = 'body-last') {
+function domInject(inject: InjectMode = 'body-last') {
   switch (inject) {
     case 'body-first':
       return 'body.insertBefore(svgDom, body.firstChild);'
@@ -141,7 +138,7 @@ function domInject(inject: DomInject = 'body-last') {
  * @param svgOptions
  * @param options
  */
-export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: Config, options: ViteSvgIconsPlugin) {
+export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConfig, options: Options) {
   const { iconDirs } = options
 
   let insertHtml = ''
@@ -193,7 +190,7 @@ export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: C
   return { insertHtml, idSet }
 }
 
-export async function compilerIcon(file: string, symbolId: string, svgOptions: Config): Promise<string | null> {
+export async function compilerIcon(file: string, symbolId: string, svgOptions: SvgoConfig): Promise<string | null> {
   if (!file) {
     return null
   }
@@ -280,7 +277,7 @@ function convertSvgToSymbol(id: string, content: string) {
   return `<symbol id="${id}" viewBox="${viewBox}">${svg.innerHTML}</symbol>`
 }
 
-export function createSymbolId(name: string, options: ViteSvgIconsPlugin) {
+export function createSymbolId(name: string, options: Options) {
   const { symbolId } = options
 
   if (!symbolId) {

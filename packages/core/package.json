@@ -2,7 +2,7 @@
   "name": "vite-plugin-svg-icons-ng",
   "version": "1.0.0",
   "description": "Vite Plugin for fast creating SVG sprites. All new.",
-  "type": "commonjs",
+  "type": "module",
   "license": "MIT",
   "author": "yangxu52",
   "files": [
@@ -24,8 +24,7 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "unbuild",
-    "prepublishOnly": "npm run build",
-    "prepack": "unbuild"
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "vite",

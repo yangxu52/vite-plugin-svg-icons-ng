@@ -1,41 +1,53 @@
 import type { Config } from 'svgo'
 
-export type DomInject = 'body-first' | 'body-last'
+export type SvgoConfig = Omit<Config, 'path'>
+export type InjectMode = 'body-first' | 'body-last'
 
-export interface ViteSvgIconsPlugin {
+export interface Options {
   /**
-   * icons folder, all svg files in it will be converted to svg sprite.
+   * # icons store directories
+   * all svg files in these  will be converted to svg sprite.
+   *
    */
   iconDirs: string[]
-
   /**
-   * svgo configuration, used to compress svg
-   * @default：true
-   */
-  svgoOptions?: Config
-
-  /**
-   * icon format
-   * @default: icon-[dir]-[name]
+   * icon name format
+   * default: icon-[dir]-[name]
    */
   symbolId?: string
-
+  /**
+   * SVGO configuration, used to optimize svg
+   * default：{}
+   */
+  svgoOptions?: SvgoConfig
   /**
    * icon format
-   * @default: body-last
+   * default: 'body-last'
    */
-  inject?: DomInject
+  inject?: InjectMode
 
   /**
    * custom dom id
-   * @default: __svg__icons__dom__
+   * default: '__svg__icons__dom__'
    */
   customDomId?: string
 }
 
 export interface FileStats {
+  /**
+   * file relative name
+   */
   relativeName: string
+  /**
+   * modified time(ms)
+   */
   mtimeMs?: number
+  /**
+   * file content
+   */
   code: string
+  /**
+   * symbol id
+   */
   symbolId?: string
 }

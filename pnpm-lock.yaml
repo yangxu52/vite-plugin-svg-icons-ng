@@ -111,7 +111,7 @@ importers:
         specifier: ^22.13.5
         version: 22.13.8
 
-  packages/playground/basic:
+  playground/basic:
     dependencies:
       vue:
         specifier: ^3.5.13
@@ -131,7 +131,7 @@ importers:
         version: 6.2.0(@types/node@22.13.8)(jiti@2.4.2)(yaml@2.7.0)
       vite-plugin-svg-icons-ng:
         specifier: workspace:*
-        version: link:../../core
+        version: link:../../packages/core
 
 packages:
   '@babel/code-frame@7.26.2':

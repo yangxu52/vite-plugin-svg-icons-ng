@@ -2,202 +2,212 @@
 
 **English** | [中文](./README.zh_CN.md)
 
-Used to generate svg sprite map.
+Used to generate **svg sprite** from **a specified folder**, which stores svg icons.
 
 ## Feature
 
-- **Preloading** All icons are generated when the project is running, and you only need to operate dom once.
-- **High performance** Built-in cache, it will be regenerated only when the file is modified.
+- **Preloading** All icons will be generated when the project is run, and only one DOM operate.
+- **High performance** Built-in cache, it will be regenerated only when the icon is modified.
 
-## Installation (yarn or npm)
+## Requirement
 
-**node version:** ^18.3.0, >=20.0.0
+- **Node:** `^18.3.0`, `>=20.0.0`
+- **Vite:** `>=5.0.0`
 
-**vite version:** >=5.0.0
+## Installation
 
 ```bash
-yarn add vite-plugin-svg-icons-ng -D
-# or
-npm i vite-plugin-svg-icons-ng -D
-# or
+# pnpm
 pnpm install vite-plugin-svg-icons-ng -D
+# npm
+npm i vite-plugin-svg-icons-ng -D
+# yarn
+yarn add vite-plugin-svg-icons-ng -D
 ```
 
 ## Usage
 
-- Configuration plugin in vite.config.ts
+1. Import and configure the plugin in `vite.config.ts`/`vite.config.js`
 
-```ts
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
-import path from 'node:path'
+   ```ts
+   import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+   import path from 'node:path'
 
-export default () => {
-  return {
-    plugins: [
-      createSvgIconsPlugin({
-        // Specify the icon folder to be cached
-        iconDirs: [path.resolve(process.cwd(), 'src/icons')],
-        // Specify symbolId format
-        symbolId: 'icon-[dir]-[name]',
-        /**
-         * custom insert position
-         * @default: body-last
-         */
-        inject?: 'body-last' | 'body-first'
-        /**
-         * custom dom id
-         * @default: __svg__icons__dom__
-         */
-        customDomId: '__svg__icons__dom__',
-      }),
-    ],
+   export default defineConfig({
+     plugins: [
+       createSvgIconsPlugin({
+         /**
+          * specify the icon folder
+          * required
+          */
+         iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+         /**
+          * specify the symbolId format
+          * default: icon-[dir]-[name]
+          */
+         symbolId: 'icon-[dir]-[name]',
+       }),
+     ],
+   })
+   ```
+
+2. Import the virtual module in `main.ts`/`main.js` to register
+
+   ```ts
+   import 'virtual:svg-icons-register'
+   ```
+
+3. Here, the svg sprite will has been generated. Can used in your components.
+
+## Use in components
+
+**⚠️ Completed the [Usage](#usage) steps, firstly.**
+
+**Premise**  
+Icons Folder Structure
+
+```
+src/icons/
+├── dir/
+│ └── icon1.svg
+├── icon1.svg
+└── icon2.svg
+```
+
+1. [Vue3 (Composition API)](#vue3)
+   1. [use setup](#setup)
+   2. [non setup](#non-setup)
+2. [React](#react)
+
+- ### Vue3
+
+  - #### setup
+
+    code component: `/src/components/SvgIcon.vue`
+
+    ```vue
+    <script setup>
+    import { computed } from 'vue'
+    defineOptions({ name: 'SvgIcon', inheritAttrs: false })
+    const props = defineProps({
+      name: { type: String, required: true },
+      color: { type: String, default: '#333' },
+    })
+    </script>
+
+    <template>
+      <svg class="svg-icon" aria-hidden="true">
+        <use :xlink:href="symbolId" :fill="color" />
+      </svg>
+    </template>
+    ```
+
+    use component: `/src/app.vue`
+
+    ```vue
+    <script setup>
+    import SvgIcon from '@/components/SvgIcon.vue'
+    </script>
+
+    <template>
+      <div>
+        <SvgIcon name="icon-icon1"></SvgIcon>
+        <SvgIcon name="icon-icon2" color="#8B81C3"></SvgIcon>
+        <SvgIcon name="icon-dir-icon1"></SvgIcon>
+      </div>
+    </template>
+    ```
+
+  - #### non-setup
+
+    component: `/src/components/SvgIcon.vue`
+
+    ```vue
+    <template>
+      <svg class="svg-icon" aria-hidden="true">
+        <use :href="symbolId" :fill="color" />
+      </svg>
+    </template>
+
+    <script>
+    import { defineComponent } from 'vue'
+    export default defineComponent({
+      name: 'SvgIcon',
+      props: {
+        name: { type: String, required: true },
+        color: { type: String, default: '#333' },
+      },
+    })
+    </script>
+    ```
+
+    use component: `/src/app.vue`
+
+    ```vue
+       <template>
+         <div>
+           <SvgIcon name="icon-icon1"></SvgIcon>
+           <SvgIcon name="icon-icon2" color="#8B81C3"></SvgIcon>
+           <SvgIcon name="icon-dir-icon1"></SvgIcon>
+         </div>
+       </template>
+
+       <script>
+       import SvgIcon from './components/SvgIcon.vue'
+       import { defineComponent } from 'vue'
+       export default defineComponent({
+         components: { SvgIcon },
+       })
+    ```
+
+- ### React
+
+  code component: `/src/components/SvgIcon.jsx`
+
+  ```jsx
+  export default function SvgIcon({ name, prefix = 'icon', color = '#333', ...props }) {
+    const symbolId = `#${prefix}-${name}`
+
+    return (
+      <svg {...props} aria-hidden='true'>
+        <use href={symbolId} fill={color} />
+      </svg>
+    )
   }
-}
+  ```
 
-```
+  use component: `/src/App.jsx`
 
-- Introduce the registration script in src/main.ts
+  ```jsx
+  import SvgIcon from './components/SvgIcon'
 
-```ts
-import 'virtual:svg-icons-register'
-```
+  export default function App() {
+    return (
+      <>
+        <SvgIcon name='icon-icon1'></SvgIcon>
+        <SvgIcon name='icon-icon1' color='#8B81C3'></SvgIcon>
+        <SvgIcon name='icon-dir-icon1'></SvgIcon>
+      </>
+    )
+  }
+  ```
 
-Here the svg sprite map has been generated
-
-## How to use in components
-
-### **Vue way**
-
-`/src/components/SvgIcon.vue`
-
-```vue
-<template>
-  <svg aria-hidden="true">
-    <use :href="symbolId" :fill="color" />
-  </svg>
-</template>
-
-<script>
-import { defineComponent, computed } from 'vue'
-
-export default defineComponent({
-  name: 'SvgIcon',
-  props: {
-    prefix: {
-      type: String,
-      default: 'icon',
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      default: '#333',
-    },
-  },
-  setup(props) {
-    const symbolId = computed(() => `#${props.prefix}-${props.name}`)
-    return { symbolId }
-  },
-})
-</script>
-```
-
-#### **Icons Directory Structure**
-
-```bash
-# src/icons
-
-- icon1.svg
-- icon2.svg
-- icon3.svg
-- dir/icon1.svg
-```
-
-`/src/App.vue`
-
-```vue
-<template>
-  <div>
-    <SvgIcon name="icon1"></SvgIcon>
-    <SvgIcon name="icon2"></SvgIcon>
-    <SvgIcon name="icon3"></SvgIcon>
-    <SvgIcon name="dir-icon1"></SvgIcon>
-  </div>
-</template>
-
-<script>
-import { defineComponent, computed } from 'vue'
-
-import SvgIcon from './components/SvgIcon.vue'
-export default defineComponent({
-  name: 'App',
-  components: { SvgIcon },
-})
-</script>
-```
-
-### **React way**
-
-`/src/components/SvgIcon.jsx`
-
-```jsx
-export default function SvgIcon({ name, prefix = 'icon', color = '#333', ...props }) {
-  const symbolId = `#${prefix}-${name}`
-
-  return (
-    <svg {...props} aria-hidden='true'>
-      <use href={symbolId} fill={color} />
-    </svg>
-  )
-}
-```
-
-#### **Icons Directory Structure**
-
-```bash
-# src/icons
-
-- icon1.svg
-- icon2.svg
-- icon3.svg
-- dir/icon1.svg
-```
-
-`/src/App.jsx`
-
-```jsx
-import SvgIcon from './components/SvgIcon'
-
-export default function App() {
-  return (
-    <>
-      <SvgIcon name='icon1'></SvgIcon>
-      <SvgIcon name='icon1'></SvgIcon>
-      <SvgIcon name='icon1'></SvgIcon>
-      <SvgIcon name='dir-icon1'></SvgIcon>
-    </>
-  )
-}
-```
-
-### Get all SymbolId
+## Get all SymbolId
 
 ```ts
 import ids from 'virtual:svg-icons-names'
 // => ['icon-icon1','icon-icon2','icon-icon3']
 ```
 
-### Options
+## Options
 
-| Parameter   | Type                   | Default               | Description                                                                           |
-| ----------- | ---------------------- | --------------------- | ------------------------------------------------------------------------------------- |
-| iconDirs    | `string[]`             | -                     | Need to generate the icon folder of the Sprite image                                  |
-| symbolId    | `string`               | `icon-[dir]-[name]`   | svg symbolId format, see the description below                                        |
-| svgoOptions | `boolean｜SvgoOptions` | `true`                | svg compression configuration, can be an object[Options](https://github.com/svg/svgo) |
-| inject      | `string`               | `body-last`           | svgDom default insertion position, optional `body-first`                              |
-| customDomId | `string`               | `__svg__icons__dom__` | Customize the ID of the svgDom insert node                                            |
+| Parameter   | Type          | Default               | Description                                                                            |
+| ----------- | ------------- | --------------------- | -------------------------------------------------------------------------------------- |
+| iconDirs    | `string[]`    | -                     | Need to generate the icon folder of the Sprite image                                   |
+| symbolId    | `string`      | `icon-[dir]-[name]`   | svg symbolId format, see the description below                                         |
+| svgoOptions | `SvgoOptions` | `{}`                  | svg compression configuration, can be an object [Options](https://github.com/svg/svgo) |
+| inject      | `string`      | `body-last`           | svgDom default insertion position, optional `body-first`                               |
+| customDomId | `string`      | `__svg__icons__dom__` | Customize the ID of the svgDom insert node                                             |
 
 **symbolId**
 
@@ -221,7 +231,6 @@ Then the generated SymbolId is written in the comment
 # src/icons
 - icon1.svg # icon-icon1
 - icon2.svg # icon-icon2
-- icon3.svg # icon-icon3
 - dir/icon1.svg # icon-dir-icon1
 - dir/dir2/icon1.svg # icon-dir-dir2-icon1
 ```
@@ -231,7 +240,6 @@ Then the generated SymbolId is written in the comment
 If using `Typescript`, you can add in `tsconfig.json`
 
 ```json
-// tsconfig.json
 {
   "compilerOptions": {
     "types": ["vite-plugin-svg-icons-ng/client"]

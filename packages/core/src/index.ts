@@ -198,8 +198,11 @@ export async function compilerIcon(file: string, symbolId: string, svgOptions: S
   let content = fs.readFileSync(file, 'utf-8')
 
   if (svgOptions) {
-    const { data } = optimize(content, svgOptions)
-    content = data || content
+    try {
+      content = optimize(content, svgOptions).data || content
+    } catch (error) {
+      console.warn(`[vite-plugin-svg-icons-ng]: Error optimizing SVG file, skip it (${file}), caused by:\n${error}`)
+    }
   }
 
   // fix cannot change svg color  by  parent node problem

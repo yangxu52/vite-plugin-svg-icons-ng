@@ -1,6 +1,6 @@
 import type { Config } from 'svgo'
 
-export type SvgoConfig = Omit<Config, 'path'>
+export type SvgoConfig = Omit<Config, 'path'> | false
 export type InjectMode = 'body-first' | 'body-last'
 
 export interface Options {

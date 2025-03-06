@@ -1,5 +1,10 @@
 # vite-plugin-svg-icons-ng
 
+[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&label=LICENSE)](https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/LICENSE)&nbsp;
+![GitHub Stars](https://img.shields.io/github/stars/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Stars&logo=github)&nbsp;
+![GitHub Forks](https://img.shields.io/github/forks/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Forks&logo=github)
+&emsp;
+
 **中文** | [English](./README.md)
 
 用于从存储SVG图标的**指定文件夹**生成**svg精灵图**。
@@ -201,13 +206,13 @@ import ids from 'virtual:svg-icons-names'
 
 ## 配置说明
 
-| 参数        | 类型          | 默认值                | 说明                                                           |
-| ----------- | ------------- | --------------------- | -------------------------------------------------------------- |
-| iconDirs    | `string[]`    | -                     | 需要生成雪碧图的图标文件夹                                     |
-| symbolId    | `string`      | `icon-[dir]-[name]`   | svg 的 symbolId 格式，见下方说明                               |
-| svgoOptions | `SvgoOptions` | `{}`                  | svg 压缩配置，可以是对象[Options](https://github.com/svg/svgo) |
-| inject      | `string`      | `body-last`           | svgDom 默认插入的位置，可选`body-first`                        |
-| customDomId | `string`      | `__svg__icons__dom__` | svgDom 插入节点的 ID                                           |
+| 参数        | 类型                 | 默认值                | 说明                                                                                 |
+| ----------- | -------------------- | --------------------- | ------------------------------------------------------------------------------------ |
+| iconDirs    | `string[]`           | -                     | 需要生成雪碧图的图标文件夹                                                           |
+| symbolId    | `string`             | `icon-[dir]-[name]`   | svg精灵图中`<symbol>`的ID格式，见下方说明                                            |
+| svgoOptions | `SvgoOptions\|false` | `{}`                  | SVGO配置，详见：[Options](https://github.com/svg/svgo#configuration),或 `false` 禁用 |
+| inject      | `string`             | `body-last`           | 生成的svg精灵图的插入方式                                                            |
+| customDomId | `string`             | `__svg__icons__dom__` | 生成的svg精灵图插入节点的 ID                                                         |
 
 **symbolId**
 

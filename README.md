@@ -1,5 +1,10 @@
 # vite-plugin-svg-icons-ng
 
+[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&label=LICENSE)](https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/LICENSE)&nbsp;
+![GitHub Stars](https://img.shields.io/github/stars/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Stars&logo=github)&nbsp;
+![GitHub Forks](https://img.shields.io/github/forks/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Forks&logo=github)
+&emsp;
+
 **English** | [中文](./README.zh_CN.md)
 
 Used to generate **svg sprite** from **a specified folder**, which stores svg icons.
@@ -201,13 +206,13 @@ import ids from 'virtual:svg-icons-names'
 
 ## Options
 
-| Parameter   | Type          | Default               | Description                                                                            |
-| ----------- | ------------- | --------------------- | -------------------------------------------------------------------------------------- |
-| iconDirs    | `string[]`    | -                     | Need to generate the icon folder of the Sprite image                                   |
-| symbolId    | `string`      | `icon-[dir]-[name]`   | svg symbolId format, see the description below                                         |
-| svgoOptions | `SvgoOptions` | `{}`                  | svg compression configuration, can be an object [Options](https://github.com/svg/svgo) |
-| inject      | `string`      | `body-last`           | svgDom default insertion position, optional `body-first`                               |
-| customDomId | `string`      | `__svg__icons__dom__` | Customize the ID of the svgDom insert node                                             |
+| Parameter   | Type                 | Default               | Description                                                                                              |
+| ----------- | -------------------- | --------------------- | -------------------------------------------------------------------------------------------------------- |
+| iconDirs    | `string[]`           | -                     | Need to generate the icon folder of the Sprite image                                                     |
+| symbolId    | `string`             | `icon-[dir]-[name]`   | `<symbol>`Id format, see the description below                                                           |
+| svgoOptions | `SvgoOptions\|false` | `{}`                  | SVGO configuration, details: [Options](https://github.com/svg/svgo#configuration), or `false` to disable |
+| inject      | `string`             | `body-last`           | the Sprite image DOM inject mode                                                                         |
+| customDomId | `string`             | `__svg__icons__dom__` | Customize the ID of the svgDom insert node                                                               |
 
 **symbolId**
 

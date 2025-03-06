@@ -5,13 +5,10 @@ on:
     tags: ['v*.*.*']
 
 jobs:
-  build:
-    name: Create Release
-    runs-on: ${{matrix.os}}
-
+  release-tag:
+    if: contains(github.event.head_commit.message, 'release')
+    runs-on: ubuntu-latest
     strategy:
-      matrix:
-        os: [ubuntu-latest]
       fail-fast: false
 
     steps:

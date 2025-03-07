@@ -1,29 +1,29 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+defineOptions({ name: 'SvgIcon', inheritAttrs: false })
+const props = defineProps({
+  name: { type: String, required: true },
+  prefix: { type: String, default: 'icon' }, // common prefix, simplify  usage
+  color: { type: String, default: '#333' }, // fill color
+})
+const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+</script>
+
 <template>
-  <svg class="app-svg-icon" :class="$attrs.class" aria-hidden="true">
+  <svg class="svg-icon" aria-hidden="true">
     <use :xlink:href="symbolId" :fill="color" />
   </svg>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-
-defineOptions({
-  name: 'SvgIcon',
-  inheritAttrs: false,
-})
-const props = defineProps({
-  prefix: {
-    type: String,
-    default: 'icon',
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    default: '#333',
-  },
-})
-const symbolId = computed(() => `#${props.prefix}-${props.name}`)
-</script>
+<style scoped>
+.svg-icon {
+  width: 8em;
+  height: 8em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+  /**
+   * custom icon common style
+   */
+}
+</style>

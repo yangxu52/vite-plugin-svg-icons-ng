@@ -92,31 +92,29 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
 export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Options) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
-  const code = `
-       if (typeof window !== 'undefined') {
-         function loadSvg() {
-           var body = document.body;
-           var svgDom = document.getElementById('${options.customDomId}');
-           if(!svgDom) {
-             svgDom = document.createElementNS('${XMLNS}', 'svg');
-             svgDom.style.position = 'absolute';
-             svgDom.style.width = '0';
-             svgDom.style.height = '0';
-             svgDom.id = '${options.customDomId}';
-             svgDom.setAttribute('xmlns','${XMLNS}');
-             svgDom.setAttribute('xmlns:link','${XMLNS_LINK}');
-             svgDom.setAttribute('aria-hidden',true);
-           }
-           svgDom.innerHTML = ${JSON.stringify(insertHtml)};
-           ${domInject(options.inject)}
-         }
-         if(document.readyState === 'loading') {
-           document.addEventListener('DOMContentLoaded', loadSvg);
-         } else {
-           loadSvg()
-         }
-      }
-        `
+  const code = `if (typeof window !== 'undefined') {
+  function load() {
+    var body = document.body;
+    var el = document.getElementById('${options.customDomId}');
+    if (!el) {
+      el = document.createElementNS('${XMLNS}', 'svg');
+      el.style.position = 'absolute';
+      el.style.width = '0';
+      el.style.height = '0';
+      el.id = '${options.customDomId}';
+      el.setAttribute('xmlns', '${XMLNS}');
+      el.setAttribute('xmlns:link', '${XMLNS_LINK}');
+      el.setAttribute('aria-hidden', true);
+    }
+    el.innerHTML = ${JSON.stringify(insertHtml)};
+    ${domInject(options.inject)}
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
+}`
   return {
     code: `${code}\nexport default {}`,
     idSet: `export default ${JSON.stringify(Array.from(idSet))}`,
@@ -126,9 +124,9 @@ export async function createModuleCode(cache: Map<string, FileStats>, svgoOption
 function domInject(inject: InjectMode = 'body-last') {
   switch (inject) {
     case 'body-first':
-      return 'body.insertBefore(svgDom, body.firstChild);'
+      return 'body.insertBefore(el, body.firstChild);'
     default:
-      return 'body.insertBefore(svgDom, body.lastChild);'
+      return 'body.insertBefore(el, body.lastChild);'
   }
 }
 

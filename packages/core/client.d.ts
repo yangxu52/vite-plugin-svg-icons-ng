@@ -1,9 +1,11 @@
+type EmptyObject = { readonly [key: string]: never }
+
 declare module 'virtual:svg-icons-register' {
-  const component: any
-  export default component
+  const src: EmptyObject
+  export default src
 }
 
 declare module 'virtual:svg-icons-names' {
-  const iconsNames: string[]
-  export default iconsNames
+  const src: string[]
+  export default src
 }

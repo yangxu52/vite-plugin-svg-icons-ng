@@ -1,3 +1,8 @@
+# [1.0.3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.3...v1.0.2) (2025-03-07)
+
+- chore: optimize inject content ([54c24de](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/54c24dee7187278696fd7ee42aed560a35cd6705))
+- chore: package export client.d.ts ([5835743](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/583574344ecff32b3ee451104cddb58bddf18aa6))
+
 ## [1.0.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.0...v1.0.2) (2025-03-05)
 
 - fix: SVGO may throw error, when svg file has DOCTYPE declaration ([45cbe93](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/45cbe93fb700c65b848f199104a1ba05f9cbb344))

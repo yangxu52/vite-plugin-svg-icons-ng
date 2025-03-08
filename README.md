@@ -242,17 +242,31 @@ Then the generated SymbolId is written in the comment
 
 ## Typescript Support
 
-If using `Typescript`, you can add in `tsconfig.json`
+- option1: add `"vite-plugin-svg-icons-ng/client"` to `tsconfig.json`.
 
-```json
-{
-  "compilerOptions": {
-    "types": ["vite-plugin-svg-icons-ng/client"]
+  ```json
+  {
+    "compilerOptions": {
+      "types": ["vite-plugin-svg-icons-ng/client"]
+    }
   }
-}
-```
+  ```
 
-**Note**
+- option2: add triple slash `/// <reference types="vite-plugin-svg-icons-ng/client" />` in the environment type declaration, like `env.d.ts` file, if you defined a `env.d.ts` file and include it.
+
+  ```ts
+  /// <reference types="vite-plugin-svg-icons-ng/client" />
+  ```
+
+  ```json
+  {
+    "compilerOptions": {
+      "types": ["env.d.ts"]
+    }
+  }
+  ```
+
+## **Note**
 
 Although the use of folders to distinguish between them can largely avoid the problem of duplicate names, there will also be svgs with multiple folders and the
 same file name in `iconDirs`.

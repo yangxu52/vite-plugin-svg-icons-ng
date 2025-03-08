@@ -242,17 +242,31 @@ svg 文件名
 
 ## Typescript 支持
 
-如果使用 `Typescript`,你可以在`tsconfig.json`内添加
+- 方式1: 在`tsconfig.json`文件`compilerOptions.types`中添加 `"vite-plugin-svg-icons-ng/client"`
 
-```json
-{
-  "compilerOptions": {
-    "types": ["vite-plugin-svg-icons-ng/client"]
+  ```json
+  {
+    "compilerOptions": {
+      "types": ["vite-plugin-svg-icons-ng/client"]
+    }
   }
-}
-```
+  ```
 
-**注意**
+- 方式2: 在项目类型声明文件，比如`env.d.ts`中添加三斜线指令 `/// <reference types="vite-plugin-svg-icons-ng/client" />`。如果你得项目中有定义`env.d.ts`文件，并且包含它。
+
+  ```ts
+  /// <reference types="vite-plugin-svg-icons-ng/client" />
+  ```
+
+  ```json
+  {
+    "compilerOptions": {
+      "types": ["env.d.ts"]
+    }
+  }
+  ```
+
+## **注意**
 
 虽然用文件夹来区分已经可以很大程度避免重名问题了,但是也会出现`iconDirs`配置多个文件夹，且存在文件名一样的 svg。
 

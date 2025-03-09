@@ -9,7 +9,7 @@ import cors from 'cors'
 import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
-import { SVG_DOM_ID, SVG_ICONS_CLIENT, SVG_ICONS_REGISTER_NAME, XMLNS, XMLNS_LINK } from './constants'
+import { SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_REGISTER, XMLNS, XMLNS_LINK } from './constants'
 
 export * from './typing'
 
@@ -43,25 +43,22 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
       debug('resolvedConfig:', resolvedConfig)
     },
     resolveId(id) {
-      if ([SVG_ICONS_REGISTER_NAME, SVG_ICONS_CLIENT].includes(id)) {
-        return id
-      }
+      return [VIRTUAL_REGISTER, VIRTUAL_NAMES].includes(id) ? '\0' + id : undefined
     },
     async load(id, ssr) {
       if (!isBuild && !ssr) return null
 
-      const isRegister = id.endsWith(SVG_ICONS_REGISTER_NAME)
-      const isClient = id.endsWith(SVG_ICONS_CLIENT)
+      const isVirtualRegister = id === '\0' + VIRTUAL_REGISTER
+      const isVirtualNames = id === '\0' + VIRTUAL_NAMES
 
-      if (ssr && !isBuild && (isRegister || isClient)) {
+      if (ssr && !isBuild && (isVirtualRegister || isVirtualNames)) {
         return `export default {}`
       }
-
       const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
-      if (isRegister) {
+      if (isVirtualRegister) {
         return code
       }
-      if (isClient) {
+      if (isVirtualNames) {
         return idSet
       }
     },
@@ -69,15 +66,13 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
       middlewares.use(cors({ origin: '*' }))
       middlewares.use(async (req, res, next) => {
         const url = normalizePath(req.url!)
-
-        const registerId = `/@id/${SVG_ICONS_REGISTER_NAME}`
-        const clientId = `/@id/${SVG_ICONS_CLIENT}`
-        if ([clientId, registerId].some((item) => url.endsWith(item))) {
+        const registerId = `/@id/__x00__${VIRTUAL_REGISTER}`
+        const namesId = `/@id/__x00__${VIRTUAL_NAMES}`
+        if (url.endsWith(registerId) || url.endsWith(namesId)) {
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
           const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
           const content = url.endsWith(registerId) ? code : idSet
-
           res.setHeader('Etag', getEtag(content, { weak: true }))
           res.statusCode = 200
           res.end(content)

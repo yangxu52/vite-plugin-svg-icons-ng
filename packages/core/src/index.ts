@@ -5,11 +5,10 @@ import { parse } from 'node-html-parser'
 import type { FileStats, InjectMode, Options, SvgoConfig } from './typing'
 import fg from 'fast-glob'
 import { createHash } from 'crypto'
-import cors from 'cors'
 import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
-import { SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_REGISTER, XMLNS, XMLNS_LINK } from './constants'
+import { SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL, XMLNS, XMLNS_LINK } from './constants'
 
 export * from './typing'
 
@@ -63,16 +62,15 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
       }
     },
     configureServer: ({ middlewares }) => {
-      middlewares.use(cors({ origin: '*' }))
+      //TODO: use the use(route, handle) replacement
       middlewares.use(async (req, res, next) => {
         const url = normalizePath(req.url!)
-        const registerId = `/@id/__x00__${VIRTUAL_REGISTER}`
-        const namesId = `/@id/__x00__${VIRTUAL_NAMES}`
-        if (url.endsWith(registerId) || url.endsWith(namesId)) {
+        if (url.endsWith(VIRTUAL_REGISTER_URL) || url.endsWith(VIRTUAL_NAMES_URL)) {
+          res.setHeader('Access-Control-Allow-Origin', '*')
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
           const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
-          const content = url.endsWith(registerId) ? code : idSet
+          const content = url.endsWith(VIRTUAL_REGISTER_URL) ? code : idSet
           res.setHeader('Etag', getWeakETag(content))
           res.statusCode = 200
           res.end(content)

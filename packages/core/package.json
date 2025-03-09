@@ -46,7 +46,6 @@
   },
   "homepage": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/tree/master/#readme",
   "dependencies": {
-    "cors": "^2.8.5",
     "debug": "^4.4.0",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",

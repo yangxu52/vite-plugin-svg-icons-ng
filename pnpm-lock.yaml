@@ -67,9 +67,6 @@ importers:
 
   packages/core:
     dependencies:
-      cors:
-        specifier: ^2.8.5
-        version: 2.8.5
       debug:
         specifier: ^4.4.0
         version: 4.4.0
@@ -1240,10 +1237,6 @@ packages:
     engines: { node: '>=18' }
     hasBin: true
 
-  cors@2.8.5:
-    resolution: { integrity: sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g== }
-    engines: { node: '>= 0.10' }
-
   corser@2.0.1:
     resolution: { integrity: sha512-utCYNzRSQIZNPIcGZdQc92UVJYAhtGAteCFg0yRaFm8f0P+CPtyGyHXJcGXnffjCybUCEx3FQ2G7U3/o9eIkVQ== }
     engines: { node: '>= 0.4.0' }
@@ -2156,10 +2149,6 @@ packages:
   nth-check@2.1.1:
     resolution: { integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w== }
 
-  object-assign@4.1.1:
-    resolution: { integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg== }
-    engines: { node: '>=0.10.0' }
-
   object-inspect@1.13.4:
     resolution: { integrity: sha512-W67iLl4J2EXEGTbfeHCffrjDfitvLANg0UlX3wFUUSTx92KXRFegMHUVgSqE+wvhAbi4WqjGg9czysTV2Epbew== }
     engines: { node: '>= 0.4' }
@@ -2862,10 +2851,6 @@ packages:
 
   validate-npm-package-license@3.0.4:
     resolution: { integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew== }
-
-  vary@1.1.2:
-    resolution: { integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg== }
-    engines: { node: '>= 0.8' }
 
   vite-node@3.0.7:
     resolution: { integrity: sha512-2fX0QwX4GkkkpULXdT1Pf4q0tC1i1lFOyseKoonavXUNlQ77KpW2XqBGGNIm/J4Ows4KxgGJzDguYVPKwG/n5A== }
@@ -4044,11 +4029,6 @@ snapshots:
     dependencies:
       meow: 13.2.0
 
-  cors@2.8.5:
-    dependencies:
-      object-assign: 4.1.1
-      vary: 1.1.2
-
   corser@2.0.1: {}
 
   cosmiconfig-typescript-loader@6.1.0(@types/node@22.13.8)(cosmiconfig@9.0.0(typescript@5.7.3))(typescript@5.7.3):
@@ -5007,8 +4987,6 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  object-assign@4.1.1: {}
-
   object-inspect@1.13.4: {}
 
   once@1.4.0:
@@ -5707,8 +5685,6 @@ snapshots:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
-
-  vary@1.1.2: {}
 
   vite-node@3.0.7(@types/node@22.13.8)(jiti@2.4.2)(yaml@2.7.0):
     dependencies:

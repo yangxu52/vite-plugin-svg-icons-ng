@@ -48,7 +48,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "debug": "^4.4.0",
-    "etag": "^1.8.1",
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",
     "node-html-parser": "^7.0.1",

@@ -4,7 +4,7 @@ import { optimize } from 'svgo'
 import { parse } from 'node-html-parser'
 import type { FileStats, InjectMode, Options, SvgoConfig } from './typing'
 import fg from 'fast-glob'
-import getEtag from 'etag'
+import { createHash } from 'crypto'
 import cors from 'cors'
 import fs from 'fs-extra'
 import path from 'pathe'
@@ -73,7 +73,7 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
           res.setHeader('Cache-Control', 'no-cache')
           const { code, idSet } = await createModuleCode(cache, svgoOptions, options)
           const content = url.endsWith(registerId) ? code : idSet
-          res.setHeader('Etag', getEtag(content, { weak: true }))
+          res.setHeader('Etag', getWeakETag(content))
           res.statusCode = 200
           res.end(content)
         } else {
@@ -306,4 +306,10 @@ export function discreteDir(name: string) {
   const fileName = strList.pop()
   const dirName = strList.join('-')
   return { fileName, dirName }
+}
+
+function getWeakETag(str: string) {
+  return str.length === 0
+    ? '"W/0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
+    : `W/${Buffer.byteLength(str, 'utf8')}-${createHash('sha1').update(str, 'utf8').digest('base64').substring(0, 27)}`
 }

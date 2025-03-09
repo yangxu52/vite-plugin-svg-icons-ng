@@ -82,7 +82,7 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
   }
 }
 
-export async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Options) {
+async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Options) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
   const code = `if (typeof window !== 'undefined') {
@@ -129,7 +129,7 @@ function domInject(inject: InjectMode = 'body-last') {
  * @param svgOptions
  * @param options
  */
-export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConfig, options: Options) {
+async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConfig, options: Options) {
   const { iconDirs } = options
 
   let insertHtml = ''
@@ -181,7 +181,7 @@ export async function compilerIcons(cache: Map<string, FileStats>, svgOptions: S
   return { insertHtml, idSet }
 }
 
-export async function compilerIcon(file: string, symbolId: string, svgOptions: SvgoConfig): Promise<string | null> {
+async function compilerIcon(file: string, symbolId: string, svgOptions: SvgoConfig): Promise<string | null> {
   if (!file) {
     return null
   }
@@ -271,7 +271,7 @@ function convertSvgToSymbol(id: string, content: string) {
   return `<symbol id="${id}" viewBox="${viewBox}">${svg.innerHTML}</symbol>`
 }
 
-export function createSymbolId(name: string, options: Options) {
+function createSymbolId(name: string, options: Options) {
   const { symbolId } = options
 
   if (!symbolId) {
@@ -293,7 +293,7 @@ export function createSymbolId(name: string, options: Options) {
   return id.replace(path.extname(id), '')
 }
 
-export function discreteDir(name: string) {
+function discreteDir(name: string) {
   if (!normalizePath(name).includes('/')) {
     return {
       fileName: name,
@@ -310,4 +310,9 @@ function getWeakETag(str: string) {
   return str.length === 0
     ? '"W/0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
     : `W/${Buffer.byteLength(str, 'utf8')}-${createHash('sha1').update(str, 'utf8').digest('base64').substring(0, 27)}`
+}
+
+export const __TEST__ = {
+  createSymbolId,
+  discreteDir,
 }

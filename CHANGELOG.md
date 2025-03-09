@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.5...v1.0.4) (2025-03-09)
+
+- refactor: implement ETag generation logic ([cd901fd](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cd901fd8d1c4745ce0fc49556303c6e2f33f0ab0))
+- refactor: add cors header independently ([0d549d2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/0d549d23f587612257c3a54ee415be94c5cb8a87))
+- chore: remove the export of internal
+  function ([4e6f336](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4e6f336bc0456a9e741462f17b3738b3ad27e5a1))
+
 ## [1.0.4](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.4...v1.0.3) (2025-03-09)
 
 - chore: add prefix '\0' while resolving id ([63b81a1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/63b81a14f39498e6e5dd3bac026bcb20ff0c50bd))

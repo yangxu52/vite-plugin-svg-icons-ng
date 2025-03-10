@@ -1,3 +1,8 @@
+## [1.1.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.1.0...v1.0.0) (2025-03-10)
+
+- refactor: reserve svg attribute in convert
+  process ([bd3ecbc](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/bd3ecbc82fc0ca8e16f2df284fa101e793300fab))
+
 ## [1.1.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.5...v1.0.4) (2025-03-09)
 
 - refactor: implement ETag generation logic ([cd901fd](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cd901fd8d1c4745ce0fc49556303c6e2f33f0ab0))
@@ -31,8 +36,8 @@
 
 ### BREAKING CHANGES
 
-- #### refactor: implement the `svg` to `symbol` convert logic to \*\*remove `svg-baker`
-  \*\* ([84a0047](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/84a00475ff705de97ee4cbf1203c3d79fbf89b03))
+- refactor: implement the `svg` to `symbol` convert logic to **remove
+  `svg-baker`** ([84a0047](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/84a00475ff705de97ee4cbf1203c3d79fbf89b03))  
   This may cause unknown problems, but it's working good now. Welcome to [issue](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues).
 
 ---

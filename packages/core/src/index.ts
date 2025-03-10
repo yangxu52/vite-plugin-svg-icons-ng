@@ -1,6 +1,7 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { optimize } from 'svgo'
+import type { HTMLElement } from 'node-html-parser'
 import { parse } from 'node-html-parser'
 import type { FileStats, InjectMode, Options, SvgoConfig } from './typing'
 import fg from 'fast-glob'
@@ -214,15 +215,36 @@ function convertSvgToSymbol(id: string, content: string) {
   if (!svg) {
     throw new Error('Invalid SVG content, missing <svg> element.')
   }
-  // if no viewBox, use width and height
-  let viewBox = svg.getAttribute('viewBox')
-  const width = svg.getAttribute('width')
-  const height = svg.getAttribute('height')
+  // remove useless attrs
+  removeUselessAttrs(svg)
+  // unify size to viewBox
+  unifySizeToViewBox(svg)
+  // prefix internal id
+  prefixInternalId(svg, id)
+  svg.tagName = 'symbol'
+  svg.setAttribute('id', id)
+  return svg.toString()
+}
+
+function removeUselessAttrs(svg: HTMLElement) {
+  svg.removeAttribute('xmlns')
+  svg.removeAttribute('xmlns:xlink')
+  svg.removeAttribute('class')
+  svg.removeAttribute('style')
+  svg.removeAttribute('role')
+  svg.removeAttribute('aria-hidden')
+}
+
+function unifySizeToViewBox(svg: HTMLElement) {
+  const { viewBox, width, height } = svg.attributes
   if (!viewBox && width && height) {
-    viewBox = `0 0 ${width} ${height}`
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
     svg.removeAttribute('width')
     svg.removeAttribute('height')
   }
+}
+
+function prefixInternalId(svg: HTMLElement, id: string) {
   // reflect oldId -> newId
   const idMap = new Map()
   // rename defs id
@@ -268,7 +290,6 @@ function convertSvgToSymbol(id: string, content: string) {
       }
     }
   }
-  return `<symbol id="${id}" viewBox="${viewBox}">${svg.innerHTML}</symbol>`
 }
 
 function createSymbolId(name: string, options: Options) {

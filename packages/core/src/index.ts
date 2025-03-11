@@ -302,29 +302,29 @@ function createSymbolId(name: string, options: Options) {
   let id = symbolId
   let fName = name
 
-  const { fileName = '', dirName } = discreteDir(name)
+  const { baseName = '', dirName } = parseDirName(name)
   if (symbolId.includes('[dir]')) {
     id = id.replace(/\[dir\]/g, dirName)
     if (!dirName) {
       id = id.replace('--', '-')
     }
-    fName = fileName
+    fName = baseName
   }
-  id = id.replace(/\[name\]/g, fName)
-  return id.replace(path.extname(id), '')
+  return id.replace(/\[name\]/g, fName)
 }
 
-function discreteDir(name: string) {
-  if (!normalizePath(name).includes('/')) {
-    return {
-      fileName: name,
-      dirName: '',
-    }
+function parseDirName(name: string) {
+  let dirName = ''
+  let baseName = name
+  const lastSeparators = name.lastIndexOf('/')
+  if (lastSeparators !== -1) {
+    dirName = name.slice(0, lastSeparators).split('/').filter(Boolean).join('-')
+    baseName = name.slice(lastSeparators + 1)
   }
-  const strList = name.split('/')
-  const fileName = strList.pop()
-  const dirName = strList.join('-')
-  return { fileName, dirName }
+  return {
+    dirName,
+    baseName: path.basename(baseName, path.extname(baseName)),
+  }
 }
 
 function getWeakETag(str: string) {
@@ -335,5 +335,5 @@ function getWeakETag(str: string) {
 
 export const __TEST__ = {
   createSymbolId,
-  discreteDir,
+  parseDirName,
 }

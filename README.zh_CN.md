@@ -102,7 +102,7 @@ src/icons/
 
     <template>
       <svg class="svg-icon" aria-hidden="true">
-        <use :xlink:href="symbolId" :fill="color" />
+        <use :xlink:href="props.name" :fill="color" />
       </svg>
     </template>
     ```
@@ -130,7 +130,7 @@ src/icons/
     ```vue
     <template>
       <svg class="svg-icon" aria-hidden="true">
-        <use :href="symbolId" :fill="color" />
+        <use :href="props.name" :fill="props.color" />
       </svg>
     </template>
 
@@ -149,20 +149,21 @@ src/icons/
     使用组件: `/src/app.vue`
 
     ```vue
-       <template>
-         <div>
-           <SvgIcon name="icon-icon1"></SvgIcon>
-           <SvgIcon name="icon-icon2" color="#8B81C3"></SvgIcon>
-           <SvgIcon name="icon-dir-icon1"></SvgIcon>
-         </div>
-       </template>
+    <template>
+      <div>
+        <SvgIcon name="icon-icon1"></SvgIcon>
+        <SvgIcon name="icon-icon2" color="#8B81C3"></SvgIcon>
+        <SvgIcon name="icon-dir-icon1"></SvgIcon>
+      </div>
+    </template>
 
-       <script>
-       import SvgIcon from './components/SvgIcon.vue'
-       import { defineComponent } from 'vue'
-       export default defineComponent({
-         components: { SvgIcon },
-       })
+    <script>
+    import SvgIcon from './components/SvgIcon.vue'
+    import { defineComponent } from 'vue'
+    export default defineComponent({
+      components: { SvgIcon },
+    })
+    </script>
     ```
 
 - ### React

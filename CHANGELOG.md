@@ -1,3 +1,18 @@
+## [1.2.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.1.1...v1.0.0) (2025-03-11)
+
+**Little Breaking Change:** the logic of generate symbol id logic is changed, and then add user option validation, but it should not affect normal users.
+
+### Features
+
+- feat: validate user option ([6487937](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6487937075a769f822074bb6be24b35f8698c076))
+
+---
+
+- refactor: file split dirname and basename
+  logic ([e243bba](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/e243bba5afd8b0e7680de406f571c641cdf70c22))
+- refactor: generate symbol id logic ([9d7ecd1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9d7ecd1eeec9c9a268cae1c6c23d7643b8f6a52f))
+- chore: optimize type declaration ([c5ef104](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/c5ef104d08eddc2f3b05f0ca27b26be0155a33e6))
+
 ## [1.1.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.1.0...v1.0.0) (2025-03-10)
 
 - refactor: reserve svg attribute in convert
@@ -9,6 +24,7 @@
 - refactor: add cors header independently ([0d549d2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/0d549d23f587612257c3a54ee415be94c5cb8a87))
 - chore: remove the export of internal
   function ([4e6f336](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4e6f336bc0456a9e741462f17b3738b3ad27e5a1))
+- docs: update README ([dc062b8](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/dc062b801188a29df368b6825101ef377549e6bd))
 
 ## [1.0.4](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.0.4...v1.0.3) (2025-03-09)
 

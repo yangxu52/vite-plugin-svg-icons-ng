@@ -34,12 +34,12 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
 
   let isBuild = false
   const options = {
-    svgoOptions: {},
     symbolId: 'icon-[dir]-[name]',
-    inject: 'body-last' as const,
+    svgoOptions: {},
+    inject: 'body-last',
     customDomId: SVG_DOM_ID,
     ...opt,
-  }
+  } as Required<Options>
 
   const { svgoOptions } = options
   const { symbolId } = options
@@ -97,7 +97,7 @@ export function createSvgIconsPlugin(opt: Options): Plugin {
   }
 }
 
-async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Options) {
+async function createModuleCode(cache: Map<string, FileStats>, svgoOptions: SvgoConfig, options: Required<Options>) {
   const { insertHtml, idSet } = await compilerIcons(cache, svgoOptions, options)
 
   const code = `if (typeof window !== 'undefined') {
@@ -144,7 +144,7 @@ function domInject(inject: InjectMode = 'body-last') {
  * @param svgOptions
  * @param options
  */
-async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConfig, options: Options) {
+async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConfig, options: Required<Options>) {
   const { iconDirs } = options
 
   let insertHtml = ''
@@ -306,7 +306,7 @@ function prefixInternalId(svg: HTMLElement, id: string) {
   }
 }
 
-function generateSymbolId(name: string, options: Options) {
+function generateSymbolId(name: string, options: Required<Options>) {
   const { symbolId = 'icon-[dir]-[name]' } = options
 
   const { dirName, baseName } = parseDirName(name)

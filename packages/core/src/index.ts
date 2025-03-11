@@ -152,7 +152,7 @@ async function compilerIcons(cache: Map<string, FileStats>, svgOptions: SvgoConf
 
       const getSymbol = async () => {
         relativeName = normalizePath(path).replace(normalizePath(dir + '/'), '')
-        symbolId = createSymbolId(relativeName, options)
+        symbolId = generateSymbolId(relativeName, options)
         svgSymbol = await compilerIcon(path, symbolId, svgOptions)
         idSet.add(symbolId)
       }
@@ -292,25 +292,14 @@ function prefixInternalId(svg: HTMLElement, id: string) {
   }
 }
 
-function createSymbolId(name: string, options: Options) {
-  const { symbolId } = options
+function generateSymbolId(name: string, options: Options) {
+  const { symbolId = 'icon-[dir]-[name]' } = options
 
-  if (!symbolId) {
-    return name
-  }
+  const { dirName, baseName } = parseDirName(name)
 
-  let id = symbolId
-  let fName = name
+  const id = symbolId.replace(/\[dir]/g, dirName).replace(/\[name]/g, baseName)
 
-  const { baseName = '', dirName } = parseDirName(name)
-  if (symbolId.includes('[dir]')) {
-    id = id.replace(/\[dir\]/g, dirName)
-    if (!dirName) {
-      id = id.replace('--', '-')
-    }
-    fName = baseName
-  }
-  return id.replace(/\[name\]/g, fName)
+  return id.replace(/-+/g, '-').replace(/(^-|-$)/g, '')
 }
 
 function parseDirName(name: string) {
@@ -334,6 +323,6 @@ function getWeakETag(str: string) {
 }
 
 export const __TEST__ = {
-  createSymbolId,
+  generateSymbolId,
   parseDirName,
 }

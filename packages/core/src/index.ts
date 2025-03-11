@@ -9,13 +9,27 @@ import { createHash } from 'crypto'
 import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
-import { SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL, XMLNS, XMLNS_LINK } from './constants'
+import {
+  ERR_CUSTOM_DOM_ID_SYNTAX,
+  ERR_ICON_DIRS_REQUIRED,
+  ERR_SYMBOL_ID_NO_NAME,
+  ERR_SYMBOL_ID_SYNTAX,
+  SVG_DOM_ID,
+  VIRTUAL_NAMES,
+  VIRTUAL_NAMES_URL,
+  VIRTUAL_REGISTER,
+  VIRTUAL_REGISTER_URL,
+  XMLNS,
+  XMLNS_LINK,
+} from './constants'
 
 export * from './typing'
 
 const debug = Debug.debug('vite-plugin-svg-icons-ng')
 
 export function createSvgIconsPlugin(opt: Options): Plugin {
+  validateOption(opt)
+
   const cache = new Map<string, FileStats>()
 
   let isBuild = false
@@ -322,7 +336,32 @@ function getWeakETag(str: string) {
     : `W/${Buffer.byteLength(str, 'utf8')}-${createHash('sha1').update(str, 'utf8').digest('base64').substring(0, 27)}`
 }
 
+function validateOption(opt: Options) {
+  // iconDirs is required
+  if (!opt.iconDirs || opt.iconDirs.length === 0) {
+    throw new Error(ERR_ICON_DIRS_REQUIRED)
+  }
+  const idSyntax = /^[a-zA-Z][a-zA-Z0-9\-_]*$/
+  if (opt.symbolId) {
+    // symbolId must contain [name]
+    if (!opt.symbolId.includes('[name]')) {
+      throw new Error(ERR_SYMBOL_ID_NO_NAME)
+    } else {
+      // symbolId must comply with the syntax, refer: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id#syntax
+      const clearSymbolId = opt.symbolId.replaceAll(/\[name]/g, '').replaceAll(/\[dir]/g, '')
+      if (!idSyntax.test(clearSymbolId)) {
+        throw new Error(ERR_SYMBOL_ID_SYNTAX)
+      }
+    }
+  }
+  // customDomId must comply with the syntax, refer: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id#syntax
+  if (opt.customDomId && !idSyntax.test(opt.customDomId)) {
+    throw new Error(ERR_CUSTOM_DOM_ID_SYNTAX)
+  }
+}
+
 export const __TEST__ = {
   generateSymbolId,
   parseDirName,
+  validateOption,
 }

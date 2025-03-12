@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../src/constants'
 
 describe('Test ValidateOption', () => {
-  const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]' } as any
+  const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]', customDomId: '__svg__icons__dom__' } as any
 
   test('right option', () => {
     const options = { ...template }

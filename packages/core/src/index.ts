@@ -14,6 +14,8 @@ import {
   ERR_ICON_DIRS_REQUIRED,
   ERR_SYMBOL_ID_NO_NAME,
   ERR_SYMBOL_ID_SYNTAX,
+  REGEXP_DOM_ID,
+  REGEXP_SYMBOL_ID,
   SVG_DOM_ID,
   VIRTUAL_NAMES,
   VIRTUAL_NAMES_URL,
@@ -341,21 +343,20 @@ function validateOption(opt: Options) {
   if (!opt.iconDirs || opt.iconDirs.length === 0) {
     throw new Error(ERR_ICON_DIRS_REQUIRED)
   }
-  const idSyntax = /^[a-zA-Z][a-zA-Z0-9\-_]*$/
   if (opt.symbolId) {
     // symbolId must contain [name]
     if (!opt.symbolId.includes('[name]')) {
       throw new Error(ERR_SYMBOL_ID_NO_NAME)
     } else {
-      // symbolId must comply with the syntax, refer: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id#syntax
+      // symbolId must be a valid ASCII letter, number, underline, hyphen, and starting with a letter, then cannot contain consecutive hyphens
       const clearSymbolId = opt.symbolId.replaceAll(/\[name]/g, '').replaceAll(/\[dir]/g, '')
-      if (!idSyntax.test(clearSymbolId)) {
+      if (!REGEXP_SYMBOL_ID.test(clearSymbolId)) {
         throw new Error(ERR_SYMBOL_ID_SYNTAX)
       }
     }
   }
-  // customDomId must comply with the syntax, refer: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id#syntax
-  if (opt.customDomId && !idSyntax.test(opt.customDomId)) {
+  // customDomId must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline
+  if (opt.customDomId && !REGEXP_DOM_ID.test(opt.customDomId)) {
     throw new Error(ERR_CUSTOM_DOM_ID_SYNTAX)
   }
 }

@@ -1,3 +1,14 @@
+## [1.2.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.2.1...v1.0.0) (2025-03-12)
+
+### Bug Fixes
+
+- fix: incorrect removal of `width` and `height` issues,
+  close [#2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/2) ([c82da26](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/c82da26a95685ad9c98f3497f99a88077cf44db7))
+
+---
+
+- chore: adjust playground style ([da0b0f9](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/da0b0f96e05def158cc89222788ea58501f6d5bd))
+
 ## [1.2.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.2.1...v1.2.0) (2025-03-12)
 
 - chore: adjust regexp for DOM id ([ee72931](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/ee729315cffa73e9aa938aa6040105c09a13fe43))

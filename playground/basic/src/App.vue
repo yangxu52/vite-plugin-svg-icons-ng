@@ -29,5 +29,8 @@ import SvgIcon from './components/SvgIcon.vue'
   grid-template-columns: repeat(8, 1fr);
   row-gap: 1rem;
   column-gap: 1rem;
+  svg {
+    font-size: 8rem;
+  }
 }
 </style>

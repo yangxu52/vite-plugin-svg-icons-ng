@@ -9,7 +9,7 @@ describe('Test ValidateOption', () => {
     const options = { ...template }
 
     expect(() => {
-      __TEST__.validateOption(options)
+      __TEST__.validate(options)
     }).not.toThrow()
   })
 
@@ -18,7 +18,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, iconDirs: [] }
 
       expect(() => {
-        __TEST__.validateOption(options)
+        __TEST__.validate(options)
       }).toThrowError(ERR_ICON_DIRS_REQUIRED)
     })
   })
@@ -27,7 +27,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, symbolId: 'icon-[dir]' }
 
       expect(() => {
-        __TEST__.validateOption(options)
+        __TEST__.validate(options)
       }).toThrowError(ERR_SYMBOL_ID_NO_NAME)
     })
 
@@ -35,7 +35,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, symbolId: '0-[name]' }
 
       expect(() => {
-        __TEST__.validateOption(options)
+        __TEST__.validate(options)
       }).toThrowError(ERR_SYMBOL_ID_SYNTAX)
     })
   })
@@ -45,7 +45,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, customDomId: '0-[name]' }
 
       expect(() => {
-        __TEST__.validateOption(options)
+        __TEST__.validate(options)
       }).toThrowError(ERR_CUSTOM_DOM_ID_SYNTAX)
     })
   })

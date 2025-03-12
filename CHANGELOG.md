@@ -1,4 +1,8 @@
-## [1.2.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.1.1...v1.0.0) (2025-03-11)
+## [1.2.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.2.1...v1.2.0) (2025-03-12)
+
+- chore: adjust regexp for DOM id ([ee72931](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/ee729315cffa73e9aa938aa6040105c09a13fe43))
+
+## [1.2.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.2.0...v1.1.1) (2025-03-11)
 
 **Little Breaking Change:** the logic of generate symbol id logic is changed, and then add user option validation, but it should not affect normal users.
 

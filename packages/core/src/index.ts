@@ -255,9 +255,9 @@ function unifySizeToViewBox(svg: HTMLElement) {
   const { viewBox, width, height } = svg.attributes
   if (!viewBox && width && height) {
     svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
-    svg.removeAttribute('width')
-    svg.removeAttribute('height')
   }
+  svg.removeAttribute('width')
+  svg.removeAttribute('height')
 }
 
 function prefixInternalId(svg: HTMLElement, id: string) {

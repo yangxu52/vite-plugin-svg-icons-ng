@@ -7,7 +7,7 @@ import { createHash } from 'crypto'
 import fs from 'fs-extra'
 import path from 'pathe'
 import Debug from 'debug'
-import { ERR_SVGO_EXCEPTION, SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL, XMLNS, XMLNS_LINK } from './constants'
+import { ERR_SVGO_EXCEPTION, SPRITE_TEMPLATE, SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL } from './constants'
 import { convertSvgToSymbol } from './convert'
 import { validate } from './validate'
 
@@ -49,12 +49,11 @@ function createSvgIconsPlugin(opt: Options): Plugin {
       if (ssr && !isBuild && (isVirtualRegister || isVirtualNames)) {
         return `export default {}`
       }
-      const { sprite, ids } = await createModuleCode(cache, options)
       if (isVirtualRegister) {
-        return sprite
+        return await createSpriteModule(cache, options)
       }
       if (isVirtualNames) {
-        return ids
+        return await createIdsModule(cache, options)
       }
     },
     configureServer: ({ middlewares }) => {
@@ -65,8 +64,13 @@ function createSvgIconsPlugin(opt: Options): Plugin {
           res.setHeader('Access-Control-Allow-Origin', '*')
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
-          const { sprite, ids } = await createModuleCode(cache, options)
-          const content = url.endsWith(VIRTUAL_REGISTER_URL) ? sprite : ids
+          let content = ''
+          if (url.endsWith(VIRTUAL_REGISTER_URL)) {
+            content = await createSpriteModule(cache, options)
+          }
+          if (url.endsWith(VIRTUAL_NAMES_URL)) {
+            content = await createIdsModule(cache, options)
+          }
           res.setHeader('Etag', getWeakETag(content))
           res.statusCode = 200
           res.end(content)
@@ -78,37 +82,14 @@ function createSvgIconsPlugin(opt: Options): Plugin {
   }
 }
 
-async function createModuleCode(cache: Map<string, CacheEntry>, options: Required<Options>) {
+async function createIdsModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
   const list = await compilerIcons(cache, options)
-  const ids = list.map((item) => item.symbolId)
-  const symbols = list.map((item) => item.symbol).join('')
-  const code = `if (typeof window !== 'undefined') {
-  function load() {
-    var body = document.body;
-    var el = document.getElementById('${options.customDomId}');
-    if (!el) {
-      el = document.createElementNS('${XMLNS}', 'svg');
-      el.style.position = 'absolute';
-      el.style.width = '0';
-      el.style.height = '0';
-      el.id = '${options.customDomId}';
-      el.setAttribute('xmlns', '${XMLNS}');
-      el.setAttribute('xmlns:link', '${XMLNS_LINK}');
-      el.setAttribute('aria-hidden', true);
-    }
-    el.innerHTML = ${JSON.stringify(symbols)};
-    ${options.inject === 'body-last' ? 'body.insertBefore(el, body.firstChild);' : 'body.insertBefore(el, body.lastChild);'}
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', load);
-  } else {
-    load();
-  }
-}`
-  return {
-    sprite: `${code}\nexport default {}`,
-    ids: `export default ${JSON.stringify(ids)}`,
-  }
+  return `export default ${JSON.stringify(list.map((item) => item.symbolId))}`
+}
+
+async function createSpriteModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
+  const list = await compilerIcons(cache, options)
+  return SPRITE_TEMPLATE(list.map((item) => item.symbol).join(''), options.customDomId, options.inject)
 }
 
 async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<Options>) {

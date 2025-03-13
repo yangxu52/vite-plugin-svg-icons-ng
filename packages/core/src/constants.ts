@@ -15,3 +15,28 @@ export const ERR_SYMBOL_ID_NO_NAME = `[${PLUGIN_NAME}]: 'symbolId' must contain 
 export const ERR_SYMBOL_ID_SYNTAX = `[${PLUGIN_NAME}]: 'symbolId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter! (Except for placeholder symbols)`
 export const ERR_CUSTOM_DOM_ID_SYNTAX = `[${PLUGIN_NAME}]: 'customDomId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline!`
 export const ERR_SVGO_EXCEPTION = (file: string, error: unknown) => `[${PLUGIN_NAME}]: SVGO optimize failure, skip this file (${file}), caused by:\n${error}`
+
+export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'body-first' | 'body-last') => `if (typeof window !== 'undefined') {
+  function load() {
+    var body = document.body;
+    var el = document.getElementById('${customDomId}');
+    if (!el) {
+      el = document.createElementNS('${XMLNS}', 'svg');
+      el.style.position = 'absolute';
+      el.style.width = '0';
+      el.style.height = '0';
+      el.id = '${customDomId}';
+      el.setAttribute('xmlns', '${XMLNS}');
+      el.setAttribute('xmlns:link', '${XMLNS_LINK}');
+      el.setAttribute('aria-hidden', true);
+    }
+    el.innerHTML = ${JSON.stringify(symbols)};
+    ${inject === 'body-last' ? 'body.insertBefore(el, body.firstChild);' : 'body.insertBefore(el, body.lastChild);'}
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', load);
+  } else {
+    load();
+  }
+}
+export default {}`

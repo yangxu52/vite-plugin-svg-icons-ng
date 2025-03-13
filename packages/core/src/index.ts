@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { optimize } from 'svgo'
-import type { FileStats, Options } from './typing'
+import type { CacheEntry, Options, SymbolEntry } from './typing'
 import fg from 'fast-glob'
 import { createHash } from 'crypto'
 import fs from 'fs-extra'
@@ -18,7 +18,7 @@ const debug = Debug.debug('vite-plugin-svg-icons-ng')
 function createSvgIconsPlugin(opt: Options): Plugin {
   validate(opt)
 
-  const cache = new Map<string, FileStats>()
+  const cache = new Map<string, CacheEntry>()
 
   let isBuild = false
   const options = {
@@ -49,12 +49,12 @@ function createSvgIconsPlugin(opt: Options): Plugin {
       if (ssr && !isBuild && (isVirtualRegister || isVirtualNames)) {
         return `export default {}`
       }
-      const { code, idSet } = await createModuleCode(cache, options)
+      const { sprite, ids } = await createModuleCode(cache, options)
       if (isVirtualRegister) {
-        return code
+        return sprite
       }
       if (isVirtualNames) {
-        return idSet
+        return ids
       }
     },
     configureServer: ({ middlewares }) => {
@@ -65,8 +65,8 @@ function createSvgIconsPlugin(opt: Options): Plugin {
           res.setHeader('Access-Control-Allow-Origin', '*')
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
-          const { code, idSet } = await createModuleCode(cache, options)
-          const content = url.endsWith(VIRTUAL_REGISTER_URL) ? code : idSet
+          const { sprite, ids } = await createModuleCode(cache, options)
+          const content = url.endsWith(VIRTUAL_REGISTER_URL) ? sprite : ids
           res.setHeader('Etag', getWeakETag(content))
           res.statusCode = 200
           res.end(content)
@@ -78,9 +78,10 @@ function createSvgIconsPlugin(opt: Options): Plugin {
   }
 }
 
-async function createModuleCode(cache: Map<string, FileStats>, options: Required<Options>) {
-  const { insertHtml, idSet } = await compilerIcons(cache, options)
-
+async function createModuleCode(cache: Map<string, CacheEntry>, options: Required<Options>) {
+  const list = await compilerIcons(cache, options)
+  const ids = list.map((item) => item.symbolId)
+  const symbols = list.map((item) => item.symbol).join('')
   const code = `if (typeof window !== 'undefined') {
   function load() {
     var body = document.body;
@@ -95,7 +96,7 @@ async function createModuleCode(cache: Map<string, FileStats>, options: Required
       el.setAttribute('xmlns:link', '${XMLNS_LINK}');
       el.setAttribute('aria-hidden', true);
     }
-    el.innerHTML = ${JSON.stringify(insertHtml)};
+    el.innerHTML = ${JSON.stringify(symbols)};
     ${options.inject === 'body-last' ? 'body.insertBefore(el, body.firstChild);' : 'body.insertBefore(el, body.lastChild);'}
   }
   if (document.readyState === 'loading') {
@@ -105,55 +106,30 @@ async function createModuleCode(cache: Map<string, FileStats>, options: Required
   }
 }`
   return {
-    code: `${code}\nexport default {}`,
-    idSet: `export default ${JSON.stringify(Array.from(idSet))}`,
+    sprite: `${code}\nexport default {}`,
+    ids: `export default ${JSON.stringify(ids)}`,
   }
 }
 
-async function compilerIcons(cache: Map<string, FileStats>, options: Required<Options>) {
-  let insertHtml = ''
-  const idSet = new Set<string>()
-
+async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<Options>) {
+  const result: Array<SymbolEntry> = []
   for (const dir of options.iconDirs) {
     const entryList = fg.sync('**/*.svg', { cwd: dir, stats: true, absolute: true })
-
     for (const entry of entryList) {
       const { path, stats: { mtimeMs } = {} } = entry
-      const cacheStat = cache.get(path)
-      let svgSymbol
-      let symbolId
-      let relativeName = ''
-
-      const getSymbol = async () => {
-        relativeName = normalizePath(path).replace(normalizePath(dir + '/'), '')
-        symbolId = generateSymbolId(relativeName, options)
-        svgSymbol = await processIcon(path, symbolId, options)
-        idSet.add(symbolId)
-      }
-
-      if (cacheStat) {
-        if (cacheStat.mtimeMs !== mtimeMs) {
-          await getSymbol()
-        } else {
-          svgSymbol = cacheStat.code
-          symbolId = cacheStat.symbolId
-          if (symbolId) idSet.add(symbolId)
-        }
+      const cached = cache.get(path)
+      if (cached && cached.mtimeMs === mtimeMs) {
+        result.push(cached.entry)
       } else {
-        await getSymbol()
+        const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
+        const symbolId = generateSymbolId(relativePath, options)
+        const symbol = await processIcon(path, symbolId, options)
+        cache.set(path, { mtimeMs, entry: { symbolId, symbol } })
+        result.push({ symbolId, symbol })
       }
-
-      if (symbolId)
-        cache.set(path, {
-          mtimeMs,
-          relativeName,
-          code: svgSymbol,
-          symbolId,
-        })
-      insertHtml += `${svgSymbol || ''}`
     }
   }
-  return { insertHtml, idSet }
+  return result
 }
 
 async function processIcon(file: string, symbolId: string, options: Required<Options>): Promise<string> {
@@ -170,13 +146,10 @@ async function processIcon(file: string, symbolId: string, options: Required<Opt
   return convertSvgToSymbol(symbolId, content)
 }
 
-function generateSymbolId(name: string, options: Required<Options>) {
+function generateSymbolId(relativePath: string, options: Required<Options>) {
   const { symbolId } = options
-
-  const { dirName, baseName } = parseDirName(name)
-
+  const { dirName, baseName } = parseDirName(relativePath)
   const id = symbolId.replace(/\[dir]/g, dirName).replace(/\[name]/g, baseName)
-
   return id.replace(/-+/g, '-').replace(/(^-|-$)/g, '')
 }
 

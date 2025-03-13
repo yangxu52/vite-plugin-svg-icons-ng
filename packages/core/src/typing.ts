@@ -33,21 +33,12 @@ export interface Options {
   customDomId?: string
 }
 
-export interface FileStats {
-  /**
-   * file relative name
-   */
-  relativeName: string
-  /**
-   * modified time(ms)
-   */
+export type SymbolEntry = {
+  symbolId: string
+  symbol: string
+}
+
+export interface CacheEntry {
   mtimeMs?: number
-  /**
-   * file content
-   */
-  code: string
-  /**
-   * symbol id
-   */
-  symbolId?: string
+  entry: SymbolEntry
 }

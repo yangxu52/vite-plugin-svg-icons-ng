@@ -32,7 +32,7 @@ export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'b
       el.setAttribute('aria-hidden', true);
     }
     el.innerHTML = ${JSON.stringify(symbols)};
-    ${inject === 'body-last' ? 'body.insertBefore(el, body.firstChild);' : 'body.insertBefore(el, body.lastChild);'}
+    body.insertBefore(el, ${inject === 'body-first' ? 'body.firstChild' : null});
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', load);

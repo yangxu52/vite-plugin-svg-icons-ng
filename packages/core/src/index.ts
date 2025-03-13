@@ -6,39 +6,24 @@ import fg from 'fast-glob'
 import { createHash } from 'crypto'
 import fs from 'fs-extra'
 import path from 'pathe'
-import Debug from 'debug'
 import { ERR_SVGO_EXCEPTION, SPRITE_TEMPLATE, SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL } from './constants'
 import { convertSvgToSymbol } from './convert'
 import { validate } from './validate'
 
 export * from './typing'
 
-const debug = Debug.debug('vite-plugin-svg-icons-ng')
-
-function createSvgIconsPlugin(opt: Options): Plugin {
-  validate(opt)
-
-  const cache = new Map<string, CacheEntry>()
-
+function createSvgIconsPlugin(userOptions: Options): Plugin {
+  validate(userOptions)
+  const options = mergeOptions(userOptions)
   let isBuild = false
-  const options = {
-    symbolId: 'icon-[dir]-[name]',
-    svgoOptions: {},
-    inject: 'body-last',
-    customDomId: SVG_DOM_ID,
-    ...opt,
-  } as Required<Options>
-
-  debug('plugin options:', options)
-
+  const cache = new Map<string, CacheEntry>()
   return {
     name: 'vite:svg-icons',
     configResolved(resolvedConfig) {
       isBuild = resolvedConfig.command === 'build'
-      debug('resolvedConfig:', resolvedConfig)
     },
     resolveId(id) {
-      return [VIRTUAL_REGISTER, VIRTUAL_NAMES].includes(id) ? '\0' + id : undefined
+      return [VIRTUAL_REGISTER, VIRTUAL_NAMES].includes(id) ? '\0' + id : null
     },
     load: async (id, ssr) => {
       if (!isBuild && !ssr) return null
@@ -84,12 +69,12 @@ function createSvgIconsPlugin(opt: Options): Plugin {
 
 async function createIdsModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
   const list = await compilerIcons(cache, options)
-  return `export default ${JSON.stringify(list.map((item) => item.symbolId))}`
+  return `export default ${JSON.stringify(list.map((i) => i.symbolId))}`
 }
 
 async function createSpriteModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
   const list = await compilerIcons(cache, options)
-  return SPRITE_TEMPLATE(list.map((item) => item.symbol).join(''), options.customDomId, options.inject)
+  return SPRITE_TEMPLATE(list.map((i) => i.symbol).join(''), options.customDomId, options.inject)
 }
 
 async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<Options>) {
@@ -114,17 +99,17 @@ async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<O
 }
 
 async function processIcon(file: string, symbolId: string, options: Required<Options>): Promise<string> {
-  let content = await fs.promises.readFile(file, 'utf-8')
+  let svg = await fs.promises.readFile(file, 'utf-8')
   if (options.svgoOptions) {
     try {
-      content = optimize(content, options.svgoOptions).data
+      svg = optimize(svg, options.svgoOptions).data
     } catch (error) {
       console.warn(ERR_SVGO_EXCEPTION(file, error))
     }
   }
   // fix cannot change svg color  by  parent node problem
-  content = content.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
-  return convertSvgToSymbol(symbolId, content)
+  svg = svg.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
+  return convertSvgToSymbol(symbolId, svg)
 }
 
 function generateSymbolId(relativePath: string, options: Required<Options>) {
@@ -152,6 +137,16 @@ function getWeakETag(str: string) {
   return str.length === 0
     ? '"W/0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
     : `W/${Buffer.byteLength(str, 'utf8')}-${createHash('sha1').update(str, 'utf8').digest('base64').substring(0, 27)}`
+}
+
+function mergeOptions(userOptions: Options): Required<Options> {
+  return {
+    symbolId: 'icon-[dir]-[name]',
+    svgoOptions: {},
+    inject: 'body-last',
+    customDomId: SVG_DOM_ID,
+    ...userOptions,
+  }
 }
 
 const __TEST__ = { generateSymbolId, parseDirName, validate }

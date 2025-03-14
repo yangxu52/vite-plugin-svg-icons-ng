@@ -2,6 +2,7 @@ import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { optimize } from 'svgo'
 import type { CacheEntry, Options, SymbolEntry } from './typing'
+import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import { createHash } from 'crypto'
 import fs from 'fs-extra'
@@ -78,24 +79,32 @@ async function createSpriteModule(cache: Map<string, CacheEntry>, options: Requi
 }
 
 async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<Options>) {
-  const result: Array<SymbolEntry> = []
-  for (const dir of options.iconDirs) {
-    const entryList = fg.sync('**/*.svg', { cwd: dir, stats: true, absolute: true })
-    for (const entry of entryList) {
-      const { path, stats: { mtimeMs } = {} } = entry
-      const cached = cache.get(path)
-      if (cached && cached.mtimeMs === mtimeMs) {
-        result.push(cached.entry)
-      } else {
-        const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
-        const symbolId = generateSymbolId(relativePath, options)
-        const symbol = await processIcon(path, symbolId, options)
-        cache.set(path, { mtimeMs, entry: { symbolId, symbol } })
-        result.push({ symbolId, symbol })
-      }
-    }
+  const dirPromises = options.iconDirs.map(async (dir) => {
+    const entryList = await fg.glob('**/*.svg', { cwd: dir, stats: true, absolute: true })
+    const entryPromises = entryList.map(async (e) => {
+      return await process(e, cache, dir, options)
+    })
+    return (await Promise.all(entryPromises)).filter(Boolean) as SymbolEntry[]
+  })
+  return (await Promise.all(dirPromises)).flat()
+}
+
+async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, options: Required<Options>) {
+  const { path, stats: { mtimeMs } = {} } = e
+  const cached = cache.get(path)
+  if (cached && cached.mtimeMs === mtimeMs) {
+    return cached.entry
   }
-  return result
+  try {
+    const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
+    const symbolId = generateSymbolId(relativePath, options)
+    const symbol = await processIcon(path, symbolId, options)
+    const entry = { symbolId, symbol }
+    cache.set(path, { mtimeMs, entry })
+    return entry
+  } catch {
+    return null
+  }
 }
 
 async function processIcon(file: string, symbolId: string, options: Required<Options>): Promise<string> {

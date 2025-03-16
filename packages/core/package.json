@@ -53,7 +53,7 @@
   "bugs": {
     "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"
   },
-  "homepage": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/tree/master/#readme",
+  "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
   "dependencies": {
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.0",

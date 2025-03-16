@@ -2,7 +2,7 @@ node_modules
 .DS_Store
 dist
 .cache
-
+/docs/.vitepress/cache
 test/upload-server/static
 
 .local

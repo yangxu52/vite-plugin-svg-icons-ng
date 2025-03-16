@@ -11,6 +11,7 @@
     "postinstall": "pnpm --filter ./packages/core run dev",
     "dev": "pnpm -r --filter ./playground/* run dev",
     "build": "pnpm --filter ./packages/core run build",
+    "build:docs": "pnpm --filter ./docs run docs:build",
     "build:playground": "pnpm -r --filter ./playground/* run build",
     "test": "pnpm build &&pnpm test-unit && pnpm test-build",
     "test-unit": "vitest run",

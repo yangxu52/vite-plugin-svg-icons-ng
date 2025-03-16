@@ -1,7 +1,23 @@
-export const VIRTUAL_REGISTER = 'virtual:svg-icons-register'
-export const VIRTUAL_NAMES = 'virtual:svg-icons-names'
+/**
+ * @deprecated
+ */
+export const VIRTUAL_REGISTER_DEPRECATED = 'virtual:svg-icons-register'
+export const VIRTUAL_REGISTER = 'virtual:svg-icons/register'
+/**
+ * @deprecated
+ */
+export const VIRTUAL_NAMES_DEPRECATED = 'virtual:svg-icons-names'
+export const VIRTUAL_IDS = 'virtual:svg-icons/ids'
+/**
+ * @deprecated
+ */
+export const VIRTUAL_REGISTER_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_REGISTER_DEPRECATED}`
 export const VIRTUAL_REGISTER_URL = `/@id/__x00__${VIRTUAL_REGISTER}`
-export const VIRTUAL_NAMES_URL = `/@id/__x00__${VIRTUAL_NAMES}`
+/**
+ * @deprecated
+ */
+export const VIRTUAL_NAMES_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_NAMES_DEPRECATED}`
+export const VIRTUAL_IDS_URL = `/@id/__x00__${VIRTUAL_IDS}`
 export const SVG_DOM_ID = '__svg__icons__dom__'
 export const XMLNS = 'http://www.w3.org/2000/svg'
 export const XMLNS_LINK = 'http://www.w3.org/1999/xlink'

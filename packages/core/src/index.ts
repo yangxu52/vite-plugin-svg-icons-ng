@@ -7,7 +7,19 @@ import fg from 'fast-glob'
 import { createHash } from 'crypto'
 import fs from 'fs-extra'
 import path from 'pathe'
-import { ERR_SVGO_EXCEPTION, SPRITE_TEMPLATE, SVG_DOM_ID, VIRTUAL_NAMES, VIRTUAL_NAMES_URL, VIRTUAL_REGISTER, VIRTUAL_REGISTER_URL } from './constants'
+import {
+  ERR_SVGO_EXCEPTION,
+  SPRITE_TEMPLATE,
+  SVG_DOM_ID,
+  VIRTUAL_IDS,
+  VIRTUAL_IDS_URL,
+  VIRTUAL_NAMES_DEPRECATED,
+  VIRTUAL_NAMES_URL_DEPRECATED,
+  VIRTUAL_REGISTER,
+  VIRTUAL_REGISTER_DEPRECATED,
+  VIRTUAL_REGISTER_URL,
+  VIRTUAL_REGISTER_URL_DEPRECATED,
+} from './constants'
 import { convertSvgToSymbol } from './convert'
 import { validate } from './validate'
 
@@ -24,13 +36,13 @@ function createSvgIconsPlugin(userOptions: Options): Plugin {
       isBuild = resolvedConfig.command === 'build'
     },
     resolveId(id) {
-      return [VIRTUAL_REGISTER, VIRTUAL_NAMES].includes(id) ? '\0' + id : null
+      return [VIRTUAL_REGISTER_DEPRECATED, VIRTUAL_NAMES_DEPRECATED, VIRTUAL_REGISTER, VIRTUAL_IDS].includes(id) ? '\0' + id : null
     },
     load: async (id, ssr) => {
       if (!isBuild && !ssr) return null
 
-      const isVirtualRegister = id === '\0' + VIRTUAL_REGISTER
-      const isVirtualNames = id === '\0' + VIRTUAL_NAMES
+      const isVirtualRegister = id === '\0' + VIRTUAL_REGISTER_DEPRECATED || id === '\0' + VIRTUAL_REGISTER
+      const isVirtualNames = id === '\0' + VIRTUAL_NAMES_DEPRECATED || id === '\0' + VIRTUAL_IDS
 
       if (ssr && !isBuild && (isVirtualRegister || isVirtualNames)) {
         return `export default {}`
@@ -46,15 +58,20 @@ function createSvgIconsPlugin(userOptions: Options): Plugin {
       //TODO: use the use(route, handle) replacement
       middlewares.use(async (req, res, next) => {
         const url = normalizePath(req.url!)
-        if (url.endsWith(VIRTUAL_REGISTER_URL) || url.endsWith(VIRTUAL_NAMES_URL)) {
+        if (
+          url.endsWith(VIRTUAL_REGISTER_URL_DEPRECATED) ||
+          url.endsWith(VIRTUAL_NAMES_URL_DEPRECATED) ||
+          url.endsWith(VIRTUAL_REGISTER_URL) ||
+          url.endsWith(VIRTUAL_IDS_URL)
+        ) {
           res.setHeader('Access-Control-Allow-Origin', '*')
           res.setHeader('Content-Type', 'application/javascript')
           res.setHeader('Cache-Control', 'no-cache')
           let content = ''
-          if (url.endsWith(VIRTUAL_REGISTER_URL)) {
+          if (url.endsWith(VIRTUAL_REGISTER_URL_DEPRECATED) || url.endsWith(VIRTUAL_REGISTER_URL)) {
             content = await createSpriteModule(cache, options)
           }
-          if (url.endsWith(VIRTUAL_NAMES_URL)) {
+          if (url.endsWith(VIRTUAL_NAMES_URL_DEPRECATED) || url.endsWith(VIRTUAL_IDS_URL)) {
             content = await createIdsModule(cache, options)
           }
           res.setHeader('Etag', getWeakETag(content))

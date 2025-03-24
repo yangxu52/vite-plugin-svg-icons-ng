@@ -1,4 +1,9 @@
-# [1.3.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.0...v1.2.2) (2025-03-16)
+## [1.3.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.1...v1.3.0) (2025-03-24)
+
+- docs: fix component reference ([55a62f4](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/55a62f4))
+- chore: add LICENSE.md and README.md to packages/core ([0422b50](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/0422b50))
+
+## [1.3.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.0...v1.2.2) (2025-03-16)
 
 ### Features
 

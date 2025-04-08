@@ -135,8 +135,10 @@ async function processIcon(file: string, symbolId: string, options: Required<Opt
     }
   }
   // stoke override
-  if (options.strokeOverride) {
+  if (options.strokeOverride === true) {
     svg = svg.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
+  } else if (options.strokeOverride !== null && typeof options.strokeOverride === 'object' && options.strokeOverride.color) {
+    svg = svg.replace(/\bstroke="[^"]*"/gi, `stroke="${options.strokeOverride.color}"`)
   }
   return convertSvgToSymbol(symbolId, svg)
 }

@@ -2,6 +2,7 @@ import type { Config } from 'svgo'
 
 export type SvgoConfig = Omit<Config, 'path'> | false
 export type InjectMode = 'body-first' | 'body-last'
+export type strokeOverrideConfig = boolean | { color: string }
 
 export interface Options {
   /**
@@ -31,11 +32,11 @@ export interface Options {
    */
   customDomId?: string
   /**
-   * override `stroke` attribute as `currentColor`
-   * `false` to disable, `true` to override as `currentColor`
+   * override `stroke` attribute
+   * `false` to disable, `true` to override as `currentColor`, or an object `{ color: '#fff' }`
    * @default: false
    */
-  strokeOverride?: boolean
+  strokeOverride?: strokeOverrideConfig
 }
 
 export type SymbolEntry = {

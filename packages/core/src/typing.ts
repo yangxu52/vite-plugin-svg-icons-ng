@@ -31,6 +31,11 @@ export interface Options {
    * default: '__svg__icons__dom__'
    */
   customDomId?: string
+  /**
+   * Override all strokes in svg as currentColor
+   * @default: true
+   */
+  reWriteStroke?: boolean
 }
 
 export type SymbolEntry = {

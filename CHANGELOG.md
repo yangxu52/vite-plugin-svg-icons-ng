@@ -1,3 +1,13 @@
+## [1.3.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.2...v1.3.1) (2025-04-08)
+
+### Features
+
+- feat: custom stroke overwrite ([68b5102](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/68b5102d3284950e9c690032ff0dfcadaeebf7b4))
+
+### Bug Fixes
+
+- fix: overwrite stroke issue ([28a25d2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/28a25d2e45923d2f148b286fe67f08e087e9711e))
+
 ## [1.3.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.1...v1.3.0) (2025-03-24)
 
 - docs: fix component reference ([55a62f4](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/55a62f4))

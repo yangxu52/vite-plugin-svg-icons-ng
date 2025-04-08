@@ -5,37 +5,37 @@ export type InjectMode = 'body-first' | 'body-last'
 
 export interface Options {
   /**
-   * # icons store directories
+   * icons store directories
    * all svg files in these  will be converted to svg sprite.
-   *
    */
   iconDirs: string[]
   /**
    * icon name format
-   * default: icon-[dir]-[name]
+   * @default: icon-[dir]-[name]
    */
   symbolId?: string
   /**
    * SVGO configuration, used to optimize svg
-   * default：{}
+   * @default：{}
    */
   svgoOptions?: SvgoConfig
   /**
    * icon format
-   * default: 'body-last'
+   * @default: 'body-last'
    */
   inject?: InjectMode
 
   /**
    * custom dom id
-   * default: '__svg__icons__dom__'
+   * @default: '__svg__icons__dom__'
    */
   customDomId?: string
   /**
-   * Override all strokes in svg as currentColor
-   * @default: true
+   * override `stroke` attribute as `currentColor`
+   * `false` to disable, `true` to override as `currentColor`
+   * @default: false
    */
-  reWriteStroke?: boolean
+  strokeOverride?: boolean
 }
 
 export type SymbolEntry = {

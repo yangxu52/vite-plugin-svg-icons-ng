@@ -126,6 +126,7 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
 
 async function processIcon(file: string, symbolId: string, options: Required<Options>): Promise<string> {
   let svg = await fs.promises.readFile(file, 'utf-8')
+  // svgo optimize
   if (options.svgoOptions) {
     try {
       svg = optimize(svg, options.svgoOptions).data
@@ -133,9 +134,9 @@ async function processIcon(file: string, symbolId: string, options: Required<Opt
       console.warn(ERR_SVGO_EXCEPTION(file, error))
     }
   }
-  // fix cannot change svg color  by  parent node problem
-  if (options.reWriteStroke) {
-    svg = svg.replace(/stroke="[^"]*"/g, 'stroke="currentColor"')
+  // stoke override
+  if (options.strokeOverride) {
+    svg = svg.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
   }
   return convertSvgToSymbol(symbolId, svg)
 }
@@ -173,7 +174,7 @@ function mergeOptions(userOptions: Options): Required<Options> {
     svgoOptions: {},
     inject: 'body-last',
     customDomId: SVG_DOM_ID,
-    reWriteStroke: true,
+    strokeOverride: false,
     ...userOptions,
   }
 }

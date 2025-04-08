@@ -83,3 +83,10 @@ SVG精灵图的插入DOM的位置。
 - default: `__svg__icons__dom__`
 
 自定义SVG精灵图的插入DOM节点的ID属性。
+
+## strokeOverride
+
+- 类型: `boolean | { color: string }`
+- default: `false`
+
+覆盖 `stroke` 属性，设置 `false` 禁用该功能，设置 `true` 为 `currentColor` 或者设置对象来自定义颜色。

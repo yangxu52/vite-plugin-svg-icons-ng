@@ -84,3 +84,10 @@ The position of the SVG sprite inject into DOM.
 - default: `__svg__icons__dom__`
 
 Customize the `id` attribute of the SVG sprite DOM.
+
+## strokeOverride
+
+- type: `boolean | { color: string }`
+- default: `false`
+
+Override `stroke` attribute, set `false` to disable it, set `true` to use `currentColor`, or set an object to specify a color.

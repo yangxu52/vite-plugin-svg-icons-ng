@@ -134,7 +134,9 @@ async function processIcon(file: string, symbolId: string, options: Required<Opt
     }
   }
   // fix cannot change svg color  by  parent node problem
-  svg = svg.replace(/stroke="[a-zA-Z#0-9]*"/, 'stroke="currentColor"')
+  if (options.reWriteStroke) {
+    svg = svg.replace(/stroke="[^"]*"/g, 'stroke="currentColor"')
+  }
   return convertSvgToSymbol(symbolId, svg)
 }
 
@@ -171,6 +173,7 @@ function mergeOptions(userOptions: Options): Required<Options> {
     svgoOptions: {},
     inject: 'body-last',
     customDomId: SVG_DOM_ID,
+    reWriteStroke: true,
     ...userOptions,
   }
 }

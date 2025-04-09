@@ -3,3 +3,5 @@ packages:
   - packages/**/__tests__/**
   - playground/*
   - docs
+onlyBuiltDependencies:
+  - esbuild

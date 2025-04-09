@@ -16,8 +16,9 @@
     "test": "pnpm build &&pnpm test-unit && pnpm test-build",
     "test-unit": "vitest run",
     "test-build": "pnpm --filter ./playground/basic run build",
-    "lint": "eslint --cache .",
-    "format": "prettier --write --cache .",
+    "lint": "eslint --fix .",
+    "format": "prettier --write .",
+    "tsc": "tsc --noEmit --skipLibCheck",
     "log": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "keywords": [
@@ -61,10 +62,12 @@
       "prettier --write --ignore-unknown"
     ],
     "packages/*/{src,types}/**/*.ts": [
-      "eslint --ext .ts"
+      "eslint",
+      "tsc --noEmit --skipLibCheck"
     ],
     "packages/**/*.d.ts": [
-      "eslint --ext .ts"
+      "eslint",
+      "tsc --noEmit --skipLibCheck"
     ]
   }
 }

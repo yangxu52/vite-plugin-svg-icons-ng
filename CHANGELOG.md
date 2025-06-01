@@ -1,3 +1,8 @@
+## [1.4.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.4.1...v1.4.0) (2025-06-01)
+
+- refactor: optimize the injected code snippets ([b143e59](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b143e5958eacc386e35f521e28449518190d8467))
+- chore: update engines requirements ([9da2000](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9da20007828a3223c1bd3280d94d7fe8e84aeccd))
+
 ## [1.4.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.2...v1.3.1) (2025-04-08)
 
 ### Features

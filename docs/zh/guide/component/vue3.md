@@ -15,7 +15,7 @@ const props = defineProps({
 </script>
 <template>
   <svg class="svg-icon" aria-hidden="true">
-    <use :xlink:href="name" />
+    <use :href="`#${name}`" />
   </svg>
 </template>
 <style>
@@ -32,7 +32,7 @@ const props = defineProps({
 ```Vue [Options]
 <template>
   <svg class="svg-icon" aria-hidden="true">
-    <use :href="name" />
+    <use :href="`#${name}`" />
   </svg>
 </template>
 

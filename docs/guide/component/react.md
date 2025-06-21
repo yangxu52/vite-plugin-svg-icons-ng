@@ -8,7 +8,7 @@ Example: `/src/components/SvgIcon.jsx`
 export default function SvgIcon({ name, color, ...props }) {
   return (
     <svg {...props} aria-hidden='true'>
-      <use href={name} fill={color} />
+      <use href={`#${name}`} fill={color} />
     </svg>
   )
 }

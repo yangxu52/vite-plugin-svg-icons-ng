@@ -36,10 +36,10 @@ export const ERR_SVGO_EXCEPTION = (file: string, error: unknown) => `[${PLUGIN_N
 export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'body-first' | 'body-last') => `if (typeof window !== 'undefined') {
   (function() {
     const loadSvgSprite = function() {
-      const body = document.body;
-      const el = document.getElementById('${customDomId}');
-      if (!el) {
-        const svg = document.createElementNS('${XMLNS}', 'svg');
+      let html = ${JSON.stringify(symbols)};
+      let svg = document.getElementById('${customDomId}');
+      if (!svg) {
+        svg = document.createElementNS('${XMLNS}', 'svg');
         svg.style.position = 'absolute';
         svg.style.width = '0';
         svg.style.height = '0';
@@ -47,8 +47,16 @@ export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'b
         svg.setAttribute('xmlns', '${XMLNS}');
         svg.setAttribute('xmlns:link', '${XMLNS_LINK}');
         svg.setAttribute('aria-hidden', true);
-        svg.innerHTML = ${JSON.stringify(symbols)};
-        body.insertBefore(svg, ${inject === 'body-first' ? 'body.firstChild' : null});
+        svg.innerHTML = html;
+        document.body.insertBefore(svg, ${inject === "body-first" ? "body.firstChild" : null});
+      } else {
+        const symbols = svg.getElementsByTagName('symbol');
+        for (const symbol of symbols) {
+          if (html.includes(symbol.id)) {
+            console.error(\`[${PLUGIN_NAME}]: Duplicated symbol id: \${symbol.id}\`);
+          }
+        }
+        svg.insertAdjacentHTML('beforeend', html);
       }
     };
     if (document.readyState === 'loading') {

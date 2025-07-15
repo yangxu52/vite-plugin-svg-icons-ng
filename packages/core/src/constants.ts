@@ -52,7 +52,7 @@ export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'b
       } else {
         const symbols = svg.getElementsByTagName('symbol');
         for (const symbol of symbols) {
-          if (html.includes(symbol.id)) {
+          if (html.includes(\`id="\${symbol.id}"\`)) {
             console.error(\`[${PLUGIN_NAME}]: Duplicated symbol id: \${symbol.id}\`);
           }
         }

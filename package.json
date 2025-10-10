@@ -19,7 +19,7 @@
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "log": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "log": "conventional-changelog -p angular"
   },
   "keywords": [
     "vite",
@@ -37,19 +37,18 @@
   },
   "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
   "devDependencies": {
-    "@commitlint/cli": "^19.8.0",
-    "@commitlint/config-conventional": "^19.8.0",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "^9.24.0",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.14.0",
-    "commitizen": "^4.3.1",
-    "conventional-changelog-cli": "^5.0.0",
+    "conventional-changelog": "^7.1.1",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^16.2.3",
     "prettier": "^3.5.3",
     "typescript": "~5.7.3",
     "typescript-eslint": "^8.29.1",

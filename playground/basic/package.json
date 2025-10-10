@@ -10,13 +10,13 @@
     "test:br": "npm run build && http-server dist --cors --brotli -c-1"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "vue": "^3.5.22"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^5.2.4",
     "http-server": "^14.1.1",
-    "typescript": "~5.7.3",
-    "vite": "^6.2.5",
+    "typescript": "~5.9.3",
+    "vite": "^6.3.6",
     "vite-plugin-svg-icons-ng": "workspace:*"
   }
 }

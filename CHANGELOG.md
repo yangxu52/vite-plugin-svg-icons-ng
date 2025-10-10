@@ -1,3 +1,16 @@
+## [1.5.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.5.0...v1.4.1) (2025-10-10)
+
+### Features
+
+- feat: add non-duplicate symbol insertion when custom DOM elements exist ([1ace017](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/1ace017))
+
+---
+
+- chore: clean project ([4f1a578](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4f1a578))
+- chore: update & adjust commit lint and log ci ([54bc53f](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/54bc53f))
+- chore: update non-major dependencies ([2a11c6d](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/2a11c6d))
+- docs: fix example component props issue ([0bc9a5c](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/0bc9a5c))
+
 ## [1.4.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.4.1...v1.4.0) (2025-06-01)
 
 - refactor: optimize the injected code snippets ([b143e59](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b143e5958eacc386e35f521e28449518190d8467))

@@ -1,10 +1,10 @@
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import pluginJs from '@eslint/js'
-import tseslint from 'typescript-eslint'
+import tsEslint from 'typescript-eslint'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
-export default tseslint.config([
+export default tsEslint.config([
   {
     files: ['packages/**/*.{js,mjs,cjs,ts}'],
     languageOptions: {
@@ -13,14 +13,24 @@ export default tseslint.config([
   },
   globalIgnores(['**/dist', '**/node_modules']),
   pluginJs.configs.recommended,
-  tseslint.configs.recommended,
+  tsEslint.configs.recommended,
   eslintPluginPrettierRecommended,
   {
     rules: {
-      'no-console': 'off',
+      'no-console': 'warn',
+      'no-unused-vars': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+        },
+      ],
     },
   },
 ])

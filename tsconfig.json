@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "ESNext",
-    "target": "es2017",
-    "moduleResolution": "node",
+    "target": "es2020",
+    "moduleResolution": "bundler",
     "strict": true,
     "declaration": true,
     "noUnusedLocals": true,
@@ -11,7 +11,9 @@
     "lib": ["ESNext"],
     "sourceMap": false,
     "noEmitOnError": true,
-    "noImplicitAny": false
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
   },
   "include": ["./packages"],
   "exclude": ["**/dist", "**/node_modules", "**/test"]

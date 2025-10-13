@@ -1,3 +1,7 @@
+## 1.5.1 (2025-10-13)
+
+- fix: prefix id issues ([30a14ce](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/30a14ce))
+
 ## [1.5.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.5.0...v1.4.1) (2025-10-10)
 
 ### Features

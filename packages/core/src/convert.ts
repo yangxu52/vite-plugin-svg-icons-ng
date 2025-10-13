@@ -37,50 +37,53 @@ function unifySizeToViewBox(svg: HTMLElement) {
   svg.removeAttribute('height')
 }
 
-function prefixInternalId(svg: HTMLElement, id: string) {
+function prefixInternalId(svg: HTMLElement, prefix: string) {
   // reflect oldId -> newId
-  const idMap = new Map()
-  // rename defs id
-  for (const defs of svg.querySelectorAll('defs')) {
-    for (const child of defs.children) {
-      const oldId = child.getAttribute('id')
-      if (oldId) {
-        const newId = `${id}_${oldId}`
-        child.setAttribute('id', newId)
-        idMap.set(oldId, newId)
-        // remove units attrs, it will cause error
-        child.removeAttribute('maskUnits')
-        child.removeAttribute('patternUnits')
-        child.removeAttribute('gradientUnits')
-        child.removeAttribute('clipPathUnits')
-        child.removeAttribute('markerUnits')
-        child.removeAttribute('filterUnits')
+  const idMap = new Map<string, string>()
+
+  // prefix the id attribute value
+  svg.querySelectorAll('[id]').forEach((element) => {
+    const oldId = element.getAttribute('id')
+    if (oldId) {
+      const newId = `${prefix}_${oldId}`
+      idMap.set(oldId, newId)
+      element.setAttribute('id', newId)
+    }
+  })
+
+  // prefix the class attribute value
+  svg.querySelectorAll('[class]').forEach((element) => {
+    const oldClasses = element.getAttribute('class')?.split(/\s+/) || []
+    if (oldClasses.length > 0) {
+      const newClasses = oldClasses.map((className) => `${prefix}_${className}`)
+      element.setAttribute('class', newClasses.join(' '))
+    }
+  })
+
+  // prefix the href attribute value, and xlink:href
+  const updateHref = (element: HTMLElement, attrName: string) => {
+    const href = element.getAttribute(attrName)
+    if (href?.startsWith('#')) {
+      const refId = href.slice(1)
+      if (idMap.has(refId)) {
+        element.setAttribute(attrName, `#${idMap.get(refId)}`)
       }
     }
   }
-  // replace id reference
-  if (idMap.size > 0) {
-    for (const el of svg.querySelectorAll('*')) {
-      for (const [attrName, attrValue] of Object.entries(el.attributes)) {
-        // xlink:href || href reference, example:`<use xlink:href="#xxx">`
-        if ((attrName === 'xlink:href' || attrName === 'href') && attrValue.startsWith('#')) {
-          const refId = attrValue.slice(1)
-          if (idMap.has(refId)) {
-            el.setAttribute('xlink:href', `#${idMap.get(refId)}`)
-            el.setAttribute('href', `#${idMap.get(refId)}`)
-          }
-        }
-        // url(#xxx) reference, example: mask、clip-path
-        if (attrValue.indexOf('url(#') !== -1) {
-          const newValue = attrValue.replace(/url\(#(.*?)\)/g, (match, refId) => {
-            if (idMap.has(refId)) {
-              return `url(#${idMap.get(refId)})`
-            }
-            return match
-          })
-          el.setAttribute(attrName, newValue)
-        }
+  svg.querySelectorAll('[href], [xlink\\:href]').forEach((element) => {
+    if (element.hasAttribute('href')) updateHref(element, 'href')
+    if (element.hasAttribute('xlink:href')) updateHref(element, 'xlink:href')
+  })
+
+  // prefix the url() attribute value
+  svg.querySelectorAll('*').forEach((element) => {
+    Object.entries(element.attributes).forEach(([name, value]) => {
+      if (value.includes('url(#')) {
+        const newValue = value.replace(/url\(#([^)]+)\)/g, (match, id) => {
+          return idMap.has(id) ? `url(#${idMap.get(id)})` : match
+        })
+        element.setAttribute(name, newValue)
       }
-    }
-  }
+    })
+  })
 }

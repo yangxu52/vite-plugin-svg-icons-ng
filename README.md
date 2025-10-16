@@ -23,7 +23,7 @@ If you like this project, please give it a Star.
 - [ ] Complete concurrent processing
 - [ ] tree-shaking
 
-## Tanks
+## Thanks
 
 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons)
 

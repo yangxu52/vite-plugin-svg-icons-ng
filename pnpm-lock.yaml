@@ -116,7 +116,7 @@ importers:
         version: 6.3.6(@types/node@22.18.9)(jiti@2.6.1)(yaml@2.8.1)
       vite-plugin-svg-icons-ng:
         specifier: workspace:*
-        version: link:../../packages/core
+        version: link:../../packages/vite-plugin-svg-icons-ng
 
 packages:
   '@algolia/abtesting@1.6.0':

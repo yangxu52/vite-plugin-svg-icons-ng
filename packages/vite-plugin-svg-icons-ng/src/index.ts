@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
 import { optimize } from 'svgo'
-import type { CacheEntry, Options, SymbolEntry } from './typing'
+import type { CacheEntry, Options, SymbolEntry } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import { createHash } from 'crypto'
@@ -23,7 +23,7 @@ import {
 import { convertSvgToSymbol } from './convert'
 import { validate } from './validate'
 
-export * from './typing'
+export * from './types'
 
 function createSvgIconsPlugin(userOptions: Options): Plugin {
   validate(userOptions)

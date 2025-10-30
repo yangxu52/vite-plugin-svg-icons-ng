@@ -48,7 +48,7 @@ export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'b
         svg.setAttribute('xmlns:link', '${XMLNS_LINK}');
         svg.setAttribute('aria-hidden', true);
         svg.innerHTML = html;
-        document.body.insertBefore(svg, ${inject === "body-first" ? "body.firstChild" : null});
+        document.body.insertBefore(svg, ${inject === 'body-first' ? 'body.firstChild' : null});
       } else {
         const symbols = svg.getElementsByTagName('symbol');
         for (const symbol of symbols) {

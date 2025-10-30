@@ -7,7 +7,7 @@ import {
   REGEXP_DOM_ID,
   REGEXP_SYMBOL_ID,
 } from './constants'
-import type { Options } from './typing'
+import type { Options } from './types'
 
 export function validate(opt: Options) {
   // iconDirs is required

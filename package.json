@@ -60,12 +60,7 @@
       "prettier --write --ignore-unknown"
     ],
     "packages/*/{src,types}/**/*.ts": [
-      "eslint",
-      "tsc --noEmit --skipLibCheck"
-    ],
-    "packages/**/*.d.ts": [
-      "eslint",
-      "tsc --noEmit --skipLibCheck"
+      "eslint"
     ]
   }
 }

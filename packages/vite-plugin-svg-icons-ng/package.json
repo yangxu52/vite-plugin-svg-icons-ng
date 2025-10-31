@@ -66,6 +66,8 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.18.9"
+    "@types/node": "^22.18.9",
+    "unbuild": "^3.6.1",
+    "vitest": "^3.2.4"
   }
 }

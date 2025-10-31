@@ -16,9 +16,6 @@ importers:
       '@eslint/js':
         specifier: ^9.37.0
         version: 9.37.0
-      '@types/node':
-        specifier: ^22.18.9
-        version: 22.18.9
       conventional-changelog:
         specifier: ^7.1.1
         version: 7.1.1(conventional-commits-filter@5.0.0)
@@ -49,15 +46,6 @@ importers:
       typescript-eslint:
         specifier: ^8.46.0
         version: 8.46.0(eslint@9.37.0(jiti@2.6.1))(typescript@5.9.3)
-      unbuild:
-        specifier: ^3.6.1
-        version: 3.6.1(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
-      vite:
-        specifier: ^6.3.6
-        version: 6.3.6(@types/node@22.18.9)(jiti@2.6.1)(yaml@2.8.1)
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.9)(jiti@2.6.1)(yaml@2.8.1)
 
   docs:
     devDependencies:
@@ -95,6 +83,12 @@ importers:
       '@types/node':
         specifier: ^22.18.9
         version: 22.18.9
+      unbuild:
+        specifier: ^3.6.1
+        version: 3.6.1(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.18.9)(jiti@2.6.1)(yaml@2.8.1)
 
   playground/basic:
     dependencies:

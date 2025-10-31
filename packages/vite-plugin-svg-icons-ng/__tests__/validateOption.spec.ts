@@ -1,5 +1,5 @@
-import { __TEST__ } from '../src'
 import { describe, expect, test } from 'vitest'
+import { validate } from '../src/core'
 import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../src/constants'
 
 describe('Test ValidateOption', () => {
@@ -9,7 +9,7 @@ describe('Test ValidateOption', () => {
     const options = { ...template }
 
     expect(() => {
-      __TEST__.validate(options)
+      validate(options)
     }).not.toThrow()
   })
 
@@ -18,7 +18,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, iconDirs: [] }
 
       expect(() => {
-        __TEST__.validate(options)
+        validate(options)
       }).toThrowError(ERR_ICON_DIRS_REQUIRED)
     })
   })
@@ -27,7 +27,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, symbolId: 'icon-[dir]' }
 
       expect(() => {
-        __TEST__.validate(options)
+        validate(options)
       }).toThrowError(ERR_SYMBOL_ID_NO_NAME)
     })
 
@@ -35,7 +35,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, symbolId: '0-[name]' }
 
       expect(() => {
-        __TEST__.validate(options)
+        validate(options)
       }).toThrowError(ERR_SYMBOL_ID_SYNTAX)
     })
   })
@@ -45,7 +45,7 @@ describe('Test ValidateOption', () => {
       const options = { ...template, customDomId: '0-[name]' }
 
       expect(() => {
-        __TEST__.validate(options)
+        validate(options)
       }).toThrowError(ERR_CUSTOM_DOM_ID_SYNTAX)
     })
   })

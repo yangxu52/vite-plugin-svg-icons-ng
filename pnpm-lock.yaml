@@ -67,9 +67,6 @@ importers:
       node-html-parser:
         specifier: ^7.0.1
         version: 7.0.1
-      pathe:
-        specifier: ^2.0.3
-        version: 2.0.3
       svgo:
         specifier: ^3.3.2
         version: 3.3.2

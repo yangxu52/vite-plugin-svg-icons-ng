@@ -9,7 +9,7 @@
     "prepare": "husky",
     "preinstall": "npx only-allow pnpm",
     "postinstall": "pnpm --filter vite-plugin-svg-icons-ng run dev",
-    "dev": "pnpm -r --filter ./playground/* run dev",
+    "dev": "pnpm run build && pnpm -r --filter ./playground/* run dev",
     "build": "pnpm --filter vite-plugin-svg-icons-ng run build",
     "build:docs": "pnpm --filter ./docs run docs:build",
     "build:playground": "pnpm -r --filter ./playground/* run build",

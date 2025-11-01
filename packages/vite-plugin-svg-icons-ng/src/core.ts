@@ -5,11 +5,9 @@ import type { CacheEntry, Options, SymbolEntry } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
-import path from 'pathe'
 import {
   ERR_SVGO_EXCEPTION,
   SPRITE_TEMPLATE,
-  SVG_DOM_ID,
   VIRTUAL_IDS,
   VIRTUAL_IDS_URL,
   VIRTUAL_NAMES_DEPRECATED,
@@ -20,11 +18,10 @@ import {
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from './constants'
 import { convertSvgToSymbol } from './convert'
-import { validate } from './validate'
-import { getWeakETag } from './utils'
+import { generateSymbolId, getWeakETag, mergeOptions, validateOptions } from './utils'
 
-function createSvgIconsPlugin(userOptions: Options): Plugin {
-  validate(userOptions)
+export function createSvgIconsPlugin(userOptions: Options): Plugin {
+  validateOptions(userOptions)
   const options = mergeOptions(userOptions)
   let isBuild = false
   const cache = new Map<string, CacheEntry>()
@@ -140,37 +137,3 @@ async function processIcon(file: string, symbolId: string, options: Required<Opt
   }
   return convertSvgToSymbol(symbolId, svg)
 }
-
-function generateSymbolId(relativePath: string, options: Required<Options>) {
-  const { symbolId } = options
-  const { dirName, baseName } = parseDirName(relativePath)
-  const id = symbolId.replace(/\[dir]/g, dirName).replace(/\[name]/g, baseName)
-  return id.replace(/-+/g, '-').replace(/(^-|-$)/g, '')
-}
-
-function parseDirName(name: string) {
-  let dirName = ''
-  let baseName = name
-  const lastSeparators = name.lastIndexOf('/')
-  if (lastSeparators !== -1) {
-    dirName = name.slice(0, lastSeparators).split('/').filter(Boolean).join('-')
-    baseName = name.slice(lastSeparators + 1)
-  }
-  return {
-    dirName,
-    baseName: path.basename(baseName, path.extname(baseName)),
-  }
-}
-
-function mergeOptions(userOptions: Options): Required<Options> {
-  return {
-    symbolId: 'icon-[dir]-[name]',
-    svgoOptions: {},
-    inject: 'body-last',
-    customDomId: SVG_DOM_ID,
-    strokeOverride: false,
-    ...userOptions,
-  }
-}
-
-export { createSvgIconsPlugin, generateSymbolId, parseDirName, validate }

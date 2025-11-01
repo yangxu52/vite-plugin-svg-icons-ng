@@ -1,50 +1,50 @@
 import { describe, expect, test } from 'vitest'
-import { parseDirName } from '../core'
+import { splitPath } from '../utils'
 
 describe('Test ParseDirName', () => {
   describe('singe level', () => {
     test('normal name', () => {
-      const { baseName, dirName } = parseDirName('file.svg')
+      const { dir, name } = splitPath('file.svg')
 
-      expect(baseName).toBe('file')
-      expect(dirName).toBe('')
+      expect(dir).toBe('')
+      expect(name).toBe('file')
     })
 
     test('special name', () => {
-      const { baseName, dirName } = parseDirName('folder_dir-file.svg')
+      const { dir, name } = splitPath('folder_dir-file.svg')
 
-      expect(baseName).toBe('folder_dir-file')
-      expect(dirName).toBe('')
+      expect(dir).toBe('')
+      expect(name).toBe('folder_dir-file')
     })
   })
   describe('second level', () => {
     test('normal name', () => {
-      const { baseName, dirName } = parseDirName('dir/file.svg')
+      const { dir, name } = splitPath('dir/file.svg')
 
-      expect(baseName).toBe('file')
-      expect(dirName).toBe('dir')
+      expect(dir).toBe('dir')
+      expect(name).toBe('file')
     })
 
     test('special name', () => {
-      const { baseName, dirName } = parseDirName('dir/folder_dir-file.svg')
+      const { dir, name } = splitPath('dir/folder_dir-file.svg')
 
-      expect(baseName).toBe('folder_dir-file')
-      expect(dirName).toBe('dir')
+      expect(dir).toBe('dir')
+      expect(name).toBe('folder_dir-file')
     })
   })
   describe('multi level', () => {
     test('normal name', () => {
-      const { baseName, dirName } = parseDirName('folder/dir/file.svg')
+      const { dir, name } = splitPath('folder/dir/file.svg')
 
-      expect(baseName).toBe('file')
-      expect(dirName).toBe('folder-dir')
+      expect(dir).toBe('folder-dir')
+      expect(name).toBe('file')
     })
 
     test('special name', () => {
-      const { baseName, dirName } = parseDirName('folder/dir/folder_dir-file.svg')
+      const { dir, name } = splitPath('folder/dir/folder_dir-file.svg')
 
-      expect(baseName).toBe('folder_dir-file')
-      expect(dirName).toBe('folder-dir')
+      expect(dir).toBe('folder-dir')
+      expect(name).toBe('folder_dir-file')
     })
   })
 })

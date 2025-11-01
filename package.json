@@ -19,7 +19,7 @@
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "log": "conventional-changelog -p angular"
+    "log": "pnpm --filter vite-plugin-svg-icons-ng run log"
   },
   "keywords": [
     "vite",

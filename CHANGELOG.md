@@ -1,3 +1,14 @@
+## <small>1.5.2 (2025-11-01)</small>
+
+- refactor: move some function and re-implement path splash logic ([202c40c](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/202c40c))
+- fix: re-implement ETag, move function and fix issue ([3ea5656](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/3ea5656))
+- fix: typo in README ([57ebaf6](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/57ebaf6))
+- chore: extract implementation from index.ts to dedicated file ([e13add7](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/e13add7))
+- chore: move vitest and unbuild from workspace to package ([51486e9](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/51486e9))
+- chore: remove some erroneous code check ([b3fdd93](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b3fdd93))
+- chore: rename package and filename ([7e59626](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/7e59626))
+- chore: standardize unit test and update vitest to v4 ([12dcc38](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/12dcc38))
+
 ## 1.5.1 (2025-10-13)
 
 - fix: prefix id issues ([30a14ce](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/30a14ce))
@@ -17,7 +28,8 @@
 
 ## [1.4.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.4.1...v1.4.0) (2025-06-01)
 
-- refactor: optimize the injected code snippets ([b143e59](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b143e5958eacc386e35f521e28449518190d8467))
+- refactor: optimize the injected code
+  snippets ([b143e59](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b143e5958eacc386e35f521e28449518190d8467))
 - chore: update engines requirements ([9da2000](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9da20007828a3223c1bd3280d94d7fe8e84aeccd))
 
 ## [1.4.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.3.2...v1.3.1) (2025-04-08)

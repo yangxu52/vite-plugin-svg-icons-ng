@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { parseDirName } from '../src/core'
+import { parseDirName } from '../core'
 
 describe('Test ParseDirName', () => {
   describe('singe level', () => {

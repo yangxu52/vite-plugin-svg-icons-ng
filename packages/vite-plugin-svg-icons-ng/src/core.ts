@@ -4,7 +4,6 @@ import { optimize } from 'svgo'
 import type { CacheEntry, Options, SymbolEntry } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
-import { createHash } from 'crypto'
 import fs from 'fs-extra'
 import path from 'pathe'
 import {
@@ -22,6 +21,7 @@ import {
 } from './constants'
 import { convertSvgToSymbol } from './convert'
 import { validate } from './validate'
+import { getWeakETag } from './utils'
 
 function createSvgIconsPlugin(userOptions: Options): Plugin {
   validate(userOptions)
@@ -160,12 +160,6 @@ function parseDirName(name: string) {
     dirName,
     baseName: path.basename(baseName, path.extname(baseName)),
   }
-}
-
-function getWeakETag(str: string) {
-  return str.length === 0
-    ? '"W/0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"'
-    : `W/${Buffer.byteLength(str, 'utf8')}-${createHash('sha1').update(str, 'utf8').digest('base64').substring(0, 27)}`
 }
 
 function mergeOptions(userOptions: Options): Required<Options> {

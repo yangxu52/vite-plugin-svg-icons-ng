@@ -110,7 +110,8 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
   try {
     const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
     const symbolId = generateSymbolId(relativePath, options)
-    const symbol = await processIcon(path, symbolId, options)
+    let symbol = await processIcon(path, symbolId)
+    symbol = overrideStroke(symbol, options)
     const entry = { symbolId, symbol }
     cache.set(path, { mtimeMs, entry })
     return entry
@@ -119,21 +120,23 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
   }
 }
 
-async function processIcon(file: string, symbolId: string, options: Required<Options>): Promise<string> {
-  let svg = await fs.promises.readFile(file, 'utf-8')
+async function processIcon(file: string, symbolId: string): Promise<string> {
+  const svg = await fs.promises.readFile(file, 'utf-8')
   // svgo optimize
   if (options.svgoOptions) {
     try {
-      svg = optimize(svg, options.svgoOptions).data
+      return optimize(svg, options.svgoOptions).data
     } catch (error) {
       console.warn(ERR_SVGO_EXCEPTION(file, error))
     }
   }
-  // stoke override
+}
+
+function overrideStroke(symbol: string, options: Required<Options>): string {
   if (options.strokeOverride === true) {
-    svg = svg.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
+    symbol = symbol.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
   } else if (options.strokeOverride !== null && typeof options.strokeOverride === 'object' && options.strokeOverride.color) {
-    svg = svg.replace(/\bstroke="[^"]*"/gi, `stroke="${options.strokeOverride.color}"`)
+    symbol = symbol.replace(/\bstroke="[^"]*"/gi, `stroke="${options.strokeOverride.color}"`)
   }
-  return convertSvgToSymbol(symbolId, svg)
+  return symbol
 }

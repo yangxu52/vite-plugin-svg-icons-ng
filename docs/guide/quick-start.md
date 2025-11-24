@@ -48,6 +48,7 @@ export default defineConfig({
 
 ```js [vite.config.js]{2,7-9}
 // ...
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
 import path from 'node:path'
 
 export default defineConfig({

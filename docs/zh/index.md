@@ -12,7 +12,7 @@ hero:
       text: 组件使用
       link: /zh/guide/component
     - theme: alt
-      text: 选项
+      text: 选项说明
       link: /zh/guide/options
 features:
   - icon: 🚀

@@ -13,7 +13,7 @@ hero:
       text: Component Examples
       link: /guide/component
     - theme: alt
-      text: Options
+      text: Options Guide
       link: /guide/options
 features:
   - icon: 🚀

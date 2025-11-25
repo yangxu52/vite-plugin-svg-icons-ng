@@ -31,8 +31,7 @@ yarn add -D vite-plugin-svg-icons-ng
 
 ::: code-group
 
-```ts [vite.config.ts]{2,7-9} typescript
-// ...
+```ts [vite.config.ts / vite.config.js]{1,7-10} typescript
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
 import path from 'node:path'
 
@@ -41,21 +40,7 @@ export default defineConfig({
     // ...
     createSvgIconsPlugin({
       iconDirs: [path.resolve(process.cwd(), 'src/icons')],
-    }),
-  ],
-})
-```
-
-```js [vite.config.js]{2,7-9}
-// ...
-import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
-import path from 'node:path'
-
-export default defineConfig({
-  plugins: [
-    // ...
-    createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+      // other options
     }),
   ],
 })
@@ -79,11 +64,12 @@ import 'virtual:svg-icons-register' // deprecated // [!code --]
 
 :::
 
-> [!CAUTION] WARN
-> 虚拟模块 `virtual:svg-icons-register` 将在未来的版本中废弃。因为它不符合虚拟模块命名空间规范。  
-> 使用 `import 'virtual:svg-icons/register'` 代替。
+> [!CAUTION] WARNING !
+> 虚拟模块 `virtual:svg-icons-register` 将在未来的版本中废弃，  
+> 因为它不符合虚拟模块的[命名空间规范](https://vite.dev/guide/api-plugin#virtual-modules-convention)。  
+> 使用 `virtual:svg-icons/register` 代替。
 
-至此，svg精灵已经生成，可以通过 [组件使用](/zh/guide/component/index)。
+至此，svg精灵已经生成并注入到HTML中，可以通过全局组件使用（[组件样例](/zh/guide/component/index)）。
 
 或者，直接在HTML中使用：
 
@@ -103,6 +89,7 @@ import ids from 'virtual:svg-icons-names' //deprecated // [!code --]
 console.log(ids) // ['icon-icon1','icon-icon2','icon-icon3']
 ```
 
-> [!CAUTION] WARN
-> 虚拟模块 `virtual:svg-icons-names` 将在未来的版本中废弃。因为它不符合虚拟模块命名空间规范。  
-> 使用 `import ids from 'virtual:svg-icons/ids'` 代替。
+> [!CAUTION] WARNING !
+> 虚拟模块 `virtual:svg-icons-names` 将在未来的版本中废弃，  
+> 因为它不符合虚拟模块的[命名空间规范](https://vite.dev/guide/api-plugin#virtual-modules-convention)。  
+> 应该使用 `virtual:svg-icons/ids` 代替。

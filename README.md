@@ -1,18 +1,15 @@
 # vite-plugin-svg-icons-ng
 
-<a href="https://npmjs.com/package/vite-plugin-svg-icons-ng"><img src="https://img.shields.io/npm/v/vite-plugin-svg-icons-ng" alt="npm package"></a>
-<a href="https://nodejs.org/en/about/previous-releases"><img src="https://img.shields.io/node/v/vite-plugin-svg-icons-ng.svg" alt="node compatibility"></a>
-[![MIT LICENSE](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square&label=LICENSE)](https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/LICENSE)
+[![npm version](https://badge.fury.io/js/vite-plugin-svg-icons-ng.svg)](https://www.npmjs.com/package/vite-plugin-svg-icons-ng)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 ![GitHub Stars](https://img.shields.io/github/stars/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Stars&logo=github)
 ![GitHub Forks](https://img.shields.io/github/forks/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Forks&logo=github)
 
-**English** | [中文](./README.zh_CN.md)
-
 Vite plugin for easily creating an SVG sprite and injecting it for use.
 
-[Read the Docs to learn more](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/)
+[Read the Docs to learn more](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [阅读文档以了解更多信息](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/)
 
-If you like this project, please give it a Star.
+If you like this project, please give it a Star. | 如果你喜欢这个项目，请给它一个Star
 
 ## Roadmap
 
@@ -22,6 +19,10 @@ If you like this project, please give it a Star.
 - [ ] SSR support
 - [ ] Complete concurrent processing
 - [ ] tree-shaking
+
+## Star History
+
+![Star History Chart](https://api.star-history.com/svg?repos=yangxu52/vite-plugin-svg-icons-ng&type=date&legend=bottom-right)
 
 ## Thanks
 

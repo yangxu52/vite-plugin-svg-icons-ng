@@ -1,12 +1,11 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
-import { optimize } from 'svgo'
 import type { CacheEntry, Options, SymbolEntry } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
+import { bakeIcon } from 'svg-icon-baker'
 import {
-  ERR_SVGO_EXCEPTION,
   SPRITE_TEMPLATE,
   VIRTUAL_IDS,
   VIRTUAL_IDS_URL,
@@ -17,7 +16,6 @@ import {
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from './constants'
-import { convertSvgToSymbol } from './convert'
 import { generateSymbolId, getWeakETag, mergeOptions, validateOptions } from './utils'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
@@ -122,13 +120,11 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
 
 async function processIcon(file: string, symbolId: string): Promise<string> {
   const svg = await fs.promises.readFile(file, 'utf-8')
-  // svgo optimize
-  if (options.svgoOptions) {
-    try {
-      return optimize(svg, options.svgoOptions).data
-    } catch (error) {
-      console.warn(ERR_SVGO_EXCEPTION(file, error))
-    }
+  try {
+    const { symbol } = bakeIcon({ name: symbolId, content: svg })
+    return symbol
+  } catch (error) {
+    throw new Error(`Failed on icon ${file}, ${String(error)}`)
   }
 }
 

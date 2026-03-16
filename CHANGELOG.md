@@ -1,3 +1,8 @@
+## 1.6.0-beta.1 (2025-11-13)
+
+- feat: using svg-icon-baker for convert ([6f465a1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6f465a1))
+- chore: extract stroke override ([706c006](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/706c006))
+
 ## <small>1.5.2 (2025-11-01)</small>
 
 - refactor: move some function and re-implement path splash logic ([202c40c](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/202c40c))

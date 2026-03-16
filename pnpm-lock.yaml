@@ -64,12 +64,9 @@ importers:
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
-      node-html-parser:
-        specifier: ^7.0.1
-        version: 7.0.1
-      svgo:
-        specifier: ^3.3.2
-        version: 3.3.2
+      svg-icon-baker:
+        specifier: 1.0.0-beta.3
+        version: 1.0.0-beta.3
       vite:
         specifier: '>=5.0.0'
         version: 6.3.6(@types/node@22.18.9)(jiti@2.6.1)(yaml@2.8.1)
@@ -883,10 +880,6 @@ packages:
   '@standard-schema/spec@1.0.0':
     resolution: { integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA== }
 
-  '@trysound/sax@0.2.0':
-    resolution: { integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA== }
-    engines: { node: '>=10.13.0' }
-
   '@types/chai@5.2.2':
     resolution: { integrity: sha512-8kB30R7Hwqf40JPiKhVzodJs2Qc1ZJ5zuT3uzw5Hq/dhNCl3G3l83jfpdI1e20BP348+fV7VIL/+FxaXkqBmWg== }
 
@@ -1300,10 +1293,6 @@ packages:
     resolution: { integrity: sha512-2JkV3gUZUVrbNA+1sjBOYLsMZ5cEEl8GTFP2a4AVz5hvasAMCQ1D2l2le/cX+pV4N6ZU17zjUahLpIXRrnWL8A== }
     engines: { node: '>=20' }
 
-  commander@7.2.0:
-    resolution: { integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw== }
-    engines: { node: '>= 10' }
-
   commondir@1.0.1:
     resolution: { integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg== }
 
@@ -1400,10 +1389,6 @@ packages:
   css-tree@2.2.1:
     resolution: { integrity: sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA== }
     engines: { node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0, npm: '>=7.0.0' }
-
-  css-tree@2.3.1:
-    resolution: { integrity: sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw== }
-    engines: { node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0 }
 
   css-tree@3.1.0:
     resolution: { integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w== }
@@ -2027,9 +2012,6 @@ packages:
   mdn-data@2.0.28:
     resolution: { integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g== }
 
-  mdn-data@2.0.30:
-    resolution: { integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA== }
-
   mdn-data@2.12.2:
     resolution: { integrity: sha512-IEn+pegP1aManZuckezWCO+XZQDplx1366JoVhTpMpBB1sPey/SbveZQUosKiKiGYjg1wH4pMlNgXbCiYgihQA== }
 
@@ -2130,9 +2112,6 @@ packages:
 
   neo-async@2.6.2:
     resolution: { integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw== }
-
-  node-html-parser@7.0.1:
-    resolution: { integrity: sha512-KGtmPY2kS0thCWGK0VuPyOS+pBKhhe8gXztzA2ilAOhbUbxa9homF1bOyKvhGzMLXUoRds9IOmr/v5lr/lqNmA== }
 
   node-releases@2.0.23:
     resolution: { integrity: sha512-cCmFDMSm26S6tQSDpBCg/NR8NENrVPhAJSf+XbxBG4rPFaaonlEoE9wHQmun+cls499TQGSb7ZyPBRlzgKfpeg== }
@@ -2657,10 +2636,9 @@ packages:
     resolution: { integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w== }
     engines: { node: '>= 0.4' }
 
-  svgo@3.3.2:
-    resolution: { integrity: sha512-OoohrmuUlBs8B8o6MB2Aevn+pRIH9zDALSR+6hhqVfa6fRwG/Qw9VUMSMW9VNg2CFc/MTIfabtdOVl9ODIJjpw== }
-    engines: { node: '>=14.0.0' }
-    hasBin: true
+  svg-icon-baker@1.0.0-beta.3:
+    resolution: { integrity: sha512-KX1zpdd1H+Q15suVG67PWu0Pf1FUdAxi8dhxM527X8lqQ6FZGMdFthKNvt9cNp/IShUhxq1EyKr15mYcERGdiw== }
+    engines: { node: ^18.0.0 || ^20.0.0 || >=22.0.0 }
 
   svgo@4.0.0:
     resolution: { integrity: sha512-VvrHQ+9uniE+Mvx3+C9IEe/lWasXCU0nXMY2kZeLrHNICuRiC8uMPyM14UEaMOFA5mhyQqEkB02VoQ16n3DLaw== }
@@ -3653,8 +3631,6 @@ snapshots:
 
   '@standard-schema/spec@1.0.0': {}
 
-  '@trysound/sax@0.2.0': {}
-
   '@types/chai@5.2.2':
     dependencies:
       '@types/deep-eql': 4.0.2
@@ -4134,8 +4110,6 @@ snapshots:
 
   commander@14.0.1: {}
 
-  commander@7.2.0: {}
-
   commondir@1.0.1: {}
 
   compare-func@2.0.0:
@@ -4237,11 +4211,6 @@ snapshots:
   css-tree@2.2.1:
     dependencies:
       mdn-data: 2.0.28
-      source-map-js: 1.2.1
-
-  css-tree@2.3.1:
-    dependencies:
-      mdn-data: 2.0.30
       source-map-js: 1.2.1
 
   css-tree@3.1.0:
@@ -4918,8 +4887,6 @@ snapshots:
 
   mdn-data@2.0.28: {}
 
-  mdn-data@2.0.30: {}
-
   mdn-data@2.12.2: {}
 
   meow@12.1.1: {}
@@ -5003,11 +4970,6 @@ snapshots:
   natural-compare@1.4.0: {}
 
   neo-async@2.6.2: {}
-
-  node-html-parser@7.0.1:
-    dependencies:
-      css-select: 5.2.2
-      he: 1.2.0
 
   node-releases@2.0.23: {}
 
@@ -5522,15 +5484,9 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svgo@3.3.2:
+  svg-icon-baker@1.0.0-beta.3:
     dependencies:
-      '@trysound/sax': 0.2.0
-      commander: 7.2.0
-      css-select: 5.2.2
-      css-tree: 2.3.1
-      css-what: 6.2.2
-      csso: 5.0.5
-      picocolors: 1.1.1
+      svgo: 4.0.0
 
   svgo@4.0.0:
     dependencies:

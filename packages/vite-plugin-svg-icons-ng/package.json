@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-svg-icons-ng",
-  "version": "1.5.2",
+  "version": "1.6.0-beta.1",
   "description": "Vite plugin for easily creating an SVG sprite and injecting it for use, with a brand-new version.",
   "type": "module",
   "license": "MIT",
@@ -58,8 +58,7 @@
   "dependencies": {
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.2",
-    "node-html-parser": "^7.0.1",
-    "svgo": "^3.3.2"
+    "svg-icon-baker": "1.0.0-beta.3"
   },
   "peerDependencies": {
     "vite": ">=5.0.0"

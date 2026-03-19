@@ -19,7 +19,8 @@
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "log": "pnpm --filter vite-plugin-svg-icons-ng run log"
+    "log": "pnpm --filter vite-plugin-svg-icons-ng run log",
+    "release": "node scripts/release.mjs"
   },
   "keywords": [
     "vite",

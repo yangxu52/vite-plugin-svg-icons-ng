@@ -1,20 +1,26 @@
 {
   "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
     "module": "ESNext",
-    "target": "es2020",
+    "lib": ["ES2022"],
+    "skipLibCheck": true,
+    /* Bundler mode */
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    /* Linting */
     "strict": true,
     "declaration": true,
     "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "outDir": "dist",
-    "lib": ["ESNext"],
-    "sourceMap": false,
-    "noEmitOnError": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["./packages"],
-  "exclude": ["**/dist", "**/node_modules", "**/test"]
+  "include": ["packages/**/*"]
 }

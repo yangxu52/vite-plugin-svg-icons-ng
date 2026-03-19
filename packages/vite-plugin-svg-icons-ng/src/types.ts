@@ -1,10 +1,9 @@
-import type { Config } from 'svgo'
+import type { Options as BakerOptions } from 'svg-icon-baker'
 
-export type SvgoConfig = Omit<Config, 'path'> | false
 export type InjectMode = 'body-first' | 'body-last'
 export type StrokeOverrideConfig = boolean | { color: string }
 
-export interface Options {
+export type Options = {
   /**
    * icons store directories
    * all svg files in these  will be converted to svg sprite.
@@ -15,11 +14,6 @@ export interface Options {
    * @default: icon-[dir]-[name]
    */
   symbolId?: string
-  /**
-   * SVGO configuration, used to optimize svg
-   * @default：{}
-   */
-  svgoOptions?: SvgoConfig
   /**
    * icon format
    * @default: 'body-last'
@@ -37,14 +31,21 @@ export interface Options {
    * @default: false
    */
   strokeOverride?: StrokeOverrideConfig
+  /**
+   * optimize Options, base on SVGO
+   * @default：true
+   */
+  optimize?: BakerOptions
 }
+
+export type ResolvedOptions = Required<Options>
 
 export type SymbolEntry = {
   symbolId: string
   symbol: string
 }
 
-export interface CacheEntry {
+export type CacheEntry = {
   mtimeMs?: number
   entry: SymbolEntry
 }

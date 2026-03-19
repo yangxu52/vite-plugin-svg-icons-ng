@@ -58,7 +58,7 @@
   "dependencies": {
     "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.2",
-    "svg-icon-baker": "1.0.0-beta.3"
+    "svg-icon-baker": "^1.1.2"
   },
   "peerDependencies": {
     "vite": ">=5.0.0"
@@ -67,6 +67,6 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.18.9",
     "unbuild": "^3.6.1",
-    "vitest": "^4.0.6"
+    "vitest": "^4.1.0"
   }
 }

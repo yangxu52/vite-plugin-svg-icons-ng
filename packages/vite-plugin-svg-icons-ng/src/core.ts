@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
-import type { CacheEntry, Options, SymbolEntry } from './types'
+import type { CacheEntry, Options, ResolvedOptions, SymbolEntry } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
@@ -16,11 +16,11 @@ import {
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from './constants'
-import { generateSymbolId, getWeakETag, mergeOptions, validateOptions } from './utils'
+import { generateSymbolId, getWeakETag, resolveOptions, validateOptions } from './utils'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
-  const options = mergeOptions(userOptions)
+  const options = resolveOptions(userOptions)
   let isBuild = false
   const cache = new Map<string, CacheEntry>()
   return {
@@ -78,17 +78,17 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
   }
 }
 
-async function createIdsModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
+async function createIdsModule(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
   const list = await compilerIcons(cache, options)
   return `export default ${JSON.stringify(list.map((i) => i.symbolId))}`
 }
 
-async function createSpriteModule(cache: Map<string, CacheEntry>, options: Required<Options>) {
+async function createSpriteModule(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
   const list = await compilerIcons(cache, options)
   return SPRITE_TEMPLATE(list.map((i) => i.symbol).join(''), options.customDomId, options.inject)
 }
 
-async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<Options>) {
+async function compilerIcons(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
   const dirPromises = options.iconDirs.map(async (dir) => {
     const entryList = await fg.glob('**/*.svg', { cwd: dir, stats: true, absolute: true })
     const entryPromises = entryList.map(async (e) => {
@@ -99,7 +99,7 @@ async function compilerIcons(cache: Map<string, CacheEntry>, options: Required<O
   return (await Promise.all(dirPromises)).flat()
 }
 
-async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, options: Required<Options>) {
+async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, options: ResolvedOptions) {
   const { path, stats: { mtimeMs } = {} } = e
   const cached = cache.get(path)
   if (cached && cached.mtimeMs === mtimeMs) {
@@ -108,7 +108,7 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
   try {
     const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
     const symbolId = generateSymbolId(relativePath, options)
-    let symbol = await processIcon(path, symbolId)
+    let symbol = await processIcon(path, symbolId, options)
     symbol = overrideStroke(symbol, options)
     const entry = { symbolId, symbol }
     cache.set(path, { mtimeMs, entry })
@@ -118,17 +118,17 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
   }
 }
 
-async function processIcon(file: string, symbolId: string): Promise<string> {
+async function processIcon(file: string, symbolId: string, options: ResolvedOptions): Promise<string> {
   const svg = await fs.promises.readFile(file, 'utf-8')
   try {
-    const { symbol } = bakeIcon({ name: symbolId, content: svg })
-    return symbol
+    const { content } = bakeIcon({ name: symbolId, content: svg }, options.optimize)
+    return content
   } catch (error) {
     throw new Error(`Failed on icon ${file}, ${String(error)}`)
   }
 }
 
-function overrideStroke(symbol: string, options: Required<Options>): string {
+function overrideStroke(symbol: string, options: ResolvedOptions): string {
   if (options.strokeOverride === true) {
     symbol = symbol.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
   } else if (options.strokeOverride !== null && typeof options.strokeOverride === 'object' && options.strokeOverride.color) {

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import type { Options } from './types'
+import type { Options, ResolvedOptions } from './types'
 import {
   ERR_CUSTOM_DOM_ID_SYNTAX,
   ERR_ICON_DIRS_REQUIRED,
@@ -41,14 +41,36 @@ export function splitPath(filePath: string) {
   return { dir, name }
 }
 
-export function mergeOptions(userOptions: Options): Required<Options> {
+const defaultOptions = {
+  symbolId: 'icon-[dir]-[name]',
+  inject: 'body-last',
+  customDomId: SVG_DOM_ID,
+  strokeOverride: false,
+  optimize: true,
+} satisfies Omit<ResolvedOptions, 'iconDirs'>
+
+const defaultStrokeOverride = {
+  color: 'currentColor',
+} satisfies { color: string }
+
+function normalizeStrokeOverride(config: Options['strokeOverride']): false | { color: string } {
+  if (config === false) {
+    return false
+  }
+  if (config === true || config === undefined) {
+    return defaultStrokeOverride
+  }
+  return { ...defaultOptions, ...config }
+}
+
+export function resolveOptions(userOptions: Options): ResolvedOptions {
   return {
-    symbolId: 'icon-[dir]-[name]',
-    svgoOptions: {},
-    inject: 'body-last',
-    customDomId: SVG_DOM_ID,
-    strokeOverride: false,
-    ...userOptions,
+    iconDirs: userOptions.iconDirs,
+    symbolId: userOptions.symbolId ?? defaultOptions.symbolId,
+    inject: userOptions.inject ?? defaultOptions.inject,
+    customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
+    strokeOverride: normalizeStrokeOverride(userOptions.strokeOverride),
+    optimize: userOptions.optimize ?? defaultOptions.optimize,
   }
 }
 

@@ -1,3 +1,3 @@
-export { createSvgIconsPlugin } from './core'
+export { createSvgIconsPlugin } from './core.ts'
 
-export type { Options, InjectMode, StrokeOverrideConfig, SvgoConfig } from './types'
+export type { Options } from './types.ts'

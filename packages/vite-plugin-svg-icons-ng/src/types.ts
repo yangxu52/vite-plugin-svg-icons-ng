@@ -50,3 +50,15 @@ export type SymbolCache = {
   mtimeMs?: number
   symbol: SymbolData
 }
+
+export type PluginContext = {
+  cache: Map<string, SymbolCache>
+  options: ResolvedOptions
+}
+
+export type CompileContext = Pick<PluginContext, 'options' | 'cache'>
+
+export type CompileResult = {
+  symbols: string[]
+  ids: string[]
+}

@@ -108,8 +108,7 @@ async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, op
   try {
     const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
     const symbolId = generateSymbolId(relativePath, options)
-    let symbol = await processIcon(path, symbolId, options)
-    symbol = overrideStroke(symbol, options)
+    const symbol = await processIcon(path, symbolId, options)
     const entry = { symbolId, symbol }
     cache.set(path, { mtimeMs, entry })
     return entry
@@ -122,17 +121,16 @@ async function processIcon(file: string, symbolId: string, options: ResolvedOpti
   const svg = await fs.promises.readFile(file, 'utf-8')
   try {
     const { content } = bakeIcon({ name: symbolId, content: svg }, options.optimize)
-    return content
+    return overrideStroke(content, options)
   } catch (error) {
     throw new Error(`Failed on icon ${file}, ${String(error)}`)
   }
 }
 
 function overrideStroke(symbol: string, options: ResolvedOptions): string {
-  if (options.strokeOverride === true) {
-    symbol = symbol.replace(/\bstroke="[^"]*"/gi, 'stroke="currentColor"')
-  } else if (options.strokeOverride !== null && typeof options.strokeOverride === 'object' && options.strokeOverride.color) {
-    symbol = symbol.replace(/\bstroke="[^"]*"/gi, `stroke="${options.strokeOverride.color}"`)
+  if (options.strokeOverride === false) {
+    return symbol
+  } else {
+    return symbol.replace(/\bstroke="[^"]*"/gi, `stroke="${options.strokeOverride}"`)
   }
-  return symbol
 }

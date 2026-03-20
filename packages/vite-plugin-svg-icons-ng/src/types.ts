@@ -1,7 +1,8 @@
 import type { Options as BakerOptions } from 'svg-icon-baker'
 
 export type InjectMode = 'body-first' | 'body-last'
-export type StrokeOverrideConfig = boolean | { color: string }
+export type StrokeOverride = boolean | string
+export type ResolvedStrokeOverride = false | string
 
 export type Options = {
   /**
@@ -30,7 +31,7 @@ export type Options = {
    * `false` to disable, `true` to override as `currentColor`, or an object `{ color: '#fff' }`
    * @default: false
    */
-  strokeOverride?: StrokeOverrideConfig
+  strokeOverride?: StrokeOverride
   /**
    * optimize Options, base on SVGO
    * @default：true
@@ -38,7 +39,7 @@ export type Options = {
   optimize?: BakerOptions
 }
 
-export type ResolvedOptions = Required<Options>
+export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }
 
 export type SymbolEntry = {
   symbolId: string

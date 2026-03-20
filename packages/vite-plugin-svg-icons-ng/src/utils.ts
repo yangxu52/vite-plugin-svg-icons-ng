@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import type { Options, ResolvedOptions } from './types'
+import type { Options, ResolvedOptions, ResolvedStrokeOverride } from './types'
 import {
   ERR_CUSTOM_DOM_ID_SYNTAX,
   ERR_ICON_DIRS_REQUIRED,
@@ -49,18 +49,14 @@ const defaultOptions = {
   optimize: true,
 } satisfies Omit<ResolvedOptions, 'iconDirs'>
 
-const defaultStrokeOverride = {
-  color: 'currentColor',
-} satisfies { color: string }
-
-function normalizeStrokeOverride(config: Options['strokeOverride']): false | { color: string } {
-  if (config === false) {
-    return false
+function normalizeStrokeOverride(value: Options['strokeOverride']): ResolvedStrokeOverride {
+  if (value === true) {
+    return 'currentColor'
   }
-  if (config === true || config === undefined) {
-    return defaultStrokeOverride
+  if (typeof value === 'string') {
+    return value
   }
-  return { ...defaultOptions, ...config }
+  return false
 }
 
 export function resolveOptions(userOptions: Options): ResolvedOptions {

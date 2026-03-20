@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { validateOptions } from '../utils'
+import { validateOptions } from '../utils/options'
 import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../constants'
 
 describe('Test ValidateOption', () => {

@@ -9,7 +9,7 @@ import {
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from '../constants'
-import { compileIcons } from '../core/compiler'
+import { buildIcons } from '../core/builder'
 import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../plugin/virtual'
 import type { PluginContext } from '../types'
 
@@ -17,7 +17,7 @@ vi.mock('../core/compiler', () => ({
   compileIcons: vi.fn(),
 }))
 
-const mockedCompileIcons = vi.mocked(compileIcons)
+const mockedCompileIcons = vi.mocked(buildIcons)
 
 const createPluginContext = (): PluginContext => ({
   cache: {

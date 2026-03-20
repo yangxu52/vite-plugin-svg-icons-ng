@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { splitPath } from '../utils'
+import { splitPath } from '../utils/path'
 
 describe('Test ParseDirName', () => {
   describe('singe level', () => {

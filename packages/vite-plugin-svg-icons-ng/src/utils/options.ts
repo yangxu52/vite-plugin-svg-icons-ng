@@ -1,5 +1,4 @@
-import { createHash } from 'node:crypto'
-import type { Options, ResolvedOptions, ResolvedStrokeOverride } from './types'
+import type { Options, ResolvedOptions, ResolvedStrokeOverride } from '../types'
 import {
   ERR_CUSTOM_DOM_ID_SYNTAX,
   ERR_ICON_DIRS_REQUIRED,
@@ -9,37 +8,7 @@ import {
   REGEXP_DOM_ID,
   REGEXP_SYMBOL_ID,
   SVG_DOM_ID,
-} from './constants'
-
-export function getWeakETag(str: string) {
-  return str.length === 0 ? 'W/"2jmj7l5rSw0yVb/vlWAYkK/YBwk="' : `W/"${createHash('sha1').update(str, 'utf8').digest('base64')}"`
-}
-
-export function generateSymbolId(filePath: string, options: Required<Options>) {
-  const { symbolId } = options
-  const { dir, name } = splitPath(filePath)
-  return symbolId
-    .replace(/\[dir]/g, dir)
-    .replace(/\[name]/g, name)
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-}
-
-/**
- * split path to `dir` and `name`
- */
-export function splitPath(filePath: string) {
-  const normalized = filePath.replace(/\\/g, '/')
-  const lastSlash = normalized.lastIndexOf('/')
-  const dirPart = lastSlash > 0 ? normalized.slice(0, lastSlash) : ''
-  const filePart = lastSlash >= 0 ? normalized.slice(lastSlash + 1) : normalized
-
-  const dir = dirPart ? dirPart.split('/').filter(Boolean).join('-') : ''
-  const dotIndex = filePart.lastIndexOf('.')
-  const name = dotIndex > 0 ? filePart.slice(0, dotIndex) : filePart.startsWith('.') ? filePart : filePart
-
-  return { dir, name }
-}
+} from '../constants'
 
 const defaultOptions = {
   symbolId: 'icon-[dir]-[name]',

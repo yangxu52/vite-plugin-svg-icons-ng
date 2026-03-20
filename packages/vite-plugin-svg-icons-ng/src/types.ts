@@ -62,9 +62,9 @@ export type PluginContext = {
   options: ResolvedOptions
 }
 
-export type CompileContext = Pick<PluginContext, 'options' | 'cache'>
+export type BuildContext = Pick<PluginContext, 'options' | 'cache'>
 
-export type CompileResult = {
+export type BuildResult = {
   symbols: string[]
   ids: string[]
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { generateSymbolId } from '../utils'
+import { generateSymbolId } from '../utils/path'
 
 describe('Test GenerateSymbolId', () => {
   describe('icon-[dir]-[name]', () => {

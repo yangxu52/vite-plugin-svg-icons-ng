@@ -68,3 +68,10 @@ export type CompileResult = {
   symbols: string[]
   ids: string[]
 }
+
+export type VirtualModuleType = 'register' | 'ids'
+
+export type VirtualModuleRenderContext = {
+  isBuild: boolean
+  ssr: boolean
+}

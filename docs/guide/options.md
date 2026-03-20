@@ -59,17 +59,6 @@ src/icons/
 > except for placeholder symbols, and starting with a `letter`!  
 > `symbolId` must contain the `[name]` placeholder symbol, otherwise an error will be thrown.
 
-## svgoOptions
-
-- type: `SvgoOptions | false`
-- default: `{}`
-
-SVGO `optimize` configuration, details: [SVGO](https://github.com/svg/svgo#configuration),
-or `false` to disable SVGO optimization.
-
-> [!WARNING] NOTE
-> If you don't know what this is, please do not override this option.
-
 ## inject
 
 - type: `string`
@@ -87,7 +76,21 @@ Customize the `id` attribute of the SVG sprite DOM.
 
 ## strokeOverride
 
-- type: `boolean | { color: string }`
+- type: `boolean | string`
 - default: `false`
 
-Override `stroke` attribute, set `false` to disable it, set `true` to use `currentColor`, or set an object to specify a color.
+Override `stroke` attribute, set `false` to disable it, set `true` to use `currentColor`, or specify a color.
+
+## optimize
+
+- type: [`BakerOptions`](https://www.npmjs.com/package/svg-icon-baker)
+- default: `true`
+
+The `optimize` is based on `SVGO`, the underlying library of `svg-icon-baker`.  
+Set `true` to enable default preset optimizations.  
+Set `false` to disable all optimizations.
+
+> [!WARNING] NOTE
+> If you don't know what this is, please do not override this option.  
+> If you understand, configure this may improve effect for some "strange SVG", but it may introduce bigger issues.
+> The best way is to modify the svg file itself

@@ -27,7 +27,7 @@ createSvgIconsPlugin({
 ## symbolId
 
 - 类型: `string`
-- default: `icon-[dir]-[name]`
+- 默认值: `icon-[dir]-[name]`
 
 SVG精灵图中的子节点 `<symbol>` 的 `id` 属性。  
 选项值可以包含占位符 `[name]` 和 `[dir]`。
@@ -58,35 +58,37 @@ src/icons/
 > `symbolId` 除了占位符本身外，必须是合法的 ASCII `字母`、`数字`、`下划线`和`连字符`。  
 > `symbolId` 必须包含 `[name]` 占位符， 否则会抛出错误。
 
-## svgoOptions
-
-- 类型: `SvgoOptions | false`
-- default: `{}`
-
-SVGO `optimize` 选项，详情：[SVGO](https://github.com/svg/svgo#configuration)，
-或者覆盖 `false` 禁用 SVGO 相关优化。
-
-> [!WARNING] 注意
-> 如果你不知道这是什么，请不要覆盖这个选项。
-
 ## inject
 
 - 类型: `string`
-- default: `body-last`
-- options: `body-first` | `body-last`
+- 默认值: `body-last`
+- 选项: `body-first` | `body-last`
 
 SVG精灵图的插入DOM的位置。
 
 ## customDomId
 
 - 类型: `string`
-- default: `__svg__icons__dom__`
+- 默认值: `__svg__icons__dom__`
 
 自定义SVG精灵图的插入DOM节点的ID属性。
 
 ## strokeOverride
 
-- 类型: `boolean | { color: string }`
-- default: `false`
+- 类型: `boolean | string`
+- 默认值: `false`
 
-覆盖 `stroke` 属性，设置 `false` 禁用该功能，设置 `true` 为 `currentColor` 或者设置对象来自定义颜色。
+覆盖 `stroke` 属性，设置 `false` 禁用该功能，设置 `true` 为 `currentColor` 或者自定义颜色。
+
+## optimize
+
+- 类型: [`BakerOptions`](https://www.npmjs.com/package/svg-icon-baker)
+- 默认值: `true`
+
+`optimize` 基于 `svg-icon-baker` 底层的 `SVGO` 库。  
+设置`true`以启用默认预设优化。设置`false`设置为禁用所有优化。
+
+> [!WARNING] 注意
+> 如果你不知道这是什么，请不要覆盖此选项。  
+> 如果你清楚原理，配置它可能会改善某些“奇怪的SVG”的效果，但它可能会引发更大的问题。
+> 最好的办法是修改SVG文件本身。

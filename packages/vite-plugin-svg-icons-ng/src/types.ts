@@ -41,12 +41,12 @@ export type Options = {
 
 export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }
 
-export type SymbolEntry = {
-  symbolId: string
-  symbol: string
+export type SymbolData = {
+  id: string
+  content: string
 }
 
-export type CacheEntry = {
+export type SymbolCache = {
   mtimeMs?: number
-  entry: SymbolEntry
+  symbol: SymbolData
 }

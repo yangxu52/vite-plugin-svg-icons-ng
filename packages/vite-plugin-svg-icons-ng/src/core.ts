@@ -1,11 +1,12 @@
 import type { Plugin } from 'vite'
 import { normalizePath } from 'vite'
-import type { CacheEntry, Options, ResolvedOptions, SymbolEntry } from './types'
+import type { Options, ResolvedOptions, SymbolCache, SymbolData } from './types'
 import type { Entry } from 'fast-glob'
 import fg from 'fast-glob'
 import fs from 'fs-extra'
 import { bakeIcon } from 'svg-icon-baker'
 import {
+  IDS_TEMPLATE,
   SPRITE_TEMPLATE,
   VIRTUAL_IDS,
   VIRTUAL_IDS_URL,
@@ -22,7 +23,7 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
   const options = resolveOptions(userOptions)
   let isBuild = false
-  const cache = new Map<string, CacheEntry>()
+  const cache = new Map<string, SymbolCache>()
   return {
     name: 'vite:svg-icons',
     configResolved(resolvedConfig) {
@@ -78,40 +79,40 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
   }
 }
 
-async function createIdsModule(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
+async function createIdsModule(cache: Map<string, SymbolCache>, options: ResolvedOptions) {
   const list = await compilerIcons(cache, options)
-  return `export default ${JSON.stringify(list.map((i) => i.symbolId))}`
+  return IDS_TEMPLATE(JSON.stringify(list.map((i) => i.id)))
 }
 
-async function createSpriteModule(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
+async function createSpriteModule(cache: Map<string, SymbolCache>, options: ResolvedOptions) {
   const list = await compilerIcons(cache, options)
-  return SPRITE_TEMPLATE(list.map((i) => i.symbol).join(''), options.customDomId, options.inject)
+  return SPRITE_TEMPLATE(JSON.stringify(list.map((i) => i.content).join('')), options.customDomId, options.inject)
 }
 
-async function compilerIcons(cache: Map<string, CacheEntry>, options: ResolvedOptions) {
+async function compilerIcons(cache: Map<string, SymbolCache>, options: ResolvedOptions) {
   const dirPromises = options.iconDirs.map(async (dir) => {
     const entryList = await fg.glob('**/*.svg', { cwd: dir, stats: true, absolute: true })
     const entryPromises = entryList.map(async (e) => {
       return await process(e, cache, dir, options)
     })
-    return (await Promise.all(entryPromises)).filter(Boolean) as SymbolEntry[]
+    return (await Promise.all(entryPromises)).filter(Boolean) as SymbolData[]
   })
   return (await Promise.all(dirPromises)).flat()
 }
 
-async function process(e: Entry, cache: Map<string, CacheEntry>, dir: string, options: ResolvedOptions) {
+async function process(e: Entry, cache: Map<string, SymbolCache>, dir: string, options: ResolvedOptions) {
   const { path, stats: { mtimeMs } = {} } = e
   const cached = cache.get(path)
   if (cached && cached.mtimeMs === mtimeMs) {
-    return cached.entry
+    return cached.symbol
   }
   try {
     const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
-    const symbolId = generateSymbolId(relativePath, options)
-    const symbol = await processIcon(path, symbolId, options)
-    const entry = { symbolId, symbol }
-    cache.set(path, { mtimeMs, entry })
-    return entry
+    const id = generateSymbolId(relativePath, options)
+    const content = await processIcon(path, id, options)
+    const symbol = { id, content }
+    cache.set(path, { mtimeMs, symbol })
+    return symbol
   } catch {
     return null
   }

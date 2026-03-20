@@ -1,13 +1,14 @@
+export const VIRTUAL_ID_PREFIX = 'virtual:svg-icons'
 /**
  * @deprecated
  */
-export const VIRTUAL_REGISTER_DEPRECATED = 'virtual:svg-icons-register'
-export const VIRTUAL_REGISTER = 'virtual:svg-icons/register'
+export const VIRTUAL_REGISTER_DEPRECATED = `${VIRTUAL_ID_PREFIX}-register`
+export const VIRTUAL_REGISTER = `${VIRTUAL_ID_PREFIX}/register`
 /**
  * @deprecated
  */
-export const VIRTUAL_NAMES_DEPRECATED = 'virtual:svg-icons-names'
-export const VIRTUAL_IDS = 'virtual:svg-icons/ids'
+export const VIRTUAL_NAMES_DEPRECATED = `${VIRTUAL_ID_PREFIX}-names`
+export const VIRTUAL_IDS = `${VIRTUAL_ID_PREFIX}/ids`
 /**
  * @deprecated
  */
@@ -33,10 +34,10 @@ export const ERR_INJECT_MODE = `[${PLUGIN_NAME}]: 'inject' must be 'body-first' 
 export const ERR_CUSTOM_DOM_ID_SYNTAX = `[${PLUGIN_NAME}]: 'customDomId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline!`
 export const ERR_SVGO_EXCEPTION = (file: string, error: unknown) => `[${PLUGIN_NAME}]: SVGO optimize failure, skip this file (${file}), caused by:\n${error}`
 
-export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'body-first' | 'body-last') => `if (typeof window !== 'undefined') {
+export const SPRITE_TEMPLATE = (symbolStr: string, customDomId: string, inject: 'body-first' | 'body-last') => `if (typeof window !== 'undefined') {
   (function() {
     const loadSvgSprite = function() {
-      let html = ${JSON.stringify(symbols)};
+      let html = ${symbolStr};
       let svg = document.getElementById('${customDomId}');
       if (!svg) {
         svg = document.createElementNS('${XMLNS}', 'svg');
@@ -67,3 +68,5 @@ export const SPRITE_TEMPLATE = (symbols: string, customDomId: string, inject: 'b
   })();
 }
 export default {}`
+
+export const IDS_TEMPLATE = (idStr: string) => `export default ${idStr}`

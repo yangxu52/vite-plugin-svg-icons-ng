@@ -51,8 +51,14 @@ export type SymbolCache = {
   symbol: SymbolData
 }
 
+export type IconCache = {
+  get(path: string, mtimeMs?: number): SymbolData | null
+  set(path: string, entry: SymbolCache): void
+  invalidate(path: string): void
+}
+
 export type PluginContext = {
-  cache: Map<string, SymbolCache>
+  cache: IconCache
   options: ResolvedOptions
 }
 

@@ -14,12 +14,13 @@ import {
 import { getWeakETag, resolveOptions, validateOptions } from './utils'
 import { compileIcons } from './core/compiler'
 import { renderIdsModule, renderSpriteModule } from './core/modules'
+import { createMemoryCache } from './cache/memoryCache'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
   const options = resolveOptions(userOptions)
   let isBuild = false
-  const ctx: CompileContext = { cache: new Map(), options }
+  const ctx: CompileContext = { cache: createMemoryCache(), options }
   return {
     name: 'vite:svg-icons',
     configResolved(resolvedConfig) {

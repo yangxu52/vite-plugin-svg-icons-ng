@@ -3,40 +3,40 @@ import fg from 'fast-glob'
 import fs from 'fs-extra'
 import { bakeIcon } from 'svg-icon-baker'
 import { normalizePath } from 'vite'
-import type { CompileContext, CompileResult, ResolvedOptions, SymbolCache, SymbolData } from '../types'
+import type { CompileContext, CompileResult, ResolvedOptions, SymbolData } from '../types'
 import { generateSymbolId } from '../utils'
 
 export async function compileIcons(ctx: CompileContext): Promise<CompileResult> {
-  const list = await compileIconSymbols(ctx.cache, ctx.options)
+  const list = await compileIconSymbols(ctx)
   return {
     symbols: list.map((item) => item.content),
     ids: list.map((item) => item.id),
   }
 }
 
-async function compileIconSymbols(cache: Map<string, SymbolCache>, options: ResolvedOptions) {
-  const dirPromises = options.iconDirs.map(async (dir) => {
+async function compileIconSymbols(ctx: CompileContext) {
+  const dirPromises = ctx.options.iconDirs.map(async (dir) => {
     const entryList = await fg.glob('**/*.svg', { cwd: dir, stats: true, absolute: true })
     const entryPromises = entryList.map(async (e) => {
-      return await compileEntry(e, cache, dir, options)
+      return await compileEntry(ctx, e, dir)
     })
     return (await Promise.all(entryPromises)).filter(Boolean) as SymbolData[]
   })
   return (await Promise.all(dirPromises)).flat()
 }
 
-async function compileEntry(e: Entry, cache: Map<string, SymbolCache>, dir: string, options: ResolvedOptions) {
+async function compileEntry(ctx: CompileContext, e: Entry, dir: string) {
   const { path, stats: { mtimeMs } = {} } = e
-  const cached = cache.get(path)
-  if (cached && cached.mtimeMs === mtimeMs) {
-    return cached.symbol
+  const cached = ctx.cache.get(path, mtimeMs)
+  if (cached) {
+    return cached
   }
   try {
     const relativePath = normalizePath(path).replace(normalizePath(dir + '/'), '') || ''
-    const id = generateSymbolId(relativePath, options)
-    const content = await transformIconFile(path, id, options)
+    const id = generateSymbolId(relativePath, ctx.options)
+    const content = await transformIconFile(path, id, ctx.options)
     const symbol = { id, content }
-    cache.set(path, { mtimeMs, symbol })
+    ctx.cache.set(path, { mtimeMs, symbol })
     return symbol
   } catch {
     return null

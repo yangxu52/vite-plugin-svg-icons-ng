@@ -1,22 +1,44 @@
-<script setup>
-import SvgIcon from './components/SvgIcon.vue'
+<script setup lang="ts">
+import ShowCase from './components/ShowCase.vue'
+import { ref, watch } from 'vue'
+
+import ids from 'virtual:svg-icons/ids'
+
+const sorted = Array.from(ids).sort((a, b) => a.localeCompare(b))
+
+const fontSize = ref(8)
+const color = ref('#2080f0')
+
+watch(fontSize, (value) => {
+  document.documentElement.style.setProperty('--font-size', `${value}rem`)
+})
 </script>
 
 <template>
   <div class="wrapper">
-    <!-- normal usage -->
-    <SvgIcon name="icon1" />
-    <!-- fill color usage -->
-    <SvgIcon name="bookmark" color="#ffc741" />
-    <!-- custom prefix usage, has reference defs -->
-    <SvgIcon name="position" />
-    <!-- subdirectory icon, has colorful -->
-    <SvgIcon name="color-folder" color="#ffc741" />
+    <div class="display">
+      <ShowCase group="normal" :icons="sorted" />
+      <ShowCase group="color" :icons="sorted" />
+      <ShowCase group="animate" :icons="sorted" />
+      <ShowCase group="origin" :icons="sorted" />
+    </div>
+    <div class="control">
+      <!--      font-size-->
+      <div class="control-item font-size">
+        <label for="font-size">Font Size: {{ `${fontSize}rem` }}</label>
+        <input type="range" id="font-size" min="1" max="10" v-model="fontSize" />
+      </div>
+      <div class="control-item color">
+        <label for="color">Fill Color: {{ color }}</label>
+        <input type="color" v-model="color" />
+      </div>
+    </div>
   </div>
 </template>
 
 <style>
 :root {
+  --font-size: 8rem;
   * {
     box-sizing: border-box;
   }
@@ -24,13 +46,19 @@ import SvgIcon from './components/SvgIcon.vue'
 .wrapper {
   width: 100%;
   height: 100%;
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  row-gap: 1rem;
-  column-gap: 1rem;
-  svg {
-    font-size: 8rem;
-  }
+  display: flex;
+}
+.display {
+  flex: 1;
+  font-size: var(--font-size);
+  color: v-bind(color);
+}
+.control {
+  width: 12rem;
+}
+.control-item {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 </style>

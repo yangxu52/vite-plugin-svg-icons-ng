@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
-defineOptions({ name: 'SvgIcon', inheritAttrs: false })
+defineOptions({ name: 'SvgIcon' })
 const props = defineProps({
   name: { type: String, required: true },
-  prefix: { type: String, default: 'icon' }, // common prefix, simplify  usage
-  color: { type: String, default: '#333' }, // fill color
 })
-const symbolId = computed(() => `#${props.prefix}-${props.name}`)
 </script>
 
 <template>
   <svg class="svg-icon" aria-hidden="true">
-    <use :xlink:href="symbolId" :fill="color" />
+    <use :href="`#${props.name}`" />
   </svg>
 </template>
 

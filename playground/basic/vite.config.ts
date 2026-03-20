@@ -10,8 +10,6 @@ export default defineConfig({
     createSvgIconsPlugin({
       iconDirs: [path.resolve(process.cwd(), 'src/icons')],
       symbolId: 'icon-[dir]-[name]',
-      customDomId: 'svg-icons',
-      inject: 'body-last',
     }),
   ],
 })

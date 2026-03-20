@@ -1,3 +1,13 @@
+## 1.6.0-rc.1 (2026-03-20)
+
+- refactor: improve strokeOverride option ([d614b01](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d614b01))
+- chore: simplify README.md ([9043717](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9043717))
+- chore(playground): collect new svg files and group Display ([4631823](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4631823))
+- fix: issues by using svg-icon-baker ([579d710](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/579d710))
+- ci: add release script & node bump to 24 ([a2e89a3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a2e89a3))
+- docs: add missing import statement ([d9d4442](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d9d4442))
+- docs: normalize text ([5d061c8](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/5d061c8))
+
 ## 1.6.0-beta.1 (2025-11-13)
 
 - feat: using svg-icon-baker for convert ([6f465a1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6f465a1))

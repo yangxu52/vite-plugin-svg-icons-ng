@@ -1,3 +1,8 @@
+## 1.6.0 (2026-03-20)
+
+- docs: update options by using svg-icon-baker ([883ba6a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/883ba6a))
+- refactor: optimize naming and structure ([a2ef916](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a2ef916))
+
 ## 1.6.0-rc.1 (2026-03-20)
 
 - refactor: improve strokeOverride option ([d614b01](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d614b01))

@@ -57,7 +57,7 @@
   "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
   "dependencies": {
     "fast-glob": "^3.3.3",
-    "fs-extra": "^11.3.2",
+    "fs-extra": "^11.3.4",
     "svg-icon-baker": "^1.1.2"
   },
   "peerDependencies": {
@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^22.18.9",
+    "@types/node": "^24.12.0",
     "unbuild": "^3.6.1",
     "vitest": "^4.1.0"
   }

@@ -38,19 +38,19 @@
   },
   "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
   "devDependencies": {
-    "@commitlint/cli": "^20.1.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@eslint/js": "^9.37.0",
-    "conventional-changelog": "^7.1.1",
-    "eslint": "^9.37.0",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@eslint/js": "^9.39.4",
+    "conventional-changelog": "^7.2.0",
+    "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
-    "globals": "^16.4.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.3",
-    "prettier": "^3.6.2",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.0"
+    "typescript-eslint": "^8.57.1"
   },
   "lint-staged": {
     "*": [

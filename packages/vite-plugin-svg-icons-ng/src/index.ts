@@ -3,13 +3,18 @@ import type { Options, PluginContext } from './types'
 import { createMemoryCache } from './cache/memoryCache'
 import { resolveOptions, validateOptions } from './utils/options'
 import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
-import { setupDevMiddleware } from './plugin/dev'
+import { createCompiler } from './core/compiler.ts'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
   const options = resolveOptions(userOptions)
   let isBuild = false
-  const ctx: PluginContext = { cache: createMemoryCache(), options }
+  const cache = createMemoryCache()
+  const ctx: PluginContext = {
+    cache,
+    options,
+    compiler: createCompiler({ cache, options }),
+  }
   return {
     name: 'vite:svg-icons',
     configResolved(resolvedConfig) {
@@ -18,14 +23,19 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
     resolveId(id) {
       return resolveVirtualId(id)
     },
-    load: async (id, ssr) => {
-      return await loadVirtualModuleById(ctx, id, {
-        isBuild,
-        ssr: !!ssr,
-      })
+    load: async (id, loadOptions) => await loadVirtualModuleById(ctx, id, isBuild, loadOptions),
+    configureServer(server) {
+      for (const dir of options.iconDirs) {
+        server.watcher.add(dir)
+      }
     },
-    configureServer: ({ middlewares }) => {
-      setupDevMiddleware(ctx, middlewares.use.bind(middlewares))
+    handleHotUpdate(hotUpdateCtx) {
+      if (!ctx.compiler.isIconFile(hotUpdateCtx.file)) {
+        return
+      }
+      ctx.compiler.invalidate(hotUpdateCtx.file)
+      hotUpdateCtx.server.ws.send({ type: 'full-reload' })
+      return []
     },
   }
 }

@@ -1,4 +1,6 @@
 import {
+  IDS_TEMPLATE,
+  SPRITE_TEMPLATE,
   VIRTUAL_IDS,
   VIRTUAL_IDS_URL,
   VIRTUAL_NAMES_DEPRECATED,
@@ -8,9 +10,7 @@ import {
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from '../constants'
-import type { PluginContext, VirtualModuleRenderContext, VirtualModuleType } from '../types'
-import { compileIcons } from '../core/compiler'
-import { renderIdsModule, renderSpriteModule } from '../core/modules'
+import type { BuildResult, PluginContext, ResolvedOptions, VirtualModuleRenderContext, VirtualModuleType } from '../types'
 
 export function resolveVirtualTypeFromId(id: string): VirtualModuleType | null {
   const normalizedId = id.startsWith('\0') ? id.slice(1) : id
@@ -38,9 +38,17 @@ export async function renderVirtualModule(ctx: PluginContext, moduleType: Virtua
   if (renderCtx.ssr && !renderCtx.isBuild) {
     return 'export default {}'
   }
-  const result = await compileIcons(ctx)
+  const result = await ctx.compiler.getResult()
   if (moduleType === 'register') {
-    return renderSpriteModule(result, ctx.options)
+    return toSpriteCode(result, ctx.options)
   }
-  return renderIdsModule(result)
+  return toIdsCode(result)
+}
+
+function toIdsCode(result: BuildResult): string {
+  return IDS_TEMPLATE(JSON.stringify(result.ids))
+}
+
+function toSpriteCode(result: BuildResult, options: ResolvedOptions): string {
+  return SPRITE_TEMPLATE(JSON.stringify(result.symbols.join('')), options.customDomId, options.inject)
 }

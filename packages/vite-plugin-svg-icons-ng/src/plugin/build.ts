@@ -1,6 +1,8 @@
 import type { PluginContext } from '../types'
 import { renderVirtualModule, resolveVirtualTypeFromId } from './virtual'
 
+type LoadOptionsLike = { ssr?: unknown } | boolean | null | undefined
+
 export function resolveVirtualId(id: string): string | null {
   if (!resolveVirtualTypeFromId(id)) {
     return null
@@ -8,23 +10,26 @@ export function resolveVirtualId(id: string): string | null {
   return id.startsWith('\0') ? id : '\0' + id
 }
 
-export async function loadVirtualModuleById(
-  ctx: PluginContext,
-  id: string,
-  renderCtx: {
-    isBuild: boolean
-    ssr?: boolean
+function parseSsr(loadOptions: LoadOptionsLike): boolean {
+  if (typeof loadOptions === 'boolean') {
+    return loadOptions
   }
-): Promise<string | null> {
+  if (!loadOptions || typeof loadOptions !== 'object') {
+    return false
+  }
+  return !!loadOptions.ssr
+}
+
+export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: boolean): Promise<string | null>
+export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: { ssr?: unknown } | null): Promise<string | null>
+export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: LoadOptionsLike): Promise<string | null> {
   const moduleType = resolveVirtualTypeFromId(id)
   if (!moduleType) {
     return null
   }
-  if (!renderCtx.isBuild && !renderCtx.ssr) {
-    return null
-  }
+  const ssr = parseSsr(loadOptions)
   return await renderVirtualModule(ctx, moduleType, {
-    isBuild: renderCtx.isBuild,
-    ssr: !!renderCtx.ssr,
+    isBuild,
+    ssr,
   })
 }

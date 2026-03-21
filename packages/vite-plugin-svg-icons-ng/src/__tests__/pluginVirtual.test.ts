@@ -9,15 +9,8 @@ import {
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
 } from '../constants'
-import { buildIcons } from '../core/builder'
 import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../plugin/virtual'
 import type { PluginContext } from '../types'
-
-vi.mock('../core/compiler', () => ({
-  compileIcons: vi.fn(),
-}))
-
-const mockedCompileIcons = vi.mocked(buildIcons)
 
 const createPluginContext = (): PluginContext => ({
   cache: {
@@ -32,6 +25,11 @@ const createPluginContext = (): PluginContext => ({
     customDomId: '__svg__icons__dom__',
     strokeOverride: false,
     optimize: true,
+  },
+  compiler: {
+    getResult: vi.fn(),
+    invalidate: vi.fn(),
+    isIconFile: vi.fn(),
   },
 })
 
@@ -69,12 +67,12 @@ describe('plugin virtual module render', () => {
     const content = await renderVirtualModule(ctx, 'register', { isBuild: false, ssr: true })
 
     expect(content).toBe('export default {}')
-    expect(mockedCompileIcons).not.toHaveBeenCalled()
+    expect(ctx.compiler.getResult).not.toHaveBeenCalled()
   })
 
   test('should render register module in build/dev client path', async () => {
     const ctx = createPluginContext()
-    mockedCompileIcons.mockResolvedValue({
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
     })
@@ -83,12 +81,12 @@ describe('plugin virtual module render', () => {
 
     expect(content).toContain('document.createElementNS')
     expect(content).toContain('<symbol id=\\"icon-a\\"></symbol>')
-    expect(mockedCompileIcons).toHaveBeenCalledTimes(1)
+    expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 
   test('should render ids module in build/dev client path', async () => {
     const ctx = createPluginContext()
-    mockedCompileIcons.mockResolvedValue({
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
     })
@@ -96,6 +94,6 @@ describe('plugin virtual module render', () => {
     const content = await renderVirtualModule(ctx, 'ids', { isBuild: true, ssr: false })
 
     expect(content).toBe('export default ["icon-a"]')
-    expect(mockedCompileIcons).toHaveBeenCalledTimes(1)
+    expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 })

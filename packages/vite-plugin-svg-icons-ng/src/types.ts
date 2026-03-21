@@ -57,9 +57,16 @@ export type IconCache = {
   invalidate(path: string): void
 }
 
+export type IconCompiler = {
+  getResult(): Promise<BuildResult>
+  invalidate(file?: string): void
+  isIconFile(file: string): boolean
+}
+
 export type PluginContext = {
   cache: IconCache
   options: ResolvedOptions
+  compiler: IconCompiler
 }
 
 export type BuildContext = Pick<PluginContext, 'options' | 'cache'>

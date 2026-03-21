@@ -1,3 +1,14 @@
+## <small>1.6.1 (2026-03-21)</small>
+
+- chore: update non-major dependencies ([28053f3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/28053f3))
+- chore(skill): add agent skill ([bdaec46](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/bdaec46))
+- test: split unit tests file by module ([cd0f41d](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cd0f41d))
+- refactor: abstract IconCache and implement memory cache ([84b5c29](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/84b5c29))
+- refactor: extract compile pipeline and unify module renderers ([eda5868](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/eda5868))
+- refactor: remove redundant core entry and decouple plugin/compiler utils ([b3e772b](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b3e772b))
+- refactor: unify load pipeline ([dd76551](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/dd76551))
+- refactor: unify virtual module pipeline and add behavior test ([25b726f](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/25b726f))
+
 ## 1.6.0 (2026-03-20)
 
 - docs: update options by using svg-icon-baker ([883ba6a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/883ba6a))

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { createSvgIconsPlugin } from '../index'
-import { loadVirtualModuleById } from '../plugin/build'
+import { createSvgIconsPlugin } from '../../index'
+import { loadVirtualModuleById } from '../build'
 import type { Plugin } from 'vite'
 
-vi.mock('../plugin/build', () => ({
+vi.mock('../build', () => ({
   resolveVirtualId: vi.fn(),
   loadVirtualModuleById: vi.fn(),
 }))

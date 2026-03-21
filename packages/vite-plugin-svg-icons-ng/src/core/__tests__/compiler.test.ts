@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { buildIcons } from '../core/builder'
-import { createCompiler } from '../core/compiler.ts'
-import type { BuildContext } from '../types'
+import { buildIcons } from '../builder'
+import { createCompiler } from '../compiler'
+import type { BuildContext } from '../../types'
 
-vi.mock('../core/builder', () => ({
+vi.mock('../builder', () => ({
   buildIcons: vi.fn(),
 }))
 

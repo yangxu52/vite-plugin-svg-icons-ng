@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { validateOptions } from '../utils/options'
-import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../constants'
+import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../constants'
+import { validateOptions } from '../options'
 
 describe('Test ValidateOption', () => {
   const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]', customDomId: '__svg__icons__dom__' } as any

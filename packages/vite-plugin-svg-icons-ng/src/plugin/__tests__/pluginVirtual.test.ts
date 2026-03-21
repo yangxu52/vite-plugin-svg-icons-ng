@@ -8,9 +8,9 @@ import {
   VIRTUAL_REGISTER_DEPRECATED,
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
-} from '../constants'
-import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../plugin/virtual'
-import type { PluginContext } from '../types'
+} from '../../constants'
+import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../virtual'
+import type { PluginContext } from '../../types'
 
 const createPluginContext = (): PluginContext => ({
   cache: {

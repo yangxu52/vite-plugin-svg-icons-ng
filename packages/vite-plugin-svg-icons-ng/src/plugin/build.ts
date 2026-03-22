@@ -20,7 +20,7 @@ function parseSsr(loadOptions: LoadOptionsLike): boolean {
   return !!loadOptions.ssr
 }
 
-export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: LoadOptionsLike): Promise<string | null> {
+export async function pluginLoad(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: LoadOptionsLike): Promise<string | null> {
   const moduleType = resolveVirtualTypeFromId(id)
   if (!moduleType) {
     return null

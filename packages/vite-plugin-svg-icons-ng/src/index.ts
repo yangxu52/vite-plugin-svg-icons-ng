@@ -1,9 +1,9 @@
 import type { Plugin } from 'vite'
 import { createMemoryCache } from './cache/memoryCache'
 import { createCompiler } from './core/compiler.ts'
-import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
-import { transformPluginIndexHtml } from './plugin/html'
-import { configurePluginServer, handlePluginHotUpdate } from './plugin/server.ts'
+import { pluginLoad, resolveVirtualId } from './plugin/build'
+import { pluginTransformIndexHtml } from './plugin/html'
+import { pluginConfigureServer, pluginHandleHotUpdate } from './plugin/server.ts'
 import type { Options, PluginContext } from './types'
 import { resolveOptions, validateOptions } from './utils/options'
 
@@ -25,10 +25,10 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
     resolveId(id) {
       return resolveVirtualId(id)
     },
-    load: async (id, loadOptions) => await loadVirtualModuleById(ctx, id, isBuild, loadOptions),
-    transformIndexHtml: async (html) => await transformPluginIndexHtml(ctx, html),
-    configureServer: (server) => configurePluginServer(ctx, server),
-    handleHotUpdate: (hotUpdateCtx) => handlePluginHotUpdate(ctx, hotUpdateCtx),
+    load: async (id, loadOptions) => await pluginLoad(ctx, id, isBuild, loadOptions),
+    transformIndexHtml: async (html) => await pluginTransformIndexHtml(ctx, html),
+    configureServer: (server) => pluginConfigureServer(ctx, server),
+    handleHotUpdate: (hotUpdateCtx) => pluginHandleHotUpdate(ctx, hotUpdateCtx),
   }
 }
 

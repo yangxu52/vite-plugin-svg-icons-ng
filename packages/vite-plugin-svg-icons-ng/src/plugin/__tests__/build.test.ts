@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { VIRTUAL_IDS, VIRTUAL_REGISTER, VIRTUAL_SPRITE } from '../../constants'
-import { loadVirtualModuleById, resolveVirtualId } from '../build'
+import { pluginLoad, resolveVirtualId } from '../build'
 import { renderVirtualModule } from '../virtual'
 import type { PluginContext } from '../../types'
 
@@ -56,16 +56,16 @@ describe('plugin build helpers', () => {
     expect(resolveVirtualId('virtual:unknown')).toBeNull()
   })
 
-  test('loadVirtualModuleById should return null for unknown id', async () => {
-    const content = await loadVirtualModuleById(createPluginContext(), 'virtual:unknown', false, { ssr: false })
+  test('pluginLoad should return null for unknown id', async () => {
+    const content = await pluginLoad(createPluginContext(), 'virtual:unknown', false, { ssr: false })
     expect(content).toBeNull()
     expect(renderVirtualModule).not.toHaveBeenCalled()
   })
 
-  test('loadVirtualModuleById should render virtual module in dev client', async () => {
+  test('pluginLoad should render virtual module in dev client', async () => {
     vi.mocked(renderVirtualModule).mockResolvedValue('export default {}')
 
-    const content = await loadVirtualModuleById(createPluginContext(), VIRTUAL_REGISTER, false, { ssr: false })
+    const content = await pluginLoad(createPluginContext(), VIRTUAL_REGISTER, false, { ssr: false })
 
     expect(content).toBe('export default {}')
     expect(renderVirtualModule).toHaveBeenCalledTimes(1)

@@ -31,13 +31,13 @@ export function setupServerMiddleware(ctx: PluginContext, use: MiddlewareUse): v
   })
 }
 
-export function configurePluginServer(ctx: PluginContext, server: ViteDevServer): void {
+export function pluginConfigureServer(ctx: PluginContext, server: ViteDevServer): void {
   for (const dir of ctx.options.iconDirs) {
     server.watcher.add(dir)
   }
 }
 
-export function handlePluginHotUpdate(ctx: PluginContext, hotUpdateCtx: HmrContext): [] | void {
+export function pluginHandleHotUpdate(ctx: PluginContext, hotUpdateCtx: HmrContext): [] | void {
   if (!ctx.compiler.isIconFile(hotUpdateCtx.file)) {
     return
   }

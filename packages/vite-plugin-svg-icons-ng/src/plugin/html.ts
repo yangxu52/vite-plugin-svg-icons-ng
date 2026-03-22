@@ -1,7 +1,7 @@
 import type { PluginContext, ResolvedOptions } from '../types'
 import { renderSpriteElement } from './virtual'
 
-export async function transformPluginIndexHtml(ctx: PluginContext, html: string): Promise<string> {
+export async function pluginTransformIndexHtml(ctx: PluginContext, html: string): Promise<string> {
   if (hasSpriteDom(html, ctx.options.customDomId)) {
     return html
   }

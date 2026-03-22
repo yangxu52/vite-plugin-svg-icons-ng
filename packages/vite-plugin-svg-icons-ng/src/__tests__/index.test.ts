@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { createSvgIconsPlugin } from '../../index'
-import { loadVirtualModuleById } from '../build'
+import { createSvgIconsPlugin } from '../index'
+import { pluginLoad } from '../plugin/build'
 import type { Plugin } from 'vite'
 
 const hoisted = vi.hoisted(() => ({
@@ -11,16 +11,16 @@ const hoisted = vi.hoisted(() => ({
   },
 }))
 
-vi.mock('../build', () => ({
+vi.mock('../plugin/build', () => ({
   resolveVirtualId: vi.fn(),
-  loadVirtualModuleById: vi.fn(),
+  pluginLoad: vi.fn(),
 }))
 
-vi.mock('../../core/compiler', () => ({
+vi.mock('../core/compiler', () => ({
   createCompiler: vi.fn(() => hoisted.compiler),
 }))
 
-describe('plugin index', () => {
+describe('index entry', () => {
   afterEach(() => {
     vi.clearAllMocks()
   })
@@ -61,26 +61,26 @@ describe('plugin index', () => {
   }
 
   test('should pass ssr flag from vite load options object', async () => {
-    vi.mocked(loadVirtualModuleById).mockResolvedValue('export default {}')
+    vi.mocked(pluginLoad).mockResolvedValue('export default {}')
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
 
     await runLoad(plugin, 'virtual:svg-icons/register', { ssr: false })
-    expect(loadVirtualModuleById).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, { ssr: false })
+    expect(pluginLoad).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, { ssr: false })
 
     await runLoad(plugin, 'virtual:svg-icons/register', { ssr: true })
-    expect(loadVirtualModuleById).toHaveBeenLastCalledWith(expect.anything(), 'virtual:svg-icons/register', false, { ssr: true })
+    expect(pluginLoad).toHaveBeenLastCalledWith(expect.anything(), 'virtual:svg-icons/register', false, { ssr: true })
   })
 
   test('should support legacy boolean load option fallback', async () => {
-    vi.mocked(loadVirtualModuleById).mockResolvedValue('export default {}')
+    vi.mocked(pluginLoad).mockResolvedValue('export default {}')
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
 
     await runLoad(plugin, 'virtual:svg-icons/register', true)
-    expect(loadVirtualModuleById).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, true)
+    expect(pluginLoad).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, true)
   })
 
   test('should inject sprite into html when dom id does not exist', async () => {

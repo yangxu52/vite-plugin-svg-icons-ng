@@ -1,10 +1,11 @@
 import type { Plugin } from 'vite'
-import type { Options, PluginContext } from './types'
 import { createMemoryCache } from './cache/memoryCache'
-import { resolveOptions, validateOptions } from './utils/options'
-import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
 import { createCompiler } from './core/compiler.ts'
+import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
 import { transformPluginIndexHtml } from './plugin/html'
+import { configurePluginServer, handlePluginHotUpdate } from './plugin/server.ts'
+import type { Options, PluginContext } from './types'
+import { resolveOptions, validateOptions } from './utils/options'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
@@ -26,19 +27,8 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
     },
     load: async (id, loadOptions) => await loadVirtualModuleById(ctx, id, isBuild, loadOptions),
     transformIndexHtml: async (html) => await transformPluginIndexHtml(ctx, html),
-    configureServer(server) {
-      for (const dir of options.iconDirs) {
-        server.watcher.add(dir)
-      }
-    },
-    handleHotUpdate(hotUpdateCtx) {
-      if (!ctx.compiler.isIconFile(hotUpdateCtx.file)) {
-        return
-      }
-      ctx.compiler.invalidate(hotUpdateCtx.file)
-      hotUpdateCtx.server.ws.send({ type: 'full-reload' })
-      return []
-    },
+    configureServer: (server) => configurePluginServer(ctx, server),
+    handleHotUpdate: (hotUpdateCtx) => handlePluginHotUpdate(ctx, hotUpdateCtx),
   }
 }
 

@@ -1,7 +1,7 @@
 import type { PluginContext } from '../types'
 import { renderVirtualModule, resolveVirtualTypeFromId } from './virtual'
 
-type LoadOptionsLike = { ssr?: unknown } | boolean | null | undefined
+type LoadOptionsLike = { ssr?: boolean | undefined } | boolean | undefined
 
 export function resolveVirtualId(id: string): string | null {
   if (!resolveVirtualTypeFromId(id)) {
@@ -20,8 +20,6 @@ function parseSsr(loadOptions: LoadOptionsLike): boolean {
   return !!loadOptions.ssr
 }
 
-export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: boolean): Promise<string | null>
-export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: { ssr?: unknown } | null): Promise<string | null>
 export async function loadVirtualModuleById(ctx: PluginContext, id: string, isBuild: boolean, loadOptions?: LoadOptionsLike): Promise<string | null> {
   const moduleType = resolveVirtualTypeFromId(id)
   if (!moduleType) {

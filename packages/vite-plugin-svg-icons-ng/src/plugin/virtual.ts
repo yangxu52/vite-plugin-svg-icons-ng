@@ -1,6 +1,4 @@
 import {
-  IDS_TEMPLATE,
-  SPRITE_TEMPLATE,
   VIRTUAL_SPRITE,
   VIRTUAL_SPRITE_URL,
   VIRTUAL_IDS,
@@ -48,7 +46,7 @@ export async function renderVirtualModule(ctx: PluginContext, moduleType: Virtua
   }
   const result = await ctx.compiler.getResult()
   if (moduleType === 'register') {
-    return toSpriteCode(result, ctx.options)
+    return toRegisterCode(result, ctx.options)
   }
   if (moduleType === 'sprite') {
     return toSpriteModule(result, ctx.options)
@@ -57,11 +55,39 @@ export async function renderVirtualModule(ctx: PluginContext, moduleType: Virtua
 }
 
 function toIdsCode(result: BuildResult): string {
-  return IDS_TEMPLATE(JSON.stringify(result.ids))
+  return `export default ${JSON.stringify(result.ids)}`
 }
 
-function toSpriteCode(result: BuildResult, options: ResolvedOptions): string {
-  return SPRITE_TEMPLATE(JSON.stringify(result.symbols.join('')), options.customDomId, options.inject)
+function toRegisterCode(result: BuildResult, options: ResolvedOptions): string {
+  const symbolStr = JSON.stringify(result.symbols.join(''))
+  const insertBefore = options.inject === 'body-first' ? 'document.body.firstChild' : null
+  return `if (typeof window !== 'undefined') {
+  (function() {
+    const loadSvgSprite = function() {
+      let html = ${symbolStr};
+      let svg = document.getElementById('${options.customDomId}');
+      if (!svg) {
+        svg = document.createElementNS('${XMLNS}', 'svg');
+        svg.style.position = 'absolute';
+        svg.style.width = '0';
+        svg.style.height = '0';
+        svg.id = '${options.customDomId}';
+        svg.setAttribute('xmlns', '${XMLNS}');
+        svg.setAttribute('aria-hidden', true);
+        svg.innerHTML = html;
+        document.body.insertBefore(svg, ${insertBefore});
+      } else {
+        return;
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSvgSprite);
+    } else {
+      loadSvgSprite();
+    }
+  })();
+}
+export default {}`
 }
 
 function toSpriteModule(result: BuildResult, options: ResolvedOptions): string {

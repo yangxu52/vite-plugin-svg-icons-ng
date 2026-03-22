@@ -64,14 +64,18 @@ src/icons/
 - 默认值: `body-last`
 - 选项: `body-first` | `body-last`
 
-SVG精灵图的插入DOM的位置。
+SVG 精灵图注入到 HTML 的位置。
+
+> [!WARNING] 注意
+> 该选项仅作用于 客户端渲染（CSR）自动注入。  
+> 如果通过 `virtual:svg-icons/sprite` 手动注入（SSR 模板场景），`inject` 不生效。
 
 ## customDomId
 
 - 类型: `string`
 - 默认值: `__svg__icons__dom__`
 
-自定义SVG精灵图的插入DOM节点的ID属性。
+自定义注入的精灵的根节点 `<svg>` 的 `id` 属性。
 
 ## strokeOverride
 

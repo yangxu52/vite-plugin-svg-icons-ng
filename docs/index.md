@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: 'vite-plugin-svg-icons-ng'
-  #  text: "Vite plugin for easily creating an SVG sprite and injecting it for use."
-  tagline: 'Vite plugin for easily creating an SVG sprite and injecting it for use.'
+  text: 'A high-performance SVG icon plugin for Vite'
+  tagline: 'Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient✈️.'
   actions:
     - theme: brand
       text: Quick Start
@@ -17,12 +17,26 @@ hero:
       link: /guide/options
 features:
   - icon: 🚀
-    title: Preloading
-    details: All icons will be generated when the project is run, and only one DOM operate.
+    title: Pre-generation & Injection
+    details: Automatically generates SVG sprites from files and injects them at runtime, enabling global reuse with a single mount.
+
   - icon: ⚡
     title: High Performance
-    details: Built-in cache, it will be regenerated only when the icon is modified.
-  - icon: 🎉
-    title: SSR Support
-    details: Coming soon
+    details: Combines async build processing with caching, updating icons only when needed for a faster, smoother experience.
+
+  - icon: 📦
+    title: Out-of-the-box
+    details: Sensible defaults and comprehensive docs for quick setup and a unified icon system.
+
+  - icon: 🔥
+    title: HMR Support
+    details: Icons update instantly without page reloads, keeping your development flow fast and seamless.
+
+  - icon: 🧩
+    title: SSR Ready
+    details: Works seamlessly in SSR environments, ensuring consistent rendering without extra setup.
+
+  - icon: 🧱
+    title: Consistent Output
+    details: Ensures identical SVG sprite output across dev, build, and SSR to avoid environment inconsistencies.
 ---

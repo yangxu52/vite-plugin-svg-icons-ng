@@ -27,7 +27,7 @@ yarn add -D vite-plugin-svg-icons-ng
 
 ## Usage
 
-Import and configure the plugin in `vite.config.ts`/`vite.config.js`
+Configure the plugin in `vite.config.ts` / `vite.config.js`:
 
 ::: code-group
 
@@ -47,46 +47,28 @@ export default defineConfig({
 ```
 
 :::
-
-Then, import the virtual module in entry file, like `main.ts`/`main.js`.
-
-::: code-group
-
-```ts [main.ts / main.js]
-import 'virtual:svg-icons/register' // recommend // [!code ++]
-import 'virtual:svg-icons-register' // deprecated // [!code --]
-```
-
-:::
-
-> [!CAUTION] WARNING !
-> The virtual module `virtual:svg-icons-register` will be deprecated in the future.  
-> Because it doesn't comply with the virtual module's [namespace specification](https://vite.dev/guide/api-plugin#virtual-modules-convention).  
-> You should use `virtual:svg-icons/register` instead.
-
-Here, the svg sprite will have been generated and injected into the HTML.  
+Here, the svg sprite will have been generated and injected into the DOM.  
 Can use through the public component ([Component Examples](/guide/component/index)).
 
 Or can use the sprite directly in the HTML.
 
 ```html
-<!-- not recommend -->
 <svg>
   <use xlink:href="#icon-icon1"></use>
 </svg>
 ```
 
-## Get all SymbolId
+### Get All Symbol IDs
 
-Can get all SymbolId through `virtual:svg-icons/ids`
+Import `virtual:svg-icons/ids` module to read all generated symbol IDs:
 
 ```ts
-import ids from 'virtual:svg-icons/ids' // recommend // [!code ++]
-import ids from 'virtual:svg-icons-names' //deprecated // [!code --]
-console.log(ids) // ['icon-icon1','icon-icon2','icon-icon3']
+import ids from 'virtual:svg-icons/ids'
+console.log(ids) // ['icon-icon1', 'icon-icon2', ...]
 ```
 
-> [!CAUTION] WARNING !
-> The virtual module `virtual:svg-icons-names` will be deprecated in the future.  
-> Because it doesn't comply with the virtual module's [namespace specification](https://vite.dev/guide/api-plugin#virtual-modules-convention).  
-> You should use `virtual:svg-icons/ids` instead.
+> Legacy id `virtual:svg-icons-names` will be removed in `v2.0.0`.
+
+### SSR
+
+If your app renders on the server, follow the dedicated [SSR Guide](/guide/ssr).

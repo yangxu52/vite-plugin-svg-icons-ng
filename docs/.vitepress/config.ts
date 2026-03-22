@@ -32,6 +32,7 @@ export default defineConfig({
                   { text: 'React', link: '/guide/component/react' },
                 ],
               },
+              { text: 'Server-Side Rendering', link: '/guide/ssr' },
             ],
           },
           {
@@ -63,6 +64,7 @@ export default defineConfig({
                   { text: 'React', link: '/zh/guide/component/react' },
                 ],
               },
+              { text: '服务端渲染（SSR）', link: '/zh/guide/ssr' },
             ],
           },
           {

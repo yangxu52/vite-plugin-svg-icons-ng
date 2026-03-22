@@ -65,14 +65,18 @@ src/icons/
 - default: `body-last`
 - options: `body-first` | `body-last`
 
-The position of the SVG sprite inject into DOM.
+The position where SVG sprite is injected into HTML.
+
+> [!WARNING] NOTE
+> This option only applies to the client-side rendering.
+> If you inject manually via `virtual:svg-icons/sprite` (for SSR templates), `inject` is not used.
 
 ## customDomId
 
 - type: `string`
 - default: `__svg__icons__dom__`
 
-Customize the `id` attribute of the SVG sprite DOM.
+Customize the `id` attribute of injected sprite root `<svg>`.
 
 ## strokeOverride
 

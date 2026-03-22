@@ -1,9 +1,9 @@
 import type { Plugin } from 'vite'
 import { createMemoryCache } from './cache/memoryCache'
-import { createCompiler } from './core/compiler.ts'
+import { createCompiler } from './core/compiler'
 import { pluginLoad, resolveVirtualId } from './plugin/build'
 import { pluginTransformIndexHtml } from './plugin/html'
-import { pluginConfigureServer, pluginHandleHotUpdate } from './plugin/server.ts'
+import { pluginConfigureServer, pluginHandleHotUpdate } from './plugin/server'
 import type { Options, PluginContext } from './types'
 import { resolveOptions, validateOptions } from './utils/options'
 

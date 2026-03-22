@@ -1,6 +1,6 @@
 import { normalizePath } from 'vite'
-import { buildIcons } from './builder.ts'
-import type { BuildContext, BuildResult, IconCompiler } from '../types.ts'
+import { buildIcons } from './builder'
+import type { BuildContext, BuildResult, IconCompiler } from '../types'
 
 function normalizeFsPath(filePath: string): string {
   const normalized = normalizePath(filePath)

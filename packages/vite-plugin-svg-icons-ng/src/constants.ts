@@ -9,6 +9,7 @@ export const VIRTUAL_REGISTER = `${VIRTUAL_ID_PREFIX}/register`
  */
 export const VIRTUAL_NAMES_DEPRECATED = `${VIRTUAL_ID_PREFIX}-names`
 export const VIRTUAL_IDS = `${VIRTUAL_ID_PREFIX}/ids`
+export const VIRTUAL_SPRITE = `${VIRTUAL_ID_PREFIX}/sprite`
 /**
  * @deprecated
  */
@@ -19,6 +20,7 @@ export const VIRTUAL_REGISTER_URL = `/@id/__x00__${VIRTUAL_REGISTER}`
  */
 export const VIRTUAL_NAMES_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_NAMES_DEPRECATED}`
 export const VIRTUAL_IDS_URL = `/@id/__x00__${VIRTUAL_IDS}`
+export const VIRTUAL_SPRITE_URL = `/@id/__x00__${VIRTUAL_SPRITE}`
 export const SVG_DOM_ID = '__svg__icons__dom__'
 export const XMLNS = 'http://www.w3.org/2000/svg'
 export const XMLNS_LINK = 'http://www.w3.org/1999/xlink'

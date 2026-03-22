@@ -4,6 +4,7 @@ import { createMemoryCache } from './cache/memoryCache'
 import { resolveOptions, validateOptions } from './utils/options'
 import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
 import { createCompiler } from './core/compiler.ts'
+import { transformPluginIndexHtml } from './plugin/html'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
@@ -24,6 +25,7 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
       return resolveVirtualId(id)
     },
     load: async (id, loadOptions) => await loadVirtualModuleById(ctx, id, isBuild, loadOptions),
+    transformIndexHtml: async (html) => await transformPluginIndexHtml(ctx, html),
     configureServer(server) {
       for (const dir of options.iconDirs) {
         server.watcher.add(dir)

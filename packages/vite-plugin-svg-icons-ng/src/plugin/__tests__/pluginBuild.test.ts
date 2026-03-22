@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { VIRTUAL_IDS, VIRTUAL_REGISTER } from '../../constants'
+import { VIRTUAL_IDS, VIRTUAL_REGISTER, VIRTUAL_SPRITE } from '../../constants'
 import { loadVirtualModuleById, resolveVirtualId } from '../build'
 import { renderVirtualModule } from '../virtual'
 import type { PluginContext } from '../../types'
@@ -12,6 +12,9 @@ vi.mock('../virtual', () => ({
     }
     if (normalized === VIRTUAL_IDS) {
       return 'ids'
+    }
+    if (normalized === VIRTUAL_SPRITE) {
+      return 'sprite'
     }
     return null
   },
@@ -49,6 +52,7 @@ describe('plugin build helpers', () => {
   test('resolveVirtualId should normalize only known virtual ids', () => {
     expect(resolveVirtualId(VIRTUAL_REGISTER)).toBe(`\0${VIRTUAL_REGISTER}`)
     expect(resolveVirtualId(`\0${VIRTUAL_IDS}`)).toBe(`\0${VIRTUAL_IDS}`)
+    expect(resolveVirtualId(VIRTUAL_SPRITE)).toBe(`\0${VIRTUAL_SPRITE}`)
     expect(resolveVirtualId('virtual:unknown')).toBeNull()
   })
 

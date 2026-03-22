@@ -8,6 +8,8 @@ import {
   VIRTUAL_REGISTER_DEPRECATED,
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
+  VIRTUAL_SPRITE,
+  VIRTUAL_SPRITE_URL,
 } from '../../constants'
 import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../virtual'
 import type { PluginContext } from '../../types'
@@ -46,6 +48,7 @@ describe('plugin virtual module resolver', () => {
     expect(resolveVirtualTypeFromId(VIRTUAL_IDS)).toBe('ids')
     expect(resolveVirtualTypeFromId(VIRTUAL_NAMES_DEPRECATED)).toBe('ids')
     expect(resolveVirtualTypeFromId(`\0${VIRTUAL_IDS}`)).toBe('ids')
+    expect(resolveVirtualTypeFromId(VIRTUAL_SPRITE)).toBe('sprite')
 
     expect(resolveVirtualTypeFromId('virtual:unknown')).toBeNull()
   })
@@ -56,6 +59,7 @@ describe('plugin virtual module resolver', () => {
 
     expect(resolveVirtualTypeFromUrl(VIRTUAL_IDS_URL)).toBe('ids')
     expect(resolveVirtualTypeFromUrl(VIRTUAL_NAMES_URL_DEPRECATED)).toBe('ids')
+    expect(resolveVirtualTypeFromUrl(VIRTUAL_SPRITE_URL)).toBe('sprite')
 
     expect(resolveVirtualTypeFromUrl('/@id/__x00__virtual:unknown')).toBeNull()
   })
@@ -68,6 +72,19 @@ describe('plugin virtual module render', () => {
 
     expect(content).toBe('export default {}')
     expect(ctx.compiler.getResult).not.toHaveBeenCalled()
+  })
+
+  test('should render ids module in dev ssr path', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+    })
+
+    const content = await renderVirtualModule(ctx, 'ids', { isBuild: false, ssr: true })
+
+    expect(content).toBe('export default ["icon-a"]')
+    expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 
   test('should render register module in build/dev client path', async () => {
@@ -94,6 +111,21 @@ describe('plugin virtual module render', () => {
     const content = await renderVirtualModule(ctx, 'ids', { isBuild: true, ssr: false })
 
     expect(content).toBe('export default ["icon-a"]')
+    expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
+  })
+
+  test('should render sprite module in build/dev client path', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+    })
+
+    const content = await renderVirtualModule(ctx, 'sprite', { isBuild: false, ssr: false })
+
+    expect(content).toContain('export default "<svg')
+    expect(content).toContain('id=\\"__svg__icons__dom__\\"')
+    expect(content).toContain('<symbol id=\\"icon-a\\"></symbol>')
     expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 })

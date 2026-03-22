@@ -76,7 +76,7 @@ export type BuildResult = {
   ids: string[]
 }
 
-export type VirtualModuleType = 'register' | 'ids'
+export type VirtualModuleType = 'register' | 'ids' | 'sprite'
 
 export type VirtualModuleRenderContext = {
   isBuild: boolean

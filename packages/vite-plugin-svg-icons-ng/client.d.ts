@@ -24,3 +24,8 @@ declare module 'virtual:svg-icons/ids' {
   const src: string[]
   export default src
 }
+
+declare module 'virtual:svg-icons/sprite' {
+  const src: string
+  export default src
+}

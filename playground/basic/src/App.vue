@@ -17,10 +17,11 @@ watch(fontSize, (value) => {
 <template>
   <div class="wrapper">
     <div class="display">
-      <ShowCase group="normal" :icons="sorted" />
-      <ShowCase group="color" :icons="sorted" />
-      <ShowCase group="animate" :icons="sorted" />
-      <ShowCase group="origin" :icons="sorted" />
+      <ShowCase :icons="sorted" group="normal" />
+      <ShowCase :icons="sorted" group="color" />
+      <ShowCase :icons="sorted" group="animate" />
+      <ShowCase :icons="sorted" group="origin" />
+      <ShowCase :icons="sorted" group="issue" />
     </div>
     <div class="control">
       <!--      font-size-->

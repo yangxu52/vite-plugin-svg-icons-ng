@@ -70,8 +70,8 @@ importers:
         specifier: ^11.3.4
         version: 11.3.4
       svg-icon-baker:
-        specifier: ^1.1.2
-        version: 1.1.2
+        specifier: ^1.1.3
+        version: 1.1.3
       vite:
         specifier: '>=5.0.0'
         version: 8.0.1(@types/node@24.12.0)(jiti@2.6.1)(yaml@2.8.3)
@@ -2840,8 +2840,8 @@ packages:
     resolution: { integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w== }
     engines: { node: '>= 0.4' }
 
-  svg-icon-baker@1.1.2:
-    resolution: { integrity: sha512-gMBaN4xhwd0Pt47BG458hcv66NEPWuNTSsKMzdOWQNyhdh9WGaCqqwIJa3EfG6rztvhPqM+q6ob7jZ0E/L83xA== }
+  svg-icon-baker@1.1.3:
+    resolution: { integrity: sha512-VFB0yBn4G7+wr90UbLFlVx8yRuB/RvHr+MHHoNruwo+F0Nl46GMIyORfWXnJPxYOVS+mee5wSteILpWzpC7P+g== }
     engines: { node: ^20.0.0 || ^22.0.0 || >=24.0.0, pnpm: '>=10.0.0' }
 
   svgo@4.0.1:
@@ -5865,7 +5865,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svg-icon-baker@1.1.2:
+  svg-icon-baker@1.1.3:
     dependencies:
       svgo: 4.0.1(patch_hash=35fdd55c181e2141af1febed1cb8fd4c07ebbdddcc07e10667a278214956e061)
 

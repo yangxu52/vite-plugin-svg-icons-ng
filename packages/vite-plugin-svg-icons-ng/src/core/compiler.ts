@@ -19,7 +19,7 @@ export function createCompiler(ctx: BuildContext): IconCompiler {
 
   function isIconFile(file: string): boolean {
     const normalized = normalizeFsPath(file)
-    if (!normalized.endsWith('.svg')) {
+    if (!normalized.toLowerCase().endsWith('.svg')) {
       return false
     }
     return iconDirs.some((dir) => normalized.startsWith(dir))

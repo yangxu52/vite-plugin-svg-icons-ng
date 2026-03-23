@@ -1,3 +1,9 @@
+## <small>1.6.2 (2026-03-23)</small>
+
+- test(playground): add icons to reproduce issue #22 ([d7e4b21](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d7e4b21)), closes [#22](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/22)
+- fix: bump svg-icon-baker to v1.1.3 ([81eb879](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/81eb879)), closes [#22](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/22)
+- chore: normalize license ([79f9cba](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/79f9cba))
+
 ## <small>1.6.1 (2026-03-21)</small>
 
 - chore: update non-major dependencies ([28053f3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/28053f3))

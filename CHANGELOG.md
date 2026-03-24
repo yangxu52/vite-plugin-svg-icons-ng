@@ -1,3 +1,9 @@
+## <small>1.6.3 (2026-03-24)</small>
+
+- feat: bump svg-icon-baker to v1.2.0 and adapt ([4f5014a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4f5014a)), closes [#23](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/23)
+- fix: make isIconFile extension check case-insensitive ([51d6a37](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/51d6a37))
+- chore: update issue template ([290a407](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/290a407))
+
 ## <small>1.6.2 (2026-03-23)</small>
 
 - test(playground): add icons to reproduce issue #22 ([d7e4b21](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d7e4b21)), closes [#22](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/22)

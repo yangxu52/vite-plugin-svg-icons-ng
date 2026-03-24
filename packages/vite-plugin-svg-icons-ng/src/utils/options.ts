@@ -15,7 +15,7 @@ const defaultOptions = {
   inject: 'body-last',
   customDomId: SVG_DOM_ID,
   strokeOverride: false,
-  optimize: true,
+  bakerOptions: {},
 } satisfies Omit<ResolvedOptions, 'iconDirs'>
 
 function normalizeStrokeOverride(value: Options['strokeOverride']): ResolvedStrokeOverride {
@@ -35,7 +35,7 @@ export function resolveOptions(userOptions: Options): ResolvedOptions {
     inject: userOptions.inject ?? defaultOptions.inject,
     customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
     strokeOverride: normalizeStrokeOverride(userOptions.strokeOverride),
-    optimize: userOptions.optimize ?? defaultOptions.optimize,
+    bakerOptions: userOptions.bakerOptions ?? defaultOptions.bakerOptions,
   }
 }
 

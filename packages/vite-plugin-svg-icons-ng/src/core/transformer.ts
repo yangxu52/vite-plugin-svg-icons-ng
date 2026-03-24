@@ -5,7 +5,7 @@ import type { ResolvedOptions } from '../types'
 export async function transformIcon(file: string, symbolId: string, options: ResolvedOptions): Promise<string> {
   const svg = await fs.promises.readFile(file, 'utf-8')
   try {
-    const { content } = bakeIcon({ name: symbolId, content: svg }, options.optimize)
+    const { content } = bakeIcon({ name: symbolId, content: svg }, options.bakerOptions)
     return applyStrokeOverride(content, options)
   } catch (error) {
     throw new Error(`Failed on icon ${file}, ${String(error)}`)

@@ -8,35 +8,39 @@ export type Options = {
   /**
    * icons store directories
    * all svg files in these  will be converted to svg sprite.
+   * @requires true
    */
   iconDirs: string[]
   /**
    * icon name format
-   * @default: icon-[dir]-[name]
+   * @default icon-[dir]-[name]
    */
   symbolId?: string
   /**
    * icon format
-   * @default: 'body-last'
+   * @default 'body-last'
    */
   inject?: InjectMode
 
   /**
    * custom dom id
-   * @default: '__svg__icons__dom__'
+   * @default '__svg__icons__dom__'
    */
   customDomId?: string
   /**
    * override `stroke` attribute
    * `false` to disable, `true` to override as `currentColor`, or an object `{ color: '#fff' }`
-   * @default: false
+   * @default false
    */
   strokeOverride?: StrokeOverride
   /**
-   * optimize Options, base on SVGO
-   * @default：true
+   * **Advanced options**
+   *
+   * Directly customize the underlying svg-icon-baker bundle.
+   * see [svg-icon-baker](https://www.npmjs.com/package/svg-icon-baker) for more details
+   * @default {}
    */
-  optimize?: BakerOptions
+  bakerOptions?: BakerOptions
 }
 
 export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }

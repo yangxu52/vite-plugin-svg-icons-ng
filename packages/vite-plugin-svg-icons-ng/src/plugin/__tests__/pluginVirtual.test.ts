@@ -24,7 +24,7 @@ const createPluginContext = (): PluginContext => ({
     inject: 'body-last',
     customDomId: '__svg__icons__dom__',
     strokeOverride: false,
-    optimize: true,
+    bakerOptions: {},
   },
   compiler: {
     getResult: vi.fn(),

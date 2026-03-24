@@ -3,7 +3,11 @@ import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME
 import { validateOptions } from '../options'
 
 describe('Test ValidateOption', () => {
-  const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]', customDomId: '__svg__icons__dom__' } as any
+  const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]', customDomId: '__svg__icons__dom__' } as {
+    iconDirs: string[]
+    symbolId: string
+    customDomId: string
+  }
 
   test('right option', () => {
     const options = { ...template }
@@ -19,7 +23,7 @@ describe('Test ValidateOption', () => {
 
       expect(() => {
         validateOptions(options)
-      }).toThrowError(ERR_ICON_DIRS_REQUIRED)
+      }).toThrow(ERR_ICON_DIRS_REQUIRED)
     })
   })
   describe('option: symbolId', () => {
@@ -28,7 +32,7 @@ describe('Test ValidateOption', () => {
 
       expect(() => {
         validateOptions(options)
-      }).toThrowError(ERR_SYMBOL_ID_NO_NAME)
+      }).toThrow(ERR_SYMBOL_ID_NO_NAME)
     })
 
     test('symbolId must comply with the syntax', () => {
@@ -36,7 +40,7 @@ describe('Test ValidateOption', () => {
 
       expect(() => {
         validateOptions(options)
-      }).toThrowError(ERR_SYMBOL_ID_SYNTAX)
+      }).toThrow(ERR_SYMBOL_ID_SYNTAX)
     })
   })
 
@@ -46,7 +50,7 @@ describe('Test ValidateOption', () => {
 
       expect(() => {
         validateOptions(options)
-      }).toThrowError(ERR_CUSTOM_DOM_ID_SYNTAX)
+      }).toThrow(ERR_CUSTOM_DOM_ID_SYNTAX)
     })
   })
 })

@@ -41,7 +41,7 @@ Turning icons from something you manage into something you just use.
   Combines async build processing with caching, updating icons only when needed for a faster, smoother experience.
 
 - 🔥 HMR Support  
-  Icons update instantly without page reloads, keeping your development flow fast and seamless.
+  Icons update quickly in dev and stay consistent across client/SSR paths (currently via automatic full-page reload).
 
 - 🧩 SSR Ready  
   Works seamlessly in SSR environments, ensuring consistent rendering without extra setup.

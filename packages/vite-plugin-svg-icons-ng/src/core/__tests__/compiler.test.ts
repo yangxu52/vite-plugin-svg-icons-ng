@@ -21,6 +21,7 @@ function createBuildContext(): BuildContext {
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
       optimize: true,
+      failOnError: false,
     },
   }
 }

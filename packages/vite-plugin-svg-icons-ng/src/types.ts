@@ -37,6 +37,12 @@ export type Options = {
    * @default：true
    */
   optimize?: BakerOptions
+  /**
+   * throw on invalid svg transform error.
+   * when false, print warning and skip the broken icon.
+   * @default: false
+   */
+  failOnError?: boolean
 }
 
 export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }

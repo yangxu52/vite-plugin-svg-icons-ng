@@ -85,6 +85,16 @@ Customize the `id` attribute of injected sprite root `<svg>`.
 
 Override `stroke` attribute, set `false` to disable it, set `true` to use `currentColor`, or specify a color.
 
+## failOnError
+
+- type: `boolean`
+- default: `false`
+
+Control how broken SVG files are handled during compile:
+
+- `false`: warn and skip broken icons.
+- `true`: throw immediately and fail the compile/build.
+
 ## optimize
 
 - type: [`BakerOptions`](https://www.npmjs.com/package/svg-icon-baker)

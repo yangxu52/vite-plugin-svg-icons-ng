@@ -35,6 +35,7 @@ function createPluginContext(): PluginContext {
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
       optimize: true,
+      failOnError: false,
     },
     compiler: {
       getResult: vi.fn(),

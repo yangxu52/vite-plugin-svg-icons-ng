@@ -16,6 +16,7 @@ const defaultOptions = {
   customDomId: SVG_DOM_ID,
   strokeOverride: false,
   optimize: true,
+  failOnError: false,
 } satisfies Omit<ResolvedOptions, 'iconDirs'>
 
 function normalizeStrokeOverride(value: Options['strokeOverride']): ResolvedStrokeOverride {
@@ -36,6 +37,7 @@ export function resolveOptions(userOptions: Options): ResolvedOptions {
     customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
     strokeOverride: normalizeStrokeOverride(userOptions.strokeOverride),
     optimize: userOptions.optimize ?? defaultOptions.optimize,
+    failOnError: userOptions.failOnError ?? defaultOptions.failOnError,
   }
 }
 

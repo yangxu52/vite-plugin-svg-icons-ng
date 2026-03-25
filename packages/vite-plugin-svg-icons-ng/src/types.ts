@@ -34,6 +34,12 @@ export type Options = {
    */
   strokeOverride?: StrokeOverride
   /**
+   * throw on invalid svg transform error.
+   * when false, print warning and skip the broken icon.
+   * @default: false
+   */
+  failOnError?: boolean
+  /**
    * **Advanced options**
    *
    * Directly customize the underlying svg-icon-baker bundle.
@@ -80,7 +86,7 @@ export type BuildResult = {
   ids: string[]
 }
 
-export type VirtualModuleType = 'register' | 'ids'
+export type VirtualModuleType = 'register' | 'ids' | 'sprite'
 
 export type VirtualModuleRenderContext = {
   isBuild: boolean

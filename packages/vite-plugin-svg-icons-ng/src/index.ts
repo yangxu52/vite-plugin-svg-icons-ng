@@ -1,9 +1,11 @@
 import type { Plugin } from 'vite'
-import type { Options, PluginContext } from './types'
 import { createMemoryCache } from './cache/memoryCache'
+import { createCompiler } from './core/compiler'
+import { pluginLoad, resolveVirtualId } from './plugin/build'
+import { pluginTransformIndexHtml } from './plugin/html'
+import { pluginConfigureServer, pluginHandleHotUpdate } from './plugin/server'
+import type { Options, PluginContext } from './types'
 import { resolveOptions, validateOptions } from './utils/options'
-import { loadVirtualModuleById, resolveVirtualId } from './plugin/build'
-import { createCompiler } from './core/compiler.ts'
 
 export function createSvgIconsPlugin(userOptions: Options): Plugin {
   validateOptions(userOptions)
@@ -23,20 +25,10 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
     resolveId(id) {
       return resolveVirtualId(id)
     },
-    load: async (id, loadOptions) => await loadVirtualModuleById(ctx, id, isBuild, loadOptions),
-    configureServer(server) {
-      for (const dir of options.iconDirs) {
-        server.watcher.add(dir)
-      }
-    },
-    handleHotUpdate(hotUpdateCtx) {
-      if (!ctx.compiler.isIconFile(hotUpdateCtx.file)) {
-        return
-      }
-      ctx.compiler.invalidate(hotUpdateCtx.file)
-      hotUpdateCtx.server.ws.send({ type: 'full-reload' })
-      return []
-    },
+    load: async (id, loadOptions) => await pluginLoad(ctx, id, isBuild, loadOptions),
+    transformIndexHtml: async (html) => await pluginTransformIndexHtml(ctx, html),
+    configureServer: (server) => pluginConfigureServer(ctx, server),
+    handleHotUpdate: (hotUpdateCtx) => pluginHandleHotUpdate(ctx, hotUpdateCtx),
   }
 }
 

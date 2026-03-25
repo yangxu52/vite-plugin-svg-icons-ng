@@ -1,27 +1,28 @@
 export const VIRTUAL_ID_PREFIX = 'virtual:svg-icons'
 /**
- * @deprecated
+ * @deprecated Will be removed in v2.0.0. Use `VIRTUAL_REGISTER`.
  */
 export const VIRTUAL_REGISTER_DEPRECATED = `${VIRTUAL_ID_PREFIX}-register`
 export const VIRTUAL_REGISTER = `${VIRTUAL_ID_PREFIX}/register`
 /**
- * @deprecated
+ * @deprecated Will be removed in v2.0.0. Use `VIRTUAL_IDS`.
  */
 export const VIRTUAL_NAMES_DEPRECATED = `${VIRTUAL_ID_PREFIX}-names`
 export const VIRTUAL_IDS = `${VIRTUAL_ID_PREFIX}/ids`
+export const VIRTUAL_SPRITE = `${VIRTUAL_ID_PREFIX}/sprite`
 /**
- * @deprecated
+ * @deprecated Will be removed in v2.0.0. Use `VIRTUAL_REGISTER_URL`.
  */
 export const VIRTUAL_REGISTER_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_REGISTER_DEPRECATED}`
 export const VIRTUAL_REGISTER_URL = `/@id/__x00__${VIRTUAL_REGISTER}`
 /**
- * @deprecated
+ * @deprecated Will be removed in v2.0.0. Use `VIRTUAL_IDS_URL`.
  */
 export const VIRTUAL_NAMES_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_NAMES_DEPRECATED}`
 export const VIRTUAL_IDS_URL = `/@id/__x00__${VIRTUAL_IDS}`
+export const VIRTUAL_SPRITE_URL = `/@id/__x00__${VIRTUAL_SPRITE}`
 export const SVG_DOM_ID = '__svg__icons__dom__'
 export const XMLNS = 'http://www.w3.org/2000/svg'
-export const XMLNS_LINK = 'http://www.w3.org/1999/xlink'
 
 export const REGEXP_SYMBOL_ID = /^[A-Za-z][A-Za-z0-9_-]*$/
 export const REGEXP_DOM_ID = /^[a-zA-Z_][a-zA-Z0-9_-]*$/
@@ -32,41 +33,3 @@ export const ERR_SYMBOL_ID_NO_NAME = `[${PLUGIN_NAME}]: 'symbolId' must contain 
 export const ERR_SYMBOL_ID_SYNTAX = `[${PLUGIN_NAME}]: 'symbolId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter! (Except for placeholder symbols)`
 export const ERR_INJECT_MODE = `[${PLUGIN_NAME}]: 'inject' must be 'body-first' or 'body-last'!`
 export const ERR_CUSTOM_DOM_ID_SYNTAX = `[${PLUGIN_NAME}]: 'customDomId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline!`
-export const ERR_SVGO_EXCEPTION = (file: string, error: unknown) => `[${PLUGIN_NAME}]: SVGO optimize failure, skip this file (${file}), caused by:\n${error}`
-
-export const SPRITE_TEMPLATE = (symbolStr: string, customDomId: string, inject: 'body-first' | 'body-last') => `if (typeof window !== 'undefined') {
-  (function() {
-    const loadSvgSprite = function() {
-      let html = ${symbolStr};
-      let svg = document.getElementById('${customDomId}');
-      if (!svg) {
-        svg = document.createElementNS('${XMLNS}', 'svg');
-        svg.style.position = 'absolute';
-        svg.style.width = '0';
-        svg.style.height = '0';
-        svg.id = '${customDomId}';
-        svg.setAttribute('xmlns', '${XMLNS}');
-        svg.setAttribute('xmlns:link', '${XMLNS_LINK}');
-        svg.setAttribute('aria-hidden', true);
-        svg.innerHTML = html;
-        document.body.insertBefore(svg, ${inject === 'body-first' ? 'body.firstChild' : null});
-      } else {
-        const symbols = svg.getElementsByTagName('symbol');
-        for (const symbol of symbols) {
-          if (html.includes(\`id="\${symbol.id}"\`)) {
-            console.error(\`[${PLUGIN_NAME}]: Duplicated symbol id: \${symbol.id}\`);
-          }
-        }
-        svg.insertAdjacentHTML('beforeend', html);
-      }
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', loadSvgSprite);
-    } else {
-      loadSvgSprite();
-    }
-  })();
-}
-export default {}`
-
-export const IDS_TEMPLATE = (idStr: string) => `export default ${idStr}`

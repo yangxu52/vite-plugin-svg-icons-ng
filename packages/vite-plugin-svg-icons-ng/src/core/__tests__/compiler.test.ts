@@ -20,6 +20,7 @@ function createBuildContext(): BuildContext {
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
+      failOnError: false,
       bakerOptions: {},
     },
   }

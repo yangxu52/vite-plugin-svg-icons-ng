@@ -25,9 +25,9 @@ yarn add -D vite-plugin-svg-icons-ng
 
 :::
 
-## Usage
+## 使用
 
-在`vite.config.ts`/`vite.config.js`中导入并配置插件
+在 `vite.config.ts` / `vite.config.js` 中配置插件：
 
 ::: code-group
 
@@ -48,28 +48,7 @@ export default defineConfig({
 
 :::
 
-接着，在`main.ts`/`main.js`导入虚拟模块`virtual:svg-icons/register`
-
-::: code-group
-
-```ts [main.ts]
-import 'virtual:svg-icons/register' // recommended // [!code ++]
-import 'virtual:svg-icons-register' // deprecated // [!code --]
-```
-
-```js [main.js]
-import 'virtual:svg-icons/register' // recommended // [!code ++]
-import 'virtual:svg-icons-register' // deprecated // [!code --]
-```
-
-:::
-
-> [!CAUTION] WARNING !
-> 虚拟模块 `virtual:svg-icons-register` 将在未来的版本中废弃，  
-> 因为它不符合虚拟模块的[命名空间规范](https://vite.dev/guide/api-plugin#virtual-modules-convention)。  
-> 使用 `virtual:svg-icons/register` 代替。
-
-至此，svg精灵已经生成并注入到HTML中，可以通过全局组件使用（[组件样例](/zh/guide/component/index)）。
+此时 SVG精灵已经生成并注入到DOM中，可以通过全局组件使用（[组件样例](/zh/guide/component/index)）。
 
 或者，直接在HTML中使用：
 
@@ -79,17 +58,17 @@ import 'virtual:svg-icons-register' // deprecated // [!code --]
 </svg>
 ```
 
-## 获取SymbolId
+### 获取所有 Symbol ID
 
-可以通过`virtual:svg-icons/ids`获取所有SymbolId的数组
+通过导入 `virtual:svg-icons/ids` 模块获取所有已生成的 symbol ID：
 
 ```ts
-import ids from 'virtual:svg-icons/ids' // recommended // [!code ++]
-import ids from 'virtual:svg-icons-names' //deprecated // [!code --]
-console.log(ids) // ['icon-icon1','icon-icon2','icon-icon3']
+import ids from 'virtual:svg-icons/ids'
+console.log(ids) // ['icon-icon1', 'icon-icon2', ...]
 ```
 
-> [!CAUTION] WARNING !
-> 虚拟模块 `virtual:svg-icons-names` 将在未来的版本中废弃，  
-> 因为它不符合虚拟模块的[命名空间规范](https://vite.dev/guide/api-plugin#virtual-modules-convention)。  
-> 应该使用 `virtual:svg-icons/ids` 代替。
+> 旧模块 `virtual:svg-icons-names` 将在 `v2.0.0` 删除。
+
+### SSR
+
+如果你的应用是服务端渲染，请阅读 [SSR 指南](/zh/guide/ssr)。

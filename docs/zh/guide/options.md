@@ -64,14 +64,18 @@ src/icons/
 - 默认值: `body-last`
 - 选项: `body-first` | `body-last`
 
-SVG精灵图的插入DOM的位置。
+SVG 精灵图注入到 HTML 的位置。
+
+> [!WARNING] 注意
+> 该选项仅作用于 客户端渲染（CSR）自动注入。  
+> 如果通过 `virtual:svg-icons/sprite` 手动注入（SSR 模板场景），`inject` 不生效。
 
 ## customDomId
 
 - 类型: `string`
 - 默认值: `__svg__icons__dom__`
 
-自定义SVG精灵图的插入DOM节点的ID属性。
+自定义注入的精灵的根节点 `<svg>` 的 `id` 属性。
 
 ## strokeOverride
 
@@ -79,6 +83,16 @@ SVG精灵图的插入DOM的位置。
 - 默认值: `false`
 
 覆盖 `stroke` 属性，设置 `false` 禁用该功能，设置 `true` 为 `currentColor` 或者自定义颜色。
+
+## failOnError
+
+- 类型: `boolean`
+- 默认值: `false`
+
+控制编译阶段遇到错误 SVG 文件时的行为：
+
+- `false`：输出告警并跳过该图标。
+- `true`：立即抛错并使编译/构建失败。
 
 ## optimize
 

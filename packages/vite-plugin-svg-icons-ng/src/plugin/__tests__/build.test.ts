@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { VIRTUAL_IDS, VIRTUAL_REGISTER } from '../../constants'
-import { loadVirtualModuleById, resolveVirtualId } from '../build'
+import { VIRTUAL_IDS, VIRTUAL_REGISTER, VIRTUAL_SPRITE } from '../../constants'
+import { pluginLoad, resolveVirtualId } from '../build'
 import { renderVirtualModule } from '../virtual'
 import type { PluginContext } from '../../types'
 
@@ -12,6 +12,9 @@ vi.mock('../virtual', () => ({
     }
     if (normalized === VIRTUAL_IDS) {
       return 'ids'
+    }
+    if (normalized === VIRTUAL_SPRITE) {
+      return 'sprite'
     }
     return null
   },
@@ -31,6 +34,7 @@ function createPluginContext(): PluginContext {
       inject: 'body-last',
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
+      failOnError: false,
       bakerOptions: {},
     },
     compiler: {
@@ -49,19 +53,20 @@ describe('plugin build helpers', () => {
   test('resolveVirtualId should normalize only known virtual ids', () => {
     expect(resolveVirtualId(VIRTUAL_REGISTER)).toBe(`\0${VIRTUAL_REGISTER}`)
     expect(resolveVirtualId(`\0${VIRTUAL_IDS}`)).toBe(`\0${VIRTUAL_IDS}`)
+    expect(resolveVirtualId(VIRTUAL_SPRITE)).toBe(`\0${VIRTUAL_SPRITE}`)
     expect(resolveVirtualId('virtual:unknown')).toBeNull()
   })
 
-  test('loadVirtualModuleById should return null for unknown id', async () => {
-    const content = await loadVirtualModuleById(createPluginContext(), 'virtual:unknown', false, { ssr: false })
+  test('pluginLoad should return null for unknown id', async () => {
+    const content = await pluginLoad(createPluginContext(), 'virtual:unknown', false, { ssr: false })
     expect(content).toBeNull()
     expect(renderVirtualModule).not.toHaveBeenCalled()
   })
 
-  test('loadVirtualModuleById should render virtual module in dev client', async () => {
+  test('pluginLoad should render virtual module in dev client', async () => {
     vi.mocked(renderVirtualModule).mockResolvedValue('export default {}')
 
-    const content = await loadVirtualModuleById(createPluginContext(), VIRTUAL_REGISTER, false, { ssr: false })
+    const content = await pluginLoad(createPluginContext(), VIRTUAL_REGISTER, false, { ssr: false })
 
     expect(content).toBe('export default {}')
     expect(renderVirtualModule).toHaveBeenCalledTimes(1)

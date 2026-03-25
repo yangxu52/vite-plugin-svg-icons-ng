@@ -1,0 +1,16 @@
+{
+  "name": "playground-ssr",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "build": "vite build --outDir dist/client --emptyOutDir",
+    "build:ssr": "vite build --ssr src/entry-server.ts --outDir dist/server --emptyOutDir false",
+    "preview": "node server.mjs --prod"
+  },
+  "devDependencies": {
+    "vite": "^6.4.1",
+    "vite-plugin-svg-icons-ng": "workspace:*"
+  }
+}

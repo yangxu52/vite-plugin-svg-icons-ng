@@ -30,7 +30,7 @@ features:
 
   - icon: 🔥
     title: HMR 开发体验
-    details: 图标变更即时生效，无需刷新页面，让开发过程更加顺畅高效。
+    details: 图标变更后会快速生效，流畅刷新，让开发过程更加顺畅高效。
 
   - icon: 🧩
     title: SSR 支持

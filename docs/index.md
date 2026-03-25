@@ -30,7 +30,7 @@ features:
 
   - icon: 🔥
     title: HMR Support
-    details: Icons update instantly without page reloads, keeping your development flow fast and seamless.
+    details: Icons update fast with a polished refresh flow, keeping your development loop smooth and efficient.
 
   - icon: 🧩
     title: SSR Ready

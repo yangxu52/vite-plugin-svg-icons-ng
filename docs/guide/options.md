@@ -95,14 +95,14 @@ Control how broken SVG files are handled during compile:
 - `false`: warn and skip broken icons.
 - `true`: throw immediately and fail the compile/build.
 
-## optimize
+## bakerOptions
 
-- type: [`BakerOptions`](https://www.npmjs.com/package/svg-icon-baker)
-- default: `true`
+- type: `BakerOptions`
+- default: `{}`
 
-The `optimize` is based on `SVGO`, the underlying library of `svg-icon-baker`.  
-Set `true` to enable default preset optimizations.  
-Set `false` to disable all optimizations.
+Pass options directly to customize the underlying `svg-icon-baker`.
+Use this to customize baker behavior, including `SVGO` options.
+See [svg-icon-baker options doc](https://www.npmjs.com/package/svg-icon-baker) for details.
 
 > [!WARNING] NOTE
 > If you don't know what this is, please do not override this option.  

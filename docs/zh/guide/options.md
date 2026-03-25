@@ -94,13 +94,14 @@ SVG 精灵图注入到 HTML 的位置。
 - `false`：输出告警并跳过该图标。
 - `true`：立即抛错并使编译/构建失败。
 
-## optimize
+## bakerOptions
 
-- 类型: [`BakerOptions`](https://www.npmjs.com/package/svg-icon-baker)
-- 默认值: `true`
+- 类型: `BakerOptions`
+- 默认值: `{}`
 
-`optimize` 基于 `svg-icon-baker` 底层的 `SVGO` 库。  
-设置`true`以启用默认预设优化。设置`false`设置为禁用所有优化。
+该选项会直接传递给底层 `svg-icon-baker`。
+可用于完整自定义 baker 行为，包括 `SVGO` 配置项。
+更多详情请参阅 [svg-icon-baker 选项文档](https://www.npmjs.com/package/svg-icon-baker)。
 
 > [!WARNING] 注意
 > 如果你不知道这是什么，请不要覆盖此选项。  

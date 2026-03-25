@@ -111,6 +111,15 @@ importers:
         specifier: workspace:*
         version: link:../../packages/vite-plugin-svg-icons-ng
 
+  playground/ssr:
+    devDependencies:
+      vite:
+        specifier: ^6.4.1
+        version: 6.4.1(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.32.0)(yaml@2.8.3)
+      vite-plugin-svg-icons-ng:
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-svg-icons-ng
+
 packages:
   '@algolia/abtesting@1.15.2':
     resolution: { integrity: sha512-rF7vRVE61E0QORw8e2NNdnttcl3jmFMWS9B4hhdga12COe+lMa26bQLfcBn/Nbp9/AF/8gXdaRCPsVns3CnjsA== }

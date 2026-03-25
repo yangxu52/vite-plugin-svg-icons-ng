@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitepress'
+import { version } from '../../packages/vite-plugin-svg-icons-ng/package.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   base: '/vite-plugin-svg-icons-ng/',
   title: 'vite-plugin-svg-icons-ng',
-  description: 'Vite plugin for easily creating an SVG sprite and injecting it for use.',
+  description: 'A high-performance SVG icon plugin for Vite, automatically generates SVG sprites from files and injects them at runtime',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     socialLinks: [
@@ -17,21 +18,32 @@ export default defineConfig({
       label: 'English',
       lang: 'en',
       themeConfig: {
-        nav: [{ text: 'Guide', link: '/guide' }],
+        nav: [
+          { text: 'Guide', link: '/guide/' },
+          { text: 'Options', link: '/guide/options' },
+          { text: `v${version}`, items: [{ text: 'Changelog', link: 'https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/CHANGELOG.md' }] },
+        ],
         sidebar: [
           {
             text: 'Introduction',
             items: [
-              { text: `What's this ?`, link: '/guide' },
-              { text: 'Quick Start', link: '/guide/quick-start' },
+              { text: `Getting Started`, link: '/guide/' },
+              { text: 'Why This Plugin', link: '/guide/why' },
+            ],
+          },
+          {
+            text: 'Guide',
+            items: [
+              { text: 'Usage', link: '/guide/usage' },
               {
                 text: 'Component',
-                link: '/guide/component',
+                link: '/guide/component/',
                 items: [
                   { text: 'Vue3', link: '/guide/component/vue3' },
                   { text: 'React', link: '/guide/component/react' },
                 ],
               },
+              { text: 'Virtual Module', link: '/guide/virtual-module' },
               { text: 'Server-Side Rendering', link: '/guide/ssr' },
             ],
           },
@@ -49,21 +61,32 @@ export default defineConfig({
       label: '中文',
       lang: 'zh',
       themeConfig: {
-        nav: [{ text: '指南', link: '/zh/guide' }],
+        nav: [
+          { text: '指南', link: '/zh/guide/' },
+          { text: '配置', link: '/zh/guide/options' },
+          { text: `v${version}`, items: [{ text: '更新日志', link: 'https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/CHANGELOG.md' }] },
+        ],
         sidebar: [
           {
-            text: '简介',
+            text: '介绍',
             items: [
-              { text: `这是什么？`, link: '/zh/guide' },
-              { text: '快速开始', link: '/zh/guide/quick-start' },
+              { text: '开始', link: '/zh/guide/' },
+              { text: '为什么选择它', link: '/zh/guide/why' },
+            ],
+          },
+          {
+            text: '指引',
+            items: [
+              { text: '使用指南', link: '/zh/guide/usage' },
               {
                 text: '组件使用',
-                link: '/zh/guide/component',
+                link: '/zh/guide/component/',
                 items: [
                   { text: 'Vue3', link: '/zh/guide/component/vue3' },
                   { text: 'React', link: '/zh/guide/component/react' },
                 ],
               },
+              { text: '虚拟模块', link: '/zh/guide/virtual-module' },
               { text: '服务端渲染（SSR）', link: '/zh/guide/ssr' },
             ],
           },

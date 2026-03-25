@@ -1,54 +1,60 @@
-# 简介
+# 开始
 
-## 这是什么？
+## 概览
 
 `vite-plugin-svg-icons-ng` 是一个专为 Vite 打造的高性能 SVG 图标插件。
 它会从本地 SVG 文件自动生成 SVG 精灵，并在运行时完成注入，让你可以像使用普通图标一样高效地使用 SVG。
 无需手动维护 sprite，无需额外请求，也无需复杂配置，即可构建一套统一、可复用的图标系统。
 
-> 本项目受到 vite-plugin-svg-icons 的启发，在此致谢。
+### 你将获得什么
 
-## 为什么选择它？
+- 以文件为输入，自动生成 SVG 精灵。
+- 运行时自动注入，无额外网络请求。
+- 在 dev / build / SSR 下保持稳定一致的行为。
+- 内置缓存与 HMR，图标迭代更流畅。
 
-#### 在实际开发中，使用 SVG 图标往往会遇到这些问题：
+如果你想先了解背景和动机，请阅读 [为什么选择它](/zh/guide/why)。
 
-- 需要手动管理图标文件、手动导入、手写路径
-- `<img src>` 或 inline SVG 使用繁琐，难以复用
-- 响应式 / 颜色控制不自然，维护成本高
-- 图标更新流程复杂，影响开发效率
-- dev / build / SSR 行为不一致，容易踩坑
+## 快速开始
 
-#### vite-plugin-svg-icons-ng 解决了这些问题：
+### 第一步：安装
 
-- 从文件自动生成 SVG 精灵，无需手动导入
-- 统一通过 `<use>` 使用图标，天然支持样式控制
-- 内置 HMR，图标修改即时生效
-- 跨 dev / build / SSR 保持一致输出
-- 无额外请求，性能更优
+::: code-group
 
-让图标从“需要管理的资源”，变成“可以直接使用的能力”。
+```sh [pnpm]
+pnpm add -D vite-plugin-svg-icons-ng
+```
 
-## 特性
+```sh [npm]
+npm i -D vite-plugin-svg-icons-ng
+```
 
-- 🚀 预生成与自动注入  
-  自动从文件生成 SVG 精灵，并在运行时完成注入，一次挂载即可全局复用。
+```sh [yarn]
+yarn add -D vite-plugin-svg-icons-ng
+```
 
-- ⚡ 高性能  
-  异步构建结合缓存优化，仅在必要时更新图标，带来更快、更流畅的开发与运行体验。
+:::
 
-- 🔥 HMR 开发体验
-  图标变更后会快速生效，流畅刷新，让开发过程更加顺畅高效。
+### 第二步：配置插件
 
-- 🧩 SSR 支持  
-  天然兼容 SSR 场景，确保服务端与客户端渲染一致，无需额外配置。
+在 `vite.config.ts` / `vite.config.js` 中添加 `createSvgIconsPlugin`：
 
-- 🧱 跨环境一致性  
-  在开发、构建与 SSR 场景下保持一致的 SVG 精灵输出，避免环境差异带来的问题。
+```ts {1,6-8}
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import path from 'node:path'
 
-- 📦 开箱即用  
-  提供合理默认配置与完善文档，快速接入，轻松构建统一的图标系统。
+export default defineConfig({
+  plugins: [
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+    }),
+  ],
+})
+```
 
-## 下一步
+此时 SVG精灵已经生成并注入到DOM中。
 
-- 从 [快速开始](/zh/guide/quick-start) 开始
-- 选项细节见 [插件选项](/zh/guide/options)
+### 第三步：继续
+
+- 前往 [使用指南](/zh/guide/usage) 查看如何后续使用。
+- 插件配置选项细节见 [插件选项](/zh/guide/options)。

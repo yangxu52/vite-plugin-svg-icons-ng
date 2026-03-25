@@ -1,6 +1,6 @@
-# Introduction
+# Getting Started
 
-## What's this?
+## Overview
 
 `vite-plugin-svg-icons-ng` is a high-performance SVG icon plugin built for Vite.
 
@@ -8,51 +8,55 @@ It automatically generates SVG sprites from local files and injects them at runt
 
 No manual sprite management, no extra requests, and no complex setup—just a clean and reusable icon system.
 
-> This project is inspired by vite-plugin-svg-icons. Thanks.
+### What you get
 
-## Why this plugin?
+- File-based icon input, auto-generated SVG sprite output.
+- Runtime injection with no extra network request.
+- Stable behavior across dev, build, and SSR flows.
+- Built-in cache + HMR for a smoother icon iteration loop.
 
-Using SVG icons in real-world projects often comes with friction:
+If you want the background story, read [Why This Plugin](/guide/why).
 
-- Manually managing icon files, imports, and paths
-- Using `<img src>` or inline SVG is verbose and hard to reuse
-- Styling (color, size, responsiveness) is awkward
-- Updating icons interrupts development flow
-- Inconsistent behavior across dev, build, and SSR
+## Quick Start
 
-vite-plugin-svg-icons-ng solves these problems:
+### Step 1: Install
 
-- Generates SVG sprites automatically from files
-- Use icons via `<use>` with full styling control
-- Built-in HMR for instant updates
-- Consistent output across dev, build, and SSR
-- No extra requests, better performance
+::: code-group
 
-Turning icons from something you manage into something you just use.
+```sh [pnpm]
+pnpm add -D vite-plugin-svg-icons-ng
+```
 
----
+```sh [npm]
+npm i -D vite-plugin-svg-icons-ng
+```
 
-## Features
+```sh [yarn]
+yarn add -D vite-plugin-svg-icons-ng
+```
 
-- 🚀 Pre-generation & Injection  
-  Automatically generates SVG sprites from files and injects them at runtime for global reuse.
+:::
 
-- ⚡ High Performance  
-  Combines async build processing with caching, updating icons only when needed for a faster, smoother experience.
+### Step 2: Configure plugin
 
-- 🔥 HMR Support  
-  Icons update fast with a polished refresh flow, keeping your development loop smooth and efficient.
+Add `createSvgIconsPlugin` in `vite.config.ts` / `vite.config.js`:
 
-- 🧩 SSR Ready  
-  Works seamlessly in SSR environments, ensuring consistent rendering without extra setup.
+```ts {1,6-8}
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import path from 'node:path'
 
-- 🧱 Cross-environment Consistency  
-  Ensures identical SVG sprite output across dev, build, and SSR to avoid environment inconsistencies.
+export default defineConfig({
+  plugins: [
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+    }),
+  ],
+})
+```
 
-- 📦 Out-of-the-box  
-  Sensible defaults and comprehensive docs for quick setup and a unified icon system.
+At this point, the SVG sprite has already been generated and injected into the DOM.
 
-## Next Steps
+### Step 3: Continue
 
-- Start with [Quick Start](/guide/quick-start)
-- Check [Options](/guide/options) for configuration details
+- Go to [Usage](/guide/usage) to see how to use it next.
+- Check [Options](/guide/options) for plugin configuration details.

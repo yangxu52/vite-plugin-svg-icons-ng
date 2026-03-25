@@ -7,11 +7,11 @@ hero:
   tagline: 'Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient✈️.'
   actions:
     - theme: brand
-      text: Quick Start
-      link: /guide/quick-start
+      text: Getting Started
+      link: /guide/
     - theme: alt
       text: Component Examples
-      link: /guide/component
+      link: /guide/component/
     - theme: alt
       text: Options Guide
       link: /guide/options

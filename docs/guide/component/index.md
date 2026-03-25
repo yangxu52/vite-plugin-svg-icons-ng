@@ -4,7 +4,7 @@ You can code your own component to use the icon.
 
 ### Prerequisites
 
-Completed the [Quick Start](/guide/quick-start) steps. ⚠️
+Completed the [Getting Started](/guide/) and [Usage](/guide/usage) steps. ⚠️
 
 And it has the following Icons Folder Structure:
 

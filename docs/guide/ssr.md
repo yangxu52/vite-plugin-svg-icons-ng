@@ -9,11 +9,23 @@ This page focuses on practical usage in SSR apps.
 
 ## Decision Table
 
-| Scenario                                      | Do I inject sprite manually? | What to do                                                                        |
-| --------------------------------------------- | ---------------------------- | --------------------------------------------------------------------------------- |
-| Standard Vite app (CSR)                       | No                           | Use plugin normally.                                                              |
-| Custom SSR server (Express/Koa/Fastify, etc.) | Yes                          | Import `virtual:svg-icons/sprite` in server render and inject into template HTML. |
-| Framework SSR (Nuxt, etc.)                    | Usually yes                  | Inject sprite in the framework's server HTML hook/template pipeline.              |
+<style>
+table th:first-of-type {
+    width: 30%;
+}
+table th:nth-of-type(2) {
+    width: 30%;
+}
+table th:nth-of-type(3) {
+    width: 40%;
+}
+</style>
+
+| Scenario                                            | Do I inject sprite manually?   | What to do                                                                        |
+| --------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------- |
+| Standard Vite app (CSR)                             | No (automatic injection works) | Use plugin normally.                                                              |
+| Custom SSR server (Express/<br />Koa/Fastify, etc.) | Yes (you assemble HTML)        | Import `virtual:svg-icons/sprite` in server render and inject into template HTML. |
+| Framework SSR (Nuxt, etc.)                          | Usually yes                    | Inject sprite in the framework's server HTML hook/template pipeline.              |
 
 ## SSR Example
 

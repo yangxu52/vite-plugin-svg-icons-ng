@@ -7,11 +7,11 @@ hero:
   tagline: '从文件自动生成 SVG 精灵并支持运行时自动注入，让图标使用更简单、更高效✈️。'
   actions:
     - theme: brand
-      text: 快速开始
-      link: /zh/guide/quick-start
+      text: 开始使用
+      link: /zh/guide/
     - theme: alt
       text: 组件指南
-      link: /zh/guide/component
+      link: /zh/guide/component/
     - theme: alt
       text: 选项说明
       link: /zh/guide/options

@@ -1,17 +1,69 @@
 # vite-plugin-svg-icons-ng
 
-> Vite plugin for easily creating an SVG sprite and injecting it for use.
+> A high-performance SVG icon plugin for Vite.
+>
+> Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient.
 
-- 🚀Preloading: All icons will be generated when the project is run, and only one DOM operate.
-- ⚡High Performance: Built-in cache, it will be regenerated only when the icon is modified.
+[Documentation](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [中文文档](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/)
 
-[Read the Docs to learn more](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/)
+## Install
 
-If you like this project, please give it a [Star](https://github.com/yangxu52/vite-plugin-svg-icons-ng).
+```sh
+pnpm add -D vite-plugin-svg-icons-ng
+```
 
-## Deprecated Virtual Modules
+## Quick Start
 
-The following deprecated module ids are removed in `v2.0.0`:
+```ts
+import { defineConfig } from 'vite'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
+import path from 'node:path'
 
-- `virtual:svg-icons-register` -> use `virtual:svg-icons/register` instead.
-- `virtual:svg-icons-names` -> use `virtual:svg-icons/ids` instead.
+export default defineConfig({
+  plugins: [
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+    }),
+  ],
+})
+```
+
+At this point, the SVG sprite has already been generated and injected into the DOM.
+
+Use icons directly in templates, or encapsulate them in reusable components.
+
+See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/component/) for framework examples.
+
+```html
+<svg aria-hidden="true">
+  <use xlink:href="#icon-icon1"></use>
+</svg>
+```
+
+## Highlights
+
+- File-based SVG icons with automatic sprite generation
+- Runtime sprite injection with no extra network request
+- Cached compilation with HMR support
+- Consistent output across dev, build, and SSR flows
+- Virtual modules for register, ids, and SSR sprite access
+
+## Virtual Modules
+
+- `virtual:svg-icons/register`: inject sprite on the client
+- `virtual:svg-icons/ids`: read all generated symbol ids
+- `virtual:svg-icons/sprite`: read sprite markup for SSR template injection
+
+## Compatibility
+
+Deprecated virtual module ids are removed in `v2.0.0`:
+
+- `virtual:svg-icons-register` -> `virtual:svg-icons/register`
+- `virtual:svg-icons-names` -> `virtual:svg-icons/ids`
+
+## Docs
+
+- [Getting Started](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/)
+- [Usage Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/usage)
+- [Options](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/options)
+- [SSR Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/ssr)

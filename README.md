@@ -5,28 +5,44 @@
 ![GitHub Stars](https://img.shields.io/github/stars/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Stars&logo=github)
 ![GitHub Forks](https://img.shields.io/github/forks/yangxu52/vite-plugin-svg-icons-ng.svg?style=flat-square&label=Forks&logo=github)
 
-Vite plugin for easily creating an SVG sprite and injecting it for use.
+> A high-performance SVG icon plugin for Vite.
+>
+> Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient.
 
-[Read the Docs to learn more](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [阅读文档以了解更多信息](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/)
+[Documentation](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [中文文档](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/) | [npm](https://www.npmjs.com/package/vite-plugin-svg-icons-ng)
 
-If you like this project, please give it a Star. | 如果你喜欢这个项目，请给它一个Star
+## Highlights
 
-## Roadmap
+- File-based SVG icons with automatic sprite generation
+- Runtime sprite injection with no extra network request
+- Cached compilation with HMR for a smoother development loop
+- Consistent output across dev, build, and SSR flows
+- Ready-to-use virtual modules for register, ids, and sprite access
 
-- [x] Implement the conversion logic independently
-- [x] Optimization and organization of project structure
-- [x] Asynchronous processing
-- [ ] SSR support
-- [ ] Complete concurrent processing
-- [ ] tree-shaking
+## Repository
 
-## Star History
+- Core package: [`packages/vite-plugin-svg-icons-ng`](./packages/vite-plugin-svg-icons-ng)
+- Documentation site: [`docs`](./docs)
+- Playground: [`playground/basic`](./playground/basic)
 
-![Star History Chart](https://api.star-history.com/svg?repos=yangxu52/vite-plugin-svg-icons-ng&type=date&legend=bottom-right)
+## Package
+
+Install the package:
+
+```sh
+pnpm add -D vite-plugin-svg-icons-ng
+```
+
+Then continue with the package guide:
+
+- [Package README](./packages/vite-plugin-svg-icons-ng/README.md)
+- [Getting Started](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/)
+- [Usage Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/usage)
+- [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/component/)
 
 ## Thanks
 
-[vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons)
+Inspired by [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons).
 
 ## License
 

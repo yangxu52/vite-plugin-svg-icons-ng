@@ -9,7 +9,7 @@ vite-plugin-svg-icons-ng 支持 `TypeScript`.
 
 在 `tsconfig.json` 文件中添加 type `"vite-plugin-svg-icons-ng/client"`。
 
-```jsonc {5}
+```jsonc {4}
 {
   // ...
   "compilerOptions": {
@@ -30,7 +30,7 @@ vite-plugin-svg-icons-ng 支持 `TypeScript`.
 
 确保你的工作区有在`tsconfig.json`文件中设置环境类型声明文件 。
 
-```jsonc {5}
+```jsonc {4}
 {
   // ...
   "compilerOptions": {

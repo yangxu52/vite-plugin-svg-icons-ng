@@ -9,7 +9,7 @@ If your workspace use the `tsconfig.json` file.
 
 Add type `"vite-plugin-svg-icons-ng/client"` to `tsconfig.json`.
 
-```jsonc {5}
+```jsonc {4}
 {
   // ...
   "compilerOptions": {
@@ -30,7 +30,7 @@ Add triple slash `/// <reference types="vite-plugin-svg-icons-ng/client" />` in 
 
 Ensure that your workspace has set up an environment type declaration in `tsconfig.json`.
 
-```jsonc {5}
+```jsonc {4}
 {
   // ...
   "compilerOptions": {

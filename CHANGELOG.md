@@ -1,3 +1,16 @@
+## 1.7.0 (2026-03-30)
+
+- docs: adjust the structure and polish content ([4909499](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4909499))
+- docs: polish HMR copy and clarify bakerOptions docs ([87e982a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/87e982a))
+- docs: refresh guides for SSR usage and auto-injection ([d5a9402](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d5a9402))
+- feat: add failOnError option and observable icon build errors ([bd534d8](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/bd534d8))
+- feat: use the transformIndexHtml hook to inject ([d6b7504](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d6b7504))
+- feat(playground): add minimal SSR playground for verification ([e761825](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/e761825))
+- fix: invalidate virtual modules on icon add/remove for dev-ssr ([07d8af3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/07d8af3))
+- refactor: cleanup dead code and import consistency ([707dcdb](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/707dcdb))
+- refactor: extract hook, move template and simplify ([9bc42ba](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9bc42ba))
+- refactor: unify naming and structure ([8ba26fe](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/8ba26fe))
+
 ## <small>1.6.3 (2026-03-24)</small>
 
 - feat: bump svg-icon-baker to v1.2.0 and adapt ([4f5014a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4f5014a)), closes [#23](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/23)

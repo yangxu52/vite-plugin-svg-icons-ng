@@ -1,17 +1,21 @@
-import { globalIgnores } from 'eslint/config'
+import { defineConfig, globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tsEslint from 'typescript-eslint'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
-export default tsEslint.config([
+export default defineConfig([
   {
-    files: ['packages/**/*.{js,mjs,cjs,ts}'],
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
+      parserOptions: {
+        ecmaVersion: '2022',
+        sourceType: 'module',
+      },
     },
   },
-  globalIgnores(['**/dist', '**/node_modules']),
+  globalIgnores(['**/dist', '**/node_modules', 'docs/.vitepress/cache/**']),
   pluginJs.configs.recommended,
   tsEslint.configs.recommended,
   eslintPluginPrettierRecommended,

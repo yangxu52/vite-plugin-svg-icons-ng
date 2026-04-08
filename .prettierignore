@@ -1,0 +1,13 @@
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist
+.cache
+docs/.vitepress/dist
+docs/.vitepress/cache
+
+# Node modules
+node_modules

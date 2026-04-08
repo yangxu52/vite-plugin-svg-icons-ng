@@ -49,7 +49,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yangxu52/vite-plugin-svg-icons-ng.git",
-    "directory": "packages/core"
+    "directory": "packages/vite-plugin-svg-icons-ng"
   },
   "bugs": {
     "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"

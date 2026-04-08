@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { createSvgIconsPlugin } from '../index'
 import { pluginLoad } from '../plugin/build'
-import type { Plugin } from 'vite'
+import type { Plugin, IndexHtmlTransformHook } from 'vite'
 
 const hoisted = vi.hoisted(() => ({
   compiler: {
@@ -50,7 +50,8 @@ describe('index entry', () => {
       }
       return html
     }
-    const transformed = await plugin.transformIndexHtml.handler.call({} as never, html, {} as never)
+    const hook = (plugin.transformIndexHtml as { handler: IndexHtmlTransformHook }).handler
+    const transformed = await hook.call({} as never, html, {} as never)
     if (typeof transformed === 'string') {
       return transformed
     }

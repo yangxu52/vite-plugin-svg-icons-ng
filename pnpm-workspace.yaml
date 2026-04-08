@@ -8,3 +8,6 @@ onlyBuiltDependencies:
 
 patchedDependencies:
   svgo: patches/svgo.patch
+
+overrides:
+  vite: ^6.0.0

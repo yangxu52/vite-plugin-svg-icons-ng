@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022"],
     "skipLibCheck": true,
@@ -13,13 +12,11 @@
     "noEmit": true,
     /* Linting */
     "strict": true,
-    "declaration": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "noImplicitAny": true,
     "resolveJsonModule": true
   },
   "include": ["packages/**/*"]

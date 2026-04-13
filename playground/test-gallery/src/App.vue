@@ -18,10 +18,10 @@ watch(fontSize, (value) => {
   <div class="wrapper">
     <div class="display">
       <ShowCase :icons="sorted" group="normal" />
-      <ShowCase :icons="sorted" group="color" />
+      <ShowCase :icons="sorted" group="colorful" />
       <ShowCase :icons="sorted" group="animate" />
-      <ShowCase :icons="sorted" group="origin" />
-      <ShowCase :icons="sorted" group="issue" />
+      <ShowCase :icons="sorted" group="complex" />
+      <ShowCase :icons="sorted" group="regression" />
     </div>
     <div class="control">
       <!--      font-size-->

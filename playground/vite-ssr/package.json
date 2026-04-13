@@ -1,5 +1,5 @@
 {
-  "name": "playground-ssr",
+  "name": "playground-vite-ssr",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,6 @@
     "preview": "node server.js --prod"
   },
   "devDependencies": {
-    "vite": "^6.4.1",
     "vite-plugin-svg-icons-ng": "workspace:*"
   }
 }

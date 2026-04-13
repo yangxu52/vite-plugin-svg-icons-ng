@@ -2,8 +2,12 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2022"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
 
     /* Bundler mode */
     "allowImportingTsExtensions": true,
@@ -11,6 +15,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true,
+    "types": ["vite/client", "vite-plugin-svg-icons-ng/client"],
 
     /* Linting */
     "strict": true,
@@ -21,5 +26,6 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["packages/**/*"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "exclude": ["dist"]
 }

@@ -23,7 +23,7 @@
 
 - Core package: [`packages/vite-plugin-svg-icons-ng`](./packages/vite-plugin-svg-icons-ng)
 - Documentation site: [`docs`](./docs)
-- Playground: [`playground/basic`](./playground/basic)
+- Playground: [`playground`](./playground)
 
 ## Package
 

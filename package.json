@@ -15,7 +15,7 @@
     "build:playground": "pnpm -r --filter ./playground/* run build",
     "test": "pnpm build &&pnpm test-unit && pnpm test-build",
     "test-unit": "vitest run",
-    "test-build": "pnpm --filter ./playground/basic run build",
+    "test-build": "pnpm --filter playground-test-gallery run build",
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "tsc": "tsc --noEmit --skipLibCheck",
@@ -41,6 +41,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^9.39.4",
+    "@types/node": "^24.12.0",
     "conventional-changelog": "^7.2.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -50,7 +51,8 @@
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "typescript-eslint": "^8.57.1",
+    "vite": "^6.4.2"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [

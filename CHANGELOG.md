@@ -1,3 +1,15 @@
+## <small>1.7.1 (2026-04-20)</small>
+
+- docs: align runtime and hmr descriptions ([767559a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/767559a))
+- docs: fix line number issue and refresh version ([5064a71](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/5064a71))
+- refactor(core): unify compile pipeline and hash cache ([6b5f4a5](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6b5f4a5))
+- refactor(playground): normalize playground packages structure and tsconfig ([a3cb687](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a3cb687))
+- refactor(plugin): switch hmr to sprite update event ([6cbaaba](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6cbaaba))
+- feat(playground): add simple vue playground and unify detail ([c82850a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/c82850a))
+- chore: improve engineering foundation ([38cb487](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/38cb487))
+- chore: unify the vite version and normalize tsconfig in workspace ([ba239a9](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/ba239a9))
+- fix: types issue in unit test ([cac7ffd](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cac7ffd))
+
 ## 1.7.0 (2026-03-30)
 
 - docs: adjust the structure and polish content ([4909499](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4909499))

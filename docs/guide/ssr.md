@@ -4,7 +4,7 @@ This page focuses on practical usage in SSR apps.
 
 ## Rule of Thumb
 
-- Default behavior: sprite is injected automatically in normal Vite HTML flow.
+- Default behavior: in standard Vite HTML flow, development can mount the sprite through `virtual:svg-icons/register`, and build can inject the sprite into HTML output.
 - SSR behavior: if your server builds the final HTML response itself, inject sprite manually.
 
 ## Decision Table
@@ -21,11 +21,11 @@ table th:nth-of-type(3) {
 }
 </style>
 
-| Scenario                                            | Do I inject sprite manually?   | What to do                                                                        |
-| --------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------- |
-| Standard Vite app (CSR)                             | No (automatic injection works) | Use plugin normally.                                                              |
-| Custom SSR server (Express/<br />Koa/Fastify, etc.) | Yes (you assemble HTML)        | Import `virtual:svg-icons/sprite` in server render and inject into template HTML. |
-| Framework SSR (Nuxt, etc.)                          | Usually yes                    | Inject sprite in the framework's server HTML hook/template pipeline.              |
+| Scenario                                            | Do I inject sprite manually?    | What to do                                                                                |
+| --------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
+| Standard Vite app (CSR)                             | No (handled by the plugin flow) | Use the client register module in dev, and let the plugin inject the sprite during build. |
+| Custom SSR server (Express/<br />Koa/Fastify, etc.) | Yes (you assemble HTML)         | Import `virtual:svg-icons/sprite` in server render and inject into template HTML.         |
+| Framework SSR (Nuxt, etc.)                          | Usually yes                     | Inject sprite in the framework's server HTML hook/template pipeline.                      |
 
 ## SSR Example
 

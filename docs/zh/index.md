@@ -18,7 +18,7 @@ hero:
 features:
   - icon: 🚀
     title: 预生成与自动注入
-    details: 自动从文件生成 SVG 精灵，并在运行时完成注入，一次挂载即可全局复用。
+    details: 自动从本地文件生成 SVG 精灵，并在运行时完成注入，一份产物即可全局复用。
 
   - icon: ⚡
     title: 高性能
@@ -30,7 +30,7 @@ features:
 
   - icon: 🔥
     title: HMR 开发体验
-    details: 图标变更后会快速生效，流畅刷新，让开发过程更加顺畅高效。
+    details: 图标变更会通过自定义更新事件直接替换现有 sprite DOM，不触发整页刷新。
 
   - icon: 🧩
     title: SSR 支持

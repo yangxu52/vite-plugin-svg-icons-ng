@@ -5,7 +5,9 @@
 ## `virtual:svg-icons/register`
 
 默认情况下，插件会自动把 sprite 注入到页面中。
-如果你希望从客户端入口显式控制这一步，例如在 `src/main.ts` 中统一处理初始化流程，也可以手动导入：
+
+当你希望在开发环境中从客户端入口挂载生成后的 sprite 时，可以在 `src/main.ts` 这类入口中导入这个模块。
+它同时会监听图标 HMR 更新，并直接替换页面中现有的 sprite DOM：
 
 ```ts
 import 'virtual:svg-icons/register'

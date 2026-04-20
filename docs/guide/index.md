@@ -11,7 +11,8 @@ No manual sprite management, no extra requests, and no complex setup—just a cl
 ### What you get
 
 - File-based icon input, auto-generated SVG sprite output.
-- Runtime injection with no extra network request.
+- Dev client mount with no extra network request
+- Build can inline the same sprite output.
 - Stable behavior across dev, build, and SSR flows.
 - Built-in cache + HMR for a smoother icon iteration loop.
 
@@ -54,7 +55,9 @@ export default defineConfig({
 })
 ```
 
-At this point, the SVG sprite has already been generated and injected into the DOM.
+At this point, the SVG sprite can already be generated from your icon directories.
+
+Import `virtual:svg-icons/register` from your client entry when you want the sprite mounted in development and updated in place during HMR.
 
 ### Step 3: Continue
 

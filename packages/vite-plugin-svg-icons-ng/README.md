@@ -28,7 +28,9 @@ export default defineConfig({
 })
 ```
 
-At this point, the SVG sprite has already been generated and injected into the DOM.
+At this point, the plugin can generate the SVG sprite and expose it through the standard Vite flow.
+
+In development, import `virtual:svg-icons/register` to mount it on the client and receive in-place HMR updates.
 
 Use icons directly in templates, or encapsulate them in reusable components.
 
@@ -43,14 +45,14 @@ See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/c
 ## Highlights
 
 - File-based SVG icons with automatic sprite generation
-- Runtime sprite injection with no extra network request
+- Dev mount + build HTML injection with no extra network request
 - Cached compilation with HMR support
 - Consistent output across dev, build, and SSR flows
 - Virtual modules for register, ids, and SSR sprite access
 
 ## Virtual Modules
 
-- `virtual:svg-icons/register`: inject sprite on the client
+- `virtual:svg-icons/register`: mount the sprite on the client and keep it updated during dev HMR
 - `virtual:svg-icons/ids`: read all generated symbol ids
 - `virtual:svg-icons/sprite`: read sprite markup for SSR template injection
 

@@ -18,7 +18,7 @@ hero:
 features:
   - icon: 🚀
     title: Pre-generation & Injection
-    details: Automatically generates SVG sprites from files and injects them at runtime, enabling global reuse with a single mount.
+    details: Automatically generates SVG sprites from local files and injects them at runtime, enabling global reuse with the same output.
 
   - icon: ⚡
     title: High Performance
@@ -30,7 +30,7 @@ features:
 
   - icon: 🔥
     title: HMR Support
-    details: Icons update fast with a polished refresh flow, keeping your development loop smooth and efficient.
+    details: Icon changes are pushed through a custom sprite update event, so the existing sprite DOM is replaced in place without a full page reload.
 
   - icon: 🧩
     title: SSR Ready

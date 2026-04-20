@@ -5,7 +5,9 @@ The plugin exposes a few virtual modules for different usage scenarios.
 ## `virtual:svg-icons/register`
 
 By default, the plugin injects the sprite into the page automatically.
-If you prefer to control that step explicitly from a client entry, for example in `src/main.ts` as part of your app bootstrap, you can import:
+
+Import this module from a client entry such as `src/main.ts` when you want the plugin to mount the generated sprite into the page during development.
+The same module also listens for icon HMR updates and replaces the existing sprite DOM in place:
 
 ```ts
 import 'virtual:svg-icons/register'

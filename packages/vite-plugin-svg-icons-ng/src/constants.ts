@@ -21,6 +21,7 @@ export const VIRTUAL_REGISTER_URL = `/@id/__x00__${VIRTUAL_REGISTER}`
 export const VIRTUAL_NAMES_URL_DEPRECATED = `/@id/__x00__${VIRTUAL_NAMES_DEPRECATED}`
 export const VIRTUAL_IDS_URL = `/@id/__x00__${VIRTUAL_IDS}`
 export const VIRTUAL_SPRITE_URL = `/@id/__x00__${VIRTUAL_SPRITE}`
+export const HMR_EVENT_SVG_ICONS_UPDATE = 'svg-icons:update'
 export const SVG_DOM_ID = '__svg__icons__dom__'
 export const XMLNS = 'http://www.w3.org/2000/svg'
 

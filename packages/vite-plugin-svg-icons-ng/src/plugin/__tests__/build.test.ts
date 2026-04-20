@@ -23,11 +23,6 @@ vi.mock('../virtual', () => ({
 
 function createPluginContext(): PluginContext {
   return {
-    cache: {
-      get: vi.fn(),
-      set: vi.fn(),
-      invalidate: vi.fn(),
-    },
     options: {
       iconDirs: ['icons'],
       symbolId: 'icon-[dir]-[name]',
@@ -36,6 +31,11 @@ function createPluginContext(): PluginContext {
       strokeOverride: false,
       failOnError: false,
       bakerOptions: {},
+    },
+    cache: {
+      get: vi.fn(),
+      set: vi.fn(),
+      invalidate: vi.fn(),
     },
     compiler: {
       getResult: vi.fn(),

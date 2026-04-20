@@ -15,11 +15,6 @@ import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUr
 import type { PluginContext } from '../../types'
 
 const createPluginContext = (): PluginContext => ({
-  cache: {
-    get: vi.fn(),
-    set: vi.fn(),
-    invalidate: vi.fn(),
-  },
   options: {
     iconDirs: ['icons'],
     symbolId: 'icon-[dir]-[name]',
@@ -28,6 +23,11 @@ const createPluginContext = (): PluginContext => ({
     strokeOverride: false,
     failOnError: false,
     bakerOptions: {},
+  },
+  cache: {
+    get: vi.fn(),
+    set: vi.fn(),
+    invalidate: vi.fn(),
   },
   compiler: {
     getResult: vi.fn(),
@@ -80,6 +80,8 @@ describe('plugin virtual module render', () => {
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
     })
 
     const content = await renderVirtualModule(ctx, 'ids', { isBuild: false, ssr: true })
@@ -93,12 +95,14 @@ describe('plugin virtual module render', () => {
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
     })
 
     const content = await renderVirtualModule(ctx, 'register', { isBuild: true, ssr: false })
 
-    expect(content).toContain('document.createElementNS')
-    expect(content).toContain('<symbol id=\\"icon-a\\"></symbol>')
+    expect(content).toContain('svg-icons:update')
+    expect(content).toContain('<svg id=\\"__svg__icons__dom__\\"><symbol id=\\"icon-a\\"></symbol></svg>')
     expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 
@@ -107,6 +111,8 @@ describe('plugin virtual module render', () => {
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
     })
 
     const content = await renderVirtualModule(ctx, 'ids', { isBuild: true, ssr: false })
@@ -120,6 +126,8 @@ describe('plugin virtual module render', () => {
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
     })
 
     const content = await renderVirtualModule(ctx, 'sprite', { isBuild: false, ssr: false })

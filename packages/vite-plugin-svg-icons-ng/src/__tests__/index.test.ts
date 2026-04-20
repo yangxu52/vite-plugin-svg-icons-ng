@@ -88,6 +88,8 @@ describe('index entry', () => {
     hoisted.compiler.getResult.mockResolvedValue({
       symbols: ['<symbol id="icon-a"></symbol>'],
       ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
     })
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],

@@ -1,4 +1,5 @@
 import {
+  HMR_EVENT_SVG_ICONS_UPDATE,
   VIRTUAL_SPRITE,
   VIRTUAL_SPRITE_URL,
   VIRTUAL_IDS,
@@ -9,9 +10,8 @@ import {
   VIRTUAL_REGISTER_DEPRECATED,
   VIRTUAL_REGISTER_URL,
   VIRTUAL_REGISTER_URL_DEPRECATED,
-  XMLNS,
 } from '../constants'
-import type { BuildResult, PluginContext, ResolvedOptions, VirtualModuleRenderContext, VirtualModuleType } from '../types'
+import type { CompileResult, PluginContext, ResolvedOptions, VirtualModuleRenderContext, VirtualModuleType } from '../types'
 
 export function resolveVirtualTypeFromId(id: string): VirtualModuleType | null {
   const normalizedId = id.startsWith('\0') ? id.slice(1) : id
@@ -54,32 +54,39 @@ export async function renderVirtualModule(ctx: PluginContext, moduleType: Virtua
   return toIdsCode(result)
 }
 
-function toIdsCode(result: BuildResult): string {
+function toIdsCode(result: CompileResult): string {
   return `export default ${JSON.stringify(result.ids)}`
 }
 
-function toRegisterCode(result: BuildResult, options: ResolvedOptions): string {
-  const symbolStr = JSON.stringify(result.symbols.join(''))
+function toRegisterCode(result: CompileResult, options: ResolvedOptions): string {
+  const sprite = JSON.stringify(result.sprite)
   const insertBefore = options.inject === 'body-first' ? 'document.body.firstChild' : null
   return `if (typeof window !== 'undefined') {
   (function() {
-    const loadSvgSprite = function() {
-      let html = ${symbolStr};
+    const renderSvgSprite = function(html) {
       let svg = document.getElementById('${options.customDomId}');
       if (!svg) {
-        svg = document.createElementNS('${XMLNS}', 'svg');
-        svg.style.position = 'absolute';
-        svg.style.width = '0';
-        svg.style.height = '0';
-        svg.id = '${options.customDomId}';
-        svg.setAttribute('xmlns', '${XMLNS}');
-        svg.setAttribute('aria-hidden', true);
-        svg.innerHTML = html;
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        svg = container.firstElementChild;
+        if (!svg) {
+          return;
+        }
         document.body.insertBefore(svg, ${insertBefore});
-      } else {
         return;
       }
+      svg.outerHTML = html;
     };
+    const loadSvgSprite = function() {
+      renderSvgSprite(${sprite});
+    };
+    if (import.meta.hot) {
+      import.meta.hot.on('${HMR_EVENT_SVG_ICONS_UPDATE}', function(data) {
+        if (data && typeof data.sprite === 'string') {
+          renderSvgSprite(data.sprite);
+        }
+      });
+    }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', loadSvgSprite);
     } else {
@@ -90,10 +97,13 @@ function toRegisterCode(result: BuildResult, options: ResolvedOptions): string {
 export default {}`
 }
 
-function toSpriteModule(result: BuildResult, options: ResolvedOptions): string {
+function toSpriteModule(result: CompileResult, options: ResolvedOptions): string {
   return `export default ${JSON.stringify(renderSpriteElement(result, options))}`
 }
 
-export function renderSpriteElement(result: BuildResult, options: ResolvedOptions): string {
-  return `<svg id="${options.customDomId}" xmlns="${XMLNS}" aria-hidden="true" style="position:absolute;width:0;height:0">${result.symbols.join('')}</svg>`
+export function renderSpriteElement(result: CompileResult, options: ResolvedOptions): string {
+  if (result.sprite.includes(`id="${options.customDomId}"`)) {
+    return result.sprite
+  }
+  return result.sprite
 }

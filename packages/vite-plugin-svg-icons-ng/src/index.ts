@@ -12,11 +12,8 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
   const options = resolveOptions(userOptions)
   let isBuild = false
   const cache = createMemoryCache()
-  const ctx: PluginContext = {
-    cache,
-    options,
-    compiler: createCompiler({ cache, options }),
-  }
+  const compiler = createCompiler({ options, cache })
+  const ctx: PluginContext = { options, cache, compiler }
   return {
     name: 'vite:svg-icons',
     configResolved(resolvedConfig) {

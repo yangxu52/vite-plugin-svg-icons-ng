@@ -51,39 +51,59 @@ export type Options = {
 
 export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }
 
-export type SymbolData = {
-  id: string
-  content: string
+export type IconFile = {
+  file: string
+  iconDir: string
+  relativePath: string
 }
 
-export type SymbolCache = {
-  mtimeMs?: number
-  symbol: SymbolData
+export type IconSource = IconFile & {
+  code: string
+  hash: string
+}
+
+export type CompiledIcon = {
+  file: string
+  id: string
+  symbol: string
+  hash: string
+}
+
+export type IconCacheEntry = {
+  hash: string
+  icon: CompiledIcon
 }
 
 export type IconCache = {
-  get(path: string, mtimeMs?: number): SymbolData | null
-  set(path: string, entry: SymbolCache): void
+  get(path: string, hash: string): CompiledIcon | null
+  set(path: string, entry: IconCacheEntry): void
   invalidate(path: string): void
 }
 
 export type IconCompiler = {
-  getResult(): Promise<BuildResult>
+  getResult(): Promise<CompileResult>
   invalidate(file?: string): void
   isIconFile(file: string): boolean
 }
 
 export type PluginContext = {
-  cache: IconCache
   options: ResolvedOptions
+  cache: IconCache
   compiler: IconCompiler
 }
 
-export type BuildContext = Pick<PluginContext, 'options' | 'cache'>
+export type CompilerContext = Pick<PluginContext, 'options' | 'cache'>
 
-export type BuildResult = {
+export type CompileResult = {
   symbols: string[]
   ids: string[]
+  sprite: string
+  iconsByFile: Map<string, CompiledIcon>
+}
+
+export type CompilerState = {
+  dirty: boolean
+  result: CompileResult | null
 }
 
 export type VirtualModuleType = 'register' | 'ids' | 'sprite'

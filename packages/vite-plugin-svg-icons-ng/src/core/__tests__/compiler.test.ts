@@ -1,16 +1,37 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { buildIcons } from '../builder'
 import { createCompiler } from '../compiler'
-import type { BuildContext } from '../../types'
+import type { CompilerContext } from '../../types'
 
-vi.mock('../builder', () => ({
-  buildIcons: vi.fn(),
+const hoisted = vi.hoisted(() => ({
+  files: [{ file: 'D:/repo/src/icons/a.svg', iconDir: 'D:/repo/src/icons', relativePath: 'a.svg' }],
+  source: {
+    file: 'D:/repo/src/icons/a.svg',
+    iconDir: 'D:/repo/src/icons',
+    relativePath: 'a.svg',
+    code: '<svg></svg>',
+    hash: 'hash-a',
+  },
+  icon: {
+    file: 'D:/repo/src/icons/a.svg',
+    id: 'icon-a',
+    symbol: '<symbol id="icon-a"></symbol>',
+    hash: 'hash-a',
+  },
 }))
 
-function createBuildContext(): BuildContext {
+vi.mock('../scanner', () => ({
+  scanIconDirs: vi.fn(async () => hoisted.files),
+}))
+
+vi.mock('../transformer', () => ({
+  loadIconSource: vi.fn(async () => hoisted.source),
+  transformIcon: vi.fn(async () => hoisted.icon),
+}))
+
+function createCompilerContext(): CompilerContext {
   return {
     cache: {
-      get: vi.fn(),
+      get: vi.fn(() => null),
       set: vi.fn(),
       invalidate: vi.fn(),
     },
@@ -32,39 +53,40 @@ describe('compiler', () => {
   })
 
   test('should dedupe concurrent compile requests', async () => {
-    const ctx = createBuildContext()
+    const ctx = createCompilerContext()
     const compiler = createCompiler(ctx)
-    const result = { symbols: ['<symbol id="icon-a"/>'], ids: ['icon-a'] }
-
-    const mockedBuildIcons = vi.mocked(buildIcons).mockResolvedValue(result)
     const [a, b] = await Promise.all([compiler.getResult(), compiler.getResult()])
 
-    expect(mockedBuildIcons).toHaveBeenCalledTimes(1)
-    expect(a).toEqual(result)
-    expect(b).toEqual(result)
+    expect(a).toEqual(b)
   })
 
-  test('should reuse snapshot before invalidation and recompile after invalidation', async () => {
-    const ctx = createBuildContext()
+  test('should reuse compile result before invalidation and recompile after invalidation', async () => {
+    const ctx = createCompilerContext()
     const compiler = createCompiler(ctx)
-    const mockedBuildIcons = vi.mocked(buildIcons)
-
-    mockedBuildIcons.mockResolvedValueOnce({ symbols: ['A'], ids: ['a'] }).mockResolvedValueOnce({ symbols: ['B'], ids: ['b'] })
 
     const first = await compiler.getResult()
     const second = await compiler.getResult()
+
     expect(first).toEqual(second)
-    expect(mockedBuildIcons).toHaveBeenCalledTimes(1)
+    expect(ctx.cache.set).toHaveBeenCalledTimes(1)
 
     compiler.invalidate('D:/repo/src/icons/a.svg')
+
+    hoisted.source.hash = 'hash-b'
+    hoisted.icon = {
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-b',
+      symbol: '<symbol id="icon-b"></symbol>',
+      hash: 'hash-b',
+    }
+
     const third = await compiler.getResult()
-    expect(third).toEqual({ symbols: ['B'], ids: ['b'] })
-    expect(mockedBuildIcons).toHaveBeenCalledTimes(2)
+    expect(third.ids).toEqual(['icon-b'])
     expect(ctx.cache.invalidate).toHaveBeenCalledWith('D:/repo/src/icons/a.svg')
   })
 
   test('should match svg file inside icon dirs only', () => {
-    const compiler = createCompiler(createBuildContext())
+    const compiler = createCompiler(createCompilerContext())
     expect(compiler.isIconFile('D:/repo/src/icons/home.svg')).toBe(true)
     expect(compiler.isIconFile('D:/repo/src/icons/sub/menu.SVG')).toBe(true)
     expect(compiler.isIconFile('D:/repo/src/assets/home.svg')).toBe(false)

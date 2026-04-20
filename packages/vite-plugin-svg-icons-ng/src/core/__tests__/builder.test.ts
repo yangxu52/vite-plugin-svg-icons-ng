@@ -1,87 +1,28 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
-import { buildIcons } from '../builder'
-import { scanIconDirs } from '../scanner'
-import { transformIcon } from '../transformer'
-import type { BuildContext } from '../../types'
+import { describe, expect, test } from 'vitest'
+import { buildCompileResult } from '../builder'
 
-vi.mock('../scanner', () => ({
-  scanIconDirs: vi.fn(),
-}))
-
-vi.mock('../transformer', () => ({
-  transformIcon: vi.fn(),
-}))
-
-function createBuildContext(failOnError: boolean): BuildContext {
-  return {
-    cache: {
-      get: vi.fn(() => null),
-      set: vi.fn(),
-      invalidate: vi.fn(),
-    },
-    options: {
-      iconDirs: ['/repo/icons'],
-      symbolId: 'icon-[dir]-[name]',
-      inject: 'body-last',
-      customDomId: '__svg__icons__dom__',
-      strokeOverride: false,
-      bakerOptions: {},
-      failOnError,
-    },
-  }
-}
-
-describe('builder error handling', () => {
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
-
-  test('should warn and skip broken icon when failOnError is false', async () => {
-    const ctx = createBuildContext(false)
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-
-    vi.mocked(scanIconDirs).mockResolvedValue([
+describe('builder', () => {
+  test('should build stable compile result from compiled icons', () => {
+    const result = buildCompileResult(
+      [
+        { file: '/repo/icons/b.svg', id: 'icon-b', symbol: '<symbol id="icon-b"></symbol>', hash: 'hash-b' },
+        { file: '/repo/icons/a.svg', id: 'icon-a', symbol: '<symbol id="icon-a"></symbol>', hash: 'hash-a' },
+      ],
       {
-        dir: '/repo/icons',
-        entries: [
-          { path: '/repo/icons/good.svg', stats: { mtimeMs: 1 } },
-          { path: '/repo/icons/bad.svg', stats: { mtimeMs: 2 } },
-        ] as never,
-      },
-    ])
-
-    vi.mocked(transformIcon).mockImplementation(async (filePath) => {
-      if (filePath.includes('bad.svg')) {
-        throw new Error('broken svg')
+        iconDirs: ['/repo/icons'],
+        symbolId: 'icon-[dir]-[name]',
+        inject: 'body-last',
+        customDomId: '__svg__icons__dom__',
+        strokeOverride: false,
+        bakerOptions: {},
+        failOnError: false,
       }
-      return '<symbol id="icon-good"></symbol>'
-    })
+    )
 
-    const result = await buildIcons(ctx)
-
-    expect(result.ids).toEqual(['icon-good'])
-    expect(result.symbols).toEqual(['<symbol id="icon-good"></symbol>'])
-    expect(ctx.cache.set).toHaveBeenCalledTimes(1)
-    expect(warnSpy).toHaveBeenCalledTimes(1)
-    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('bad.svg'))
-    warnSpy.mockRestore()
-  })
-
-  test('should throw when failOnError is true', async () => {
-    const ctx = createBuildContext(true)
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
-
-    vi.mocked(scanIconDirs).mockResolvedValue([
-      {
-        dir: '/repo/icons',
-        entries: [{ path: '/repo/icons/bad.svg', stats: { mtimeMs: 2 } }] as never,
-      },
-    ])
-
-    vi.mocked(transformIcon).mockRejectedValue(new Error('broken svg'))
-
-    await expect(buildIcons(ctx)).rejects.toThrowError('/repo/icons/bad.svg')
-    expect(warnSpy).not.toHaveBeenCalled()
-    warnSpy.mockRestore()
+    expect(result.ids).toEqual(['icon-a', 'icon-b'])
+    expect(result.symbols).toEqual(['<symbol id="icon-a"></symbol>', '<symbol id="icon-b"></symbol>'])
+    expect(result.sprite).toContain('id="__svg__icons__dom__"')
+    expect(result.sprite).toContain('<symbol id="icon-a"></symbol>')
+    expect(result.iconsByFile.get('/repo/icons/a.svg')?.id).toBe('icon-a')
   })
 })

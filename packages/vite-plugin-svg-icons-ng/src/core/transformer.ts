@@ -1,14 +1,30 @@
-import fs from 'fs-extra'
+import { readFile } from 'node:fs/promises'
 import { bakeIcon } from 'svg-icon-baker'
-import type { ResolvedOptions } from '../types'
+import type { CompiledIcon, IconFile, IconSource, ResolvedOptions } from '../types'
+import { getWeakETag } from '../utils/hash'
+import { generateSymbolId } from '../utils/path'
 
-export async function transformIcon(file: string, symbolId: string, options: ResolvedOptions): Promise<string> {
-  const svg = await fs.promises.readFile(file, 'utf-8')
+export async function loadIconSource(iconFile: IconFile): Promise<IconSource> {
+  const code = await readFile(iconFile.file, 'utf-8')
+  return {
+    ...iconFile,
+    code,
+    hash: getWeakETag(code),
+  }
+}
+
+export async function transformIcon(source: IconSource, options: ResolvedOptions): Promise<CompiledIcon> {
+  const id = generateSymbolId(source.relativePath, options)
   try {
-    const { content } = bakeIcon({ name: symbolId, content: svg }, options.bakerOptions)
-    return applyStrokeOverride(content, options)
+    const { content } = bakeIcon({ name: id, content: source.code }, options.bakerOptions)
+    return {
+      file: source.file,
+      id,
+      symbol: applyStrokeOverride(content, options),
+      hash: source.hash,
+    }
   } catch (error) {
-    throw new Error(`Failed on icon ${file}, ${String(error)}`)
+    throw new Error(`Failed on icon ${source.file}, ${String(error)}`)
   }
 }
 

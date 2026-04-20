@@ -1,15 +1,28 @@
-import type { Entry } from 'fast-glob'
-import fg from 'fast-glob'
+import { glob } from 'tinyglobby'
+import { normalizePath } from 'vite'
+import type { IconFile } from '../types'
 
-export type ScannedIconDir = {
-  dir: string
-  entries: Entry[]
-}
-
-export async function scanIconDirs(iconDirs: string[]): Promise<ScannedIconDir[]> {
-  const dirPromises = iconDirs.map(async (dir) => {
-    const entries = await fg.glob('**/*.svg', { cwd: dir, stats: true, absolute: true })
-    return { dir, entries }
-  })
-  return await Promise.all(dirPromises)
+export async function scanIconDirs(iconDirs: string[]): Promise<IconFile[]> {
+  const groups = await Promise.all(
+    iconDirs.map(async (iconDir) => {
+      const files = await glob('**/*.svg', {
+        cwd: iconDir,
+        absolute: true,
+        onlyFiles: true,
+      })
+      return files
+        .map((file) => {
+          const normalizedFile = normalizePath(file)
+          const normalizedDir = normalizePath(iconDir)
+          const relativePath = normalizedFile.replace(normalizedDir.endsWith('/') ? normalizedDir : `${normalizedDir}/`, '')
+          return {
+            file,
+            iconDir,
+            relativePath,
+          } satisfies IconFile
+        })
+        .sort((a, b) => a.relativePath.localeCompare(b.relativePath))
+    })
+  )
+  return groups.flat()
 }

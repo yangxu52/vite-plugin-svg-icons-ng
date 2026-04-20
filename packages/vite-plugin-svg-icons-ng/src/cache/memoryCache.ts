@@ -1,16 +1,16 @@
-import type { IconCache, SymbolCache, SymbolData } from '../types'
+import type { CompiledIcon, IconCache, IconCacheEntry } from '../types'
 
 export function createMemoryCache(): IconCache {
-  const store = new Map<string, SymbolCache>()
+  const store = new Map<string, IconCacheEntry>()
   return {
-    get(path: string, mtimeMs?: number): SymbolData | null {
+    get(path: string, hash: string): CompiledIcon | null {
       const cached = store.get(path)
       if (!cached) {
         return null
       }
-      return cached.mtimeMs === mtimeMs ? cached.symbol : null
+      return cached.hash === hash ? cached.icon : null
     },
-    set(path: string, entry: SymbolCache): void {
+    set(path: string, entry: IconCacheEntry): void {
       store.set(path, entry)
     },
     invalidate(path: string): void {

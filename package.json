@@ -13,9 +13,10 @@
     "build": "pnpm --filter vite-plugin-svg-icons-ng run build",
     "build:docs": "pnpm --filter ./docs run docs:build",
     "build:playground": "pnpm -r --filter ./playground/* run build",
-    "test": "pnpm build &&pnpm test-unit && pnpm test-build",
-    "test-unit": "vitest run",
-    "test-build": "pnpm --filter playground-test-gallery run build",
+    "build:gallery": "pnpm --filter playground-test-gallery run build",
+    "test": "pnpm --filter vite-plugin-svg-icons-ng run test",
+    "coverage": "pnpm --filter vite-plugin-svg-icons-ng run coverage",
+    "test:ci": "pnpm build &&pnpm test && pnpm build:gallery",
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "tsc": "tsc --noEmit --skipLibCheck",
@@ -42,6 +43,7 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^9.39.4",
     "@types/node": "^24.12.0",
+    "@vitest/coverage-v8": "4.1.0",
     "conventional-changelog": "^7.2.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -52,7 +54,8 @@
     "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.1",
-    "vite": "^6.4.2"
+    "vite": "^6.4.2",
+    "vitest": "^4.1.0"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [

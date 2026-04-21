@@ -47,7 +47,7 @@ describe('plugin server hooks', () => {
     expect(on).toHaveBeenNthCalledWith(2, 'unlink', expect.any(Function))
   })
 
-  test('pluginConfigureServer should invalidate on add/unlink icon files', async () => {
+  test.each(['add', 'unlink'] as const)('pluginConfigureServer should invalidate on %s icon files', async (event) => {
     const ctx = createPluginContext()
     vi.mocked(ctx.compiler.isIconFile).mockReturnValue(true)
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
@@ -73,15 +73,18 @@ describe('plugin server hooks', () => {
 
     pluginConfigureServer(ctx, server)
 
-    handlers.get('add')?.('/repo/icons/new.svg')
-    handlers.get('unlink')?.('/repo/icons/new.svg')
+    handlers.get(event)?.('/repo/icons/new.svg')
     await Promise.resolve()
     await Promise.resolve()
 
-    expect(ctx.compiler.invalidate).toHaveBeenCalledTimes(2)
-    expect(send).toHaveBeenCalledTimes(2)
-    expect(getModuleById).toHaveBeenCalledTimes(10)
-    expect(invalidateAll).toHaveBeenCalledTimes(2)
+    expect(ctx.compiler.invalidate).toHaveBeenCalledWith('/repo/icons/new.svg')
+    expect(send).toHaveBeenCalledWith({
+      type: 'custom',
+      event: 'svg-icons:update',
+      data: { sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-home"></symbol></svg>' },
+    })
+    expect(getModuleById).toHaveBeenCalledTimes(5)
+    expect(invalidateAll).toHaveBeenCalledTimes(1)
   })
 
   test('pluginHandleHotUpdate should ignore non-icon files', async () => {
@@ -146,6 +149,41 @@ describe('plugin server hooks', () => {
       type: 'custom',
       event: 'svg-icons:update',
       data: { sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-home"></symbol></svg>' },
+    })
+  })
+
+  test('pluginHandleHotUpdate should update sprite on changed icon files', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.isIconFile).mockReturnValue(true)
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
+      ids: ['icon-updated'],
+      symbols: ['<symbol id="icon-updated"></symbol>'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-updated"></symbol></svg>',
+      iconsByFile: new Map(),
+    })
+    const send = vi.fn()
+    const invalidateAll = vi.fn()
+    const hotUpdateCtx = {
+      file: '/repo/icons/home.svg',
+      server: {
+        ws: { send },
+        moduleGraph: {
+          getModuleById: vi.fn(),
+          invalidateModule: vi.fn(),
+          invalidateAll,
+        },
+      },
+    } as never
+
+    const result = await pluginHandleHotUpdate(ctx, hotUpdateCtx)
+
+    expect(result).toEqual([])
+    expect(ctx.compiler.invalidate).toHaveBeenCalledWith('/repo/icons/home.svg')
+    expect(invalidateAll).toHaveBeenCalledTimes(1)
+    expect(send).toHaveBeenCalledWith({
+      type: 'custom',
+      event: 'svg-icons:update',
+      data: { sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-updated"></symbol></svg>' },
     })
   })
 })

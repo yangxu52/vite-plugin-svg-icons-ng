@@ -40,6 +40,79 @@ afterEach(() => {
   vi.clearAllMocks()
 })
 
+type SvgElementStub = {
+  id: string
+  outerHTML: string
+}
+
+function createSvgElementStub(html: string): SvgElementStub {
+  const element = {
+    id: parseSvgId(html),
+    get outerHTML() {
+      return html
+    },
+    set outerHTML(value: string) {
+      html = value
+      element.id = parseSvgId(value)
+    },
+  }
+  return element
+}
+
+function parseSvgId(html: string): string {
+  return /id="([^"]+)"/.exec(html)?.[1] ?? ''
+}
+
+function createDocumentStub() {
+  let mountedSvg: SvgElementStub | null = null
+  const body = {
+    firstChild: null,
+    insertBefore: vi.fn((node: SvgElementStub) => {
+      mountedSvg = node
+      return node
+    }),
+  }
+  const document = {
+    readyState: 'complete',
+    body,
+    addEventListener: vi.fn(),
+    getElementById: vi.fn((id: string) => (mountedSvg?.id === id ? mountedSvg : null)),
+    createElement: vi.fn(() => {
+      let firstElementChild: SvgElementStub | null = null
+      return {
+        set innerHTML(html: string) {
+          firstElementChild = createSvgElementStub(html)
+        },
+        get firstElementChild() {
+          return firstElementChild
+        },
+      }
+    }),
+  }
+  return {
+    document,
+    getMountedSvg: () => mountedSvg,
+  }
+}
+
+function runRegisterCode(code: string, document: ReturnType<typeof createDocumentStub>['document'], hot = createHotStub()): ReturnType<typeof createHotStub> {
+  const executable = code.replaceAll('import.meta.hot', 'hot').replace(/\nexport default \{\}$/, '')
+  new Function('window', 'document', 'hot', executable)({}, document, hot)
+  return hot
+}
+
+function createHotStub() {
+  const handlers = new Map<string, (data: unknown) => void>()
+  return {
+    on: vi.fn((event: string, handler: (data: unknown) => void) => {
+      handlers.set(event, handler)
+    }),
+    emit(event: string, data: unknown) {
+      handlers.get(event)?.(data)
+    },
+  }
+}
+
 describe('plugin virtual module resolver', () => {
   test('resolveVirtualTypeFromId should resolve new/deprecated and prefixed ids', () => {
     expect(resolveVirtualTypeFromId(VIRTUAL_REGISTER)).toBe('register')
@@ -106,6 +179,43 @@ describe('plugin virtual module render', () => {
     expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 
+  test('register module should mount sprite on first client run', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
+    })
+    const { document, getMountedSvg } = createDocumentStub()
+    const content = await renderVirtualModule(ctx, 'register', { isBuild: false, ssr: false })
+
+    runRegisterCode(content, document)
+
+    expect(document.body.insertBefore).toHaveBeenCalledTimes(1)
+    expect(getMountedSvg()?.outerHTML).toBe('<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>')
+  })
+
+  test('register module should replace mounted sprite in place on hmr update', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.getResult).mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
+    })
+    const { document, getMountedSvg } = createDocumentStub()
+    const content = await renderVirtualModule(ctx, 'register', { isBuild: false, ssr: false })
+    const hot = runRegisterCode(content, document)
+
+    hot.emit('svg-icons:update', {
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-b"></symbol></svg>',
+    })
+
+    expect(document.body.insertBefore).toHaveBeenCalledTimes(1)
+    expect(getMountedSvg()?.outerHTML).toBe('<svg id="__svg__icons__dom__"><symbol id="icon-b"></symbol></svg>')
+  })
+
   test('should render ids module in build/dev client path', async () => {
     const ctx = createPluginContext()
     vi.mocked(ctx.compiler.getResult).mockResolvedValue({
@@ -136,5 +246,30 @@ describe('plugin virtual module render', () => {
     expect(content).toContain('id=\\"__svg__icons__dom__\\"')
     expect(content).toContain('<symbol id=\\"icon-a\\"></symbol>')
     expect(ctx.compiler.getResult).toHaveBeenCalledTimes(1)
+  })
+
+  test('should render latest sprite module content for ssr after compiler invalidation', async () => {
+    const ctx = createPluginContext()
+    vi.mocked(ctx.compiler.getResult)
+      .mockResolvedValueOnce({
+        symbols: ['<symbol id="icon-a"></symbol>'],
+        ids: ['icon-a'],
+        sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+        iconsByFile: new Map(),
+      })
+      .mockResolvedValueOnce({
+        symbols: ['<symbol id="icon-b"></symbol>'],
+        ids: ['icon-b'],
+        sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-b"></symbol></svg>',
+        iconsByFile: new Map(),
+      })
+
+    const first = await renderVirtualModule(ctx, 'sprite', { isBuild: false, ssr: true })
+    ctx.compiler.invalidate('/repo/icons/a.svg')
+    const second = await renderVirtualModule(ctx, 'sprite', { isBuild: false, ssr: true })
+
+    expect(first).toContain('icon-a')
+    expect(second).toContain('icon-b')
+    expect(ctx.compiler.invalidate).toHaveBeenCalledWith('/repo/icons/a.svg')
   })
 })

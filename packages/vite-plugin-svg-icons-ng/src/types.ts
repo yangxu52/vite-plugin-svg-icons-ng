@@ -98,7 +98,7 @@ export type PluginContext = {
   logger?: Logger
 }
 
-export type CompilerContext = Pick<PluginContext, 'options' | 'cache'>
+export type CompilerContext = Pick<PluginContext, 'options' | 'cache' | 'logger'>
 
 export type CompileResult = {
   symbols: string[]

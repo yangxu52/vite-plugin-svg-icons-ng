@@ -35,6 +35,15 @@ function createCompilerContext(): CompilerContext {
       set: vi.fn(),
       invalidate: vi.fn(),
     },
+    logger: {
+      hasWarned: false,
+      hasErrorLogged: () => false,
+      clearScreen: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      warnOnce: vi.fn(),
+      error: vi.fn(),
+    },
     options: {
       iconDirs: ['D:/repo/src/icons'],
       symbolId: 'icon-[dir]-[name]',
@@ -50,6 +59,20 @@ function createCompilerContext(): CompilerContext {
 describe('compiler', () => {
   afterEach(() => {
     vi.clearAllMocks()
+    hoisted.files = [{ file: 'D:/repo/src/icons/a.svg', iconDir: 'D:/repo/src/icons', relativePath: 'a.svg' }]
+    hoisted.source = {
+      file: 'D:/repo/src/icons/a.svg',
+      iconDir: 'D:/repo/src/icons',
+      relativePath: 'a.svg',
+      code: '<svg></svg>',
+      hash: 'hash-a',
+    }
+    hoisted.icon = {
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-a',
+      symbol: '<symbol id="icon-a"></symbol>',
+      hash: 'hash-a',
+    }
   })
 
   test('should dedupe concurrent compile requests', async () => {
@@ -91,5 +114,57 @@ describe('compiler', () => {
     expect(compiler.isIconFile('D:/repo/src/icons/sub/menu.SVG')).toBe(true)
     expect(compiler.isIconFile('D:/repo/src/assets/home.svg')).toBe(false)
     expect(compiler.isIconFile('D:/repo/src/icons/readme.md')).toBe(false)
+  })
+
+  test('should warn and skip duplicate symbolId by default', async () => {
+    const ctx = createCompilerContext()
+    hoisted.files = [
+      { file: 'D:/repo/src/icons/a.svg', iconDir: 'D:/repo/src/icons', relativePath: 'a.svg' },
+      { file: 'D:/repo/src/icons/b.svg', iconDir: 'D:/repo/src/icons', relativePath: 'b.svg' },
+    ]
+    vi.mocked(ctx.cache.get).mockReturnValueOnce({
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-duplicate',
+      symbol: '<symbol id="icon-duplicate"><path id="a"/></symbol>',
+      hash: 'hash-a',
+    })
+    vi.mocked(ctx.cache.get).mockReturnValueOnce({
+      file: 'D:/repo/src/icons/b.svg',
+      id: 'icon-duplicate',
+      symbol: '<symbol id="icon-duplicate"><path id="b"/></symbol>',
+      hash: 'hash-b',
+    })
+    const compiler = createCompiler(ctx)
+
+    const result = await compiler.getResult()
+
+    expect(result.ids).toEqual(['icon-duplicate'])
+    expect(result.sprite).toContain('id="a"')
+    expect(result.sprite).not.toContain('id="b"')
+    expect(ctx.logger?.warn).toHaveBeenCalledWith(expect.stringContaining('Duplicate symbolId "icon-duplicate"'))
+  })
+
+  test('should throw duplicate symbolId when failOnError is true', async () => {
+    const ctx = createCompilerContext()
+    ctx.options.failOnError = true
+    hoisted.files = [
+      { file: 'D:/repo/src/icons/a.svg', iconDir: 'D:/repo/src/icons', relativePath: 'a.svg' },
+      { file: 'D:/repo/src/icons/b.svg', iconDir: 'D:/repo/src/icons', relativePath: 'b.svg' },
+    ]
+    vi.mocked(ctx.cache.get).mockReturnValueOnce({
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-duplicate',
+      symbol: '<symbol id="icon-duplicate"></symbol>',
+      hash: 'hash-a',
+    })
+    vi.mocked(ctx.cache.get).mockReturnValueOnce({
+      file: 'D:/repo/src/icons/b.svg',
+      id: 'icon-duplicate',
+      symbol: '<symbol id="icon-duplicate"></symbol>',
+      hash: 'hash-b',
+    })
+    const compiler = createCompiler(ctx)
+
+    await expect(compiler.getResult()).rejects.toThrow('Duplicate symbolId "icon-duplicate"')
   })
 })

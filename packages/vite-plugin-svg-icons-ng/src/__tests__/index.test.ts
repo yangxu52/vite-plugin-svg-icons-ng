@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { createCompiler } from '../core/compiler'
 import { createSvgIconsPlugin } from '../index'
 import { pluginLoad } from '../plugin/build'
 import type { Plugin, IndexHtmlTransformHook } from 'vite'
@@ -36,6 +37,24 @@ describe('index entry', () => {
     await plugin.load.handler.call({} as never, id, options as never)
   }
 
+  async function runConfigResolved(plugin: Plugin, root = '/repo/app', command: 'serve' | 'build' = 'serve'): Promise<void> {
+    if (!plugin.configResolved) {
+      throw new Error('plugin.configResolved is required in this test')
+    }
+    const config = {
+      command,
+      root,
+      logger: {
+        warn: vi.fn(),
+      },
+    } as never
+    if (typeof plugin.configResolved === 'function') {
+      await plugin.configResolved.call({} as never, config)
+      return
+    }
+    await plugin.configResolved.handler.call({} as never, config)
+  }
+
   async function runTransform(plugin: Plugin, html: string): Promise<string> {
     if (!plugin.transformIndexHtml) {
       throw new Error('plugin.transformIndexHtml is required in this test')
@@ -66,6 +85,7 @@ describe('index entry', () => {
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
+    await runConfigResolved(plugin)
 
     await runLoad(plugin, 'virtual:svg-icons/register', { ssr: false })
     expect(pluginLoad).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, { ssr: false })
@@ -79,6 +99,7 @@ describe('index entry', () => {
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
+    await runConfigResolved(plugin)
 
     await runLoad(plugin, 'virtual:svg-icons/register', true)
     expect(pluginLoad).toHaveBeenCalledWith(expect.anything(), 'virtual:svg-icons/register', false, true)
@@ -94,6 +115,7 @@ describe('index entry', () => {
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
+    await runConfigResolved(plugin)
 
     const html = '<html><body><div id="app"></div></body></html>'
     const transformed = await runTransform(plugin, html)
@@ -107,11 +129,28 @@ describe('index entry', () => {
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
     })
+    await runConfigResolved(plugin)
     const html = '<html><body><svg id="__svg__icons__dom__"></svg><div id="app"></div></body></html>'
 
     const transformed = await runTransform(plugin, html)
 
     expect(transformed).toBe(html)
     expect(hoisted.compiler.getResult).not.toHaveBeenCalled()
+  })
+
+  test('should resolve relative iconDirs from vite root', async () => {
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['src/icons'],
+    })
+
+    await runConfigResolved(plugin, '/repo/app')
+
+    expect(createCompiler).toHaveBeenCalledWith(
+      expect.objectContaining({
+        options: expect.objectContaining({
+          iconDirs: ['/repo/app/src/icons'],
+        }),
+      })
+    )
   })
 })

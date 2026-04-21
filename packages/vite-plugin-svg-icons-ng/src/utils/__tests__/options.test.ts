@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../constants'
-import { resolveOptions, validateOptions } from '../options'
+import { resolveOptions, resolveOptionsWithContext, validateOptions } from '../options'
 
 describe('Test ValidateOption', () => {
   const template = { iconDirs: ['icons'], symbolId: 'icon-[dir]-[name]', customDomId: '__svg__icons__dom__' } as {
@@ -24,6 +24,26 @@ describe('Test ValidateOption', () => {
       expect(() => {
         validateOptions(options)
       }).toThrow(ERR_ICON_DIRS_REQUIRED)
+    })
+
+    test('relative iconDirs should resolve from vite root', () => {
+      const options = resolveOptionsWithContext(
+        {
+          iconDirs: ['src/icons', '/shared/icons'],
+        },
+        { root: '/repo/app' }
+      )
+
+      expect(options.iconDirs).toEqual(['/repo/app/src/icons', '/shared/icons'])
+    })
+
+    test('resolveOptions should keep backwards compatible cwd fallback', () => {
+      const options = resolveOptions({
+        iconDirs: ['src/icons', '/shared/icons'],
+      })
+
+      expect(options.iconDirs[0]).toMatch(/\/src\/icons$/)
+      expect(options.iconDirs[1]).toBe('/shared/icons')
     })
   })
   describe('option: symbolId', () => {

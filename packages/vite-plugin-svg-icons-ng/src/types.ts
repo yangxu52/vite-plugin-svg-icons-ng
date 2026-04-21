@@ -1,4 +1,5 @@
 import type { Options as BakerOptions } from 'svg-icon-baker'
+import type { Logger } from 'vite'
 
 export type InjectMode = 'body-first' | 'body-last'
 export type StrokeOverride = boolean | string
@@ -51,6 +52,10 @@ export type Options = {
 
 export type ResolvedOptions = Required<Omit<Options, 'strokeOverride'>> & { strokeOverride: ResolvedStrokeOverride }
 
+export type ResolveOptionsContext = {
+  root: string
+}
+
 export type IconFile = {
   file: string
   iconDir: string
@@ -90,6 +95,7 @@ export type PluginContext = {
   options: ResolvedOptions
   cache: IconCache
   compiler: IconCompiler
+  logger?: Logger
 }
 
 export type CompilerContext = Pick<PluginContext, 'options' | 'cache'>

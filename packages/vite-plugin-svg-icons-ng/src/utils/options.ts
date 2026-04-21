@@ -1,4 +1,6 @@
-import type { Options, ResolvedOptions, ResolvedStrokeOverride } from '../types'
+import { isAbsolute, resolve } from 'node:path'
+import { normalizePath } from 'vite'
+import type { Options, ResolvedOptions, ResolvedStrokeOverride, ResolveOptionsContext } from '../types'
 import {
   ERR_CUSTOM_DOM_ID_SYNTAX,
   ERR_ICON_DIRS_REQUIRED,
@@ -31,7 +33,7 @@ function normalizeStrokeOverride(value: Options['strokeOverride']): ResolvedStro
 
 export function resolveOptions(userOptions: Options): ResolvedOptions {
   return {
-    iconDirs: userOptions.iconDirs,
+    iconDirs: userOptions.iconDirs.map((dir) => resolveIconDir(dir, process.cwd())),
     symbolId: userOptions.symbolId ?? defaultOptions.symbolId,
     inject: userOptions.inject ?? defaultOptions.inject,
     customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
@@ -39,6 +41,17 @@ export function resolveOptions(userOptions: Options): ResolvedOptions {
     failOnError: userOptions.failOnError ?? defaultOptions.failOnError,
     bakerOptions: userOptions.bakerOptions ?? defaultOptions.bakerOptions,
   }
+}
+
+export function resolveOptionsWithContext(userOptions: Options, ctx: ResolveOptionsContext): ResolvedOptions {
+  return {
+    ...resolveOptions(userOptions),
+    iconDirs: userOptions.iconDirs.map((dir) => resolveIconDir(dir, ctx.root)),
+  }
+}
+
+function resolveIconDir(iconDir: string, root: string): string {
+  return normalizePath(isAbsolute(iconDir) ? iconDir : resolve(root, iconDir))
 }
 
 export function validateOptions(opt: Options) {

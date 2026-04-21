@@ -42,14 +42,13 @@ yarn add -D vite-plugin-svg-icons-ng
 
 Add `createSvgIconsPlugin` in `vite.config.ts` / `vite.config.js`:
 
-```ts {1,6-8}
+```ts {1,5-7}
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
-import path from 'node:path'
 
 export default defineConfig({
   plugins: [
     createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+      iconDirs: ['src/icons'],
     }),
   ],
 })
@@ -57,7 +56,12 @@ export default defineConfig({
 
 At this point, the SVG sprite can already be generated from your icon directories.
 
-Import `virtual:svg-icons/register` from your client entry when you want the sprite mounted in development and updated in place during HMR.
+> [!NOTE]
+> Path resolution follows Vite: relative `iconDirs` are resolved from your Vite project [`root`](https://vite.dev/config/shared-options#root), while absolute paths are used as written.
+> In monorepos, use an absolute path when the icon folder lives outside the current app root.
+
+> [!TIP]
+> Import `virtual:svg-icons/register` from your client entry when you want the sprite mounted in development and updated in place during HMR.
 
 ### Step 3: Continue
 

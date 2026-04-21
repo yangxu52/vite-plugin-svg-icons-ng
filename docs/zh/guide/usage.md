@@ -15,7 +15,7 @@ src/icons/
 └── icon2.svg
 ```
 
-插件配置项 `symbolId:`为默认的：`icon-[dir]-[name]`
+插件配置项 `symbolId` 为默认的 `'icon-[dir]-[name]'`
 
 ## 在模板中直接使用图标
 
@@ -31,7 +31,7 @@ src/icons/
 
 ## 封装可复用组件
 
-避免在业务页面重复写 `<svg><use /></svg>`，建议封装组件后统一复用。
+避免在业务页面重复写 `<svg><use xxx/></svg>`，建议封装组件后统一复用。
 
 可参考 [组件使用](/zh/guide/component/)。
 

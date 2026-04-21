@@ -6,6 +6,7 @@ This page focuses on practical usage in SSR apps.
 
 - Default behavior: in standard Vite HTML flow, development can mount the sprite through `virtual:svg-icons/register`, and build can inject the sprite into HTML output.
 - SSR behavior: if your server builds the final HTML response itself, inject sprite manually.
+- In SSR dev, `virtual:svg-icons/sprite` reads from the same compiler state as dev HMR, so the next server render gets the latest sprite after icon changes.
 
 ## Decision Table
 
@@ -46,7 +47,7 @@ export async function render(url: string, template: string) {
 ## HMR in SSR Dev
 
 - When an SVG file changes, the plugin updates sprite output.
-- In SSR dev mode, the updated sprite should appear in the next server-rendered response.
+- In SSR dev mode, `virtual:svg-icons/sprite` returns the latest sprite on the next server-rendered response.
 - If your SSR layer caches full HTML/template aggressively, invalidate that cache after icon changes.
 
 ## Related Virtual Modules

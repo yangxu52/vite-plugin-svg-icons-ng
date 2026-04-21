@@ -40,14 +40,13 @@ yarn add -D vite-plugin-svg-icons-ng
 
 在 `vite.config.ts` / `vite.config.js` 中添加 `createSvgIconsPlugin`：
 
-```ts {1,6-8}
+```ts {1,5-7}
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
-import path from 'node:path'
 
 export default defineConfig({
   plugins: [
     createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+      iconDirs: ['src/icons'],
     }),
   ],
 })
@@ -55,7 +54,12 @@ export default defineConfig({
 
 此时插件已经可以根据图标目录生成 SVG 精灵。
 
-若需要在开发环境挂载到页面并接收 HMR 更新，可在客户端入口导入 `virtual:svg-icons/register`。
+> [!NOTE] 注意
+> 路径解析跟随 Vite：相对 `iconDirs` 会基于当前 Vite 项目的 [`root`](https://cn.vite.dev/config/shared-options#root) 解析，绝对路径则按原样使用。  
+> 在 monorepo 中，如果图标目录位于当前 app root 之外，请使用绝对路径。
+
+> [!TIP] 提示
+> 若需要在开发环境挂载到页面并接收 HMR 更新，可在客户端入口导入 `virtual:svg-icons/register`。
 
 ### 第三步：继续
 

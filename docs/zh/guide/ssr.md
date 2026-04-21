@@ -6,6 +6,7 @@ SSR 场景下的使用方式。
 
 - 默认情况：在标准 Vite HTML 流程下，开发环境可通过 `virtual:svg-icons/register` 挂载 sprite，构建阶段则由插件注入到 HTML。
 - SSR 情况：如果最终 HTML 是由你的服务端代码拼接输出，需要手动注入 sprite。
+- SSR 开发模式下，`virtual:svg-icons/sprite` 与 dev HMR 使用同一份编译状态，图标变更后的下一次服务端渲染会读取最新 sprite。
 
 ## 场景判断
 
@@ -46,7 +47,7 @@ export async function render(url: string, template: string) {
 ## SSR 开发模式下的 HMR
 
 - SVG 文件变更后，插件会更新 sprite 输出。
-- 在 SSR 开发模式下，新的 sprite 应该体现在下一次服务端渲染响应中。
+- 在 SSR 开发模式下，`virtual:svg-icons/sprite` 会在下一次服务端渲染响应中返回最新 sprite。
 - 如果 SSR 层对完整 HTML/模板做了激进缓存，请在图标变更后主动失效缓存。
 
 ## 相关虚拟模块

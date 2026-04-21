@@ -9,20 +9,22 @@ plugin options can be passed to the `createSvgIconsPlugin` function.
 
 Specify which folders the plugin can search for SVG files to generate SVG sprite.
 
+- Relative paths are resolved from Vite [`root`](https://vite.dev/config/shared-options#root).
+- Absolute paths are kept as-is, which is useful for shared icon folders in monorepos.
+
 Example:
 
 ```ts{3}
 // ...
 createSvgIconsPlugin({
-  iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+  iconDirs: ['src/icons'],
 })
 // ...
 ```
 
 > [!WARNING] NOTE
-> Although the use of folders to distinguish between them can largely avoid the problem of duplicate names,
-> there will also be svgs with multiple folders and the same file name in `iconDirs`.
-> This needs to be avoided by the developer themselves.
+> Duplicate generated `symbolId` values are detected during compile.
+> By default, the plugin warns and skips later duplicates; set `failOnError: true` to fail the compile/build instead.
 
 ## symbolId
 
@@ -40,7 +42,7 @@ Example:
 ```ts{3,4}
 // ...
 createSvgIconsPlugin({
-  iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+  iconDirs: ['src/icons'],
   symbolId: 'icon-[dir]-[name]',
 })
 // ...
@@ -90,9 +92,9 @@ Override `stroke` attribute, set `false` to disable it, set `true` to use `curre
 - type: `boolean`
 - default: `false`
 
-Control how broken SVG files are handled during compile:
+Control how broken SVG files and duplicate generated `symbolId` values are handled during compile:
 
-- `false`: warn and skip broken icons.
+- `false`: warn and skip broken icons or later duplicate icons.
 - `true`: throw immediately and fail the compile/build.
 
 ## bakerOptions

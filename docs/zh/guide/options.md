@@ -9,20 +9,22 @@
 
 配置插件遍历用来生成 SVG精灵图 的 SVG文件 所在的文件夹。
 
+- 相对路径 统一基于 Vite 配置选项 [`root`](https://cn.vite.dev/config/shared-options#root) 解析。
+- 绝对路径 保持不变，适合 monorepo 中引用共享图标目录。
+
 示例：
 
 ```ts{3}
 // ...
 createSvgIconsPlugin({
-  iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+  iconDirs: ['src/icons'],
 })
 // ...
 ```
 
 > [!WARNING] 注意
-> 虽然用文件夹路径来区分已经可以很大程度避免重名问题了，  
-> 但是也会出现`iconDirs`配置多个文件夹，且存在文件名一样的 svg 。  
-> 这需要开发者自己规避。
+> 插件会在编译阶段检测重复生成的 `symbolId`。
+> 默认行为是输出告警并跳过后出现的重复图标；设置 `failOnError: true` 后会直接抛错并中断编译/构建。
 
 ## symbolId
 
@@ -40,7 +42,7 @@ SVG精灵图中的子节点 `<symbol>` 的 `id` 属性。
 ```ts{3,4}
 // ...
 createSvgIconsPlugin({
-  iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+  iconDirs: ['src/icons'],
   symbolId: 'icon-[dir]-[name]',
 })
 // ...
@@ -89,9 +91,9 @@ SVG 精灵图注入到 HTML 的位置。
 - 类型: `boolean`
 - 默认值: `false`
 
-控制编译阶段遇到错误 SVG 文件时的行为：
+控制编译阶段遇到错误 SVG 文件或重复生成 `symbolId` 时的行为：
 
-- `false`：输出告警并跳过该图标。
+- `false`：输出告警并跳过错误图标或后出现的重复图标。
 - `true`：立即抛错并使编译/构建失败。
 
 ## bakerOptions

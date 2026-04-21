@@ -26,7 +26,7 @@ The goal is simple: turn icon handling from manual chores into a standard workfl
 ## Relationship with `vite-plugin-svg-icons`
 
 - This project is inspired by [`vite-plugin-svg-icons`](https://github.com/vbenjs/vite-plugin-svg-icons), and respects its core sprite-based idea.
-- `vite-plugin-svg-icons-ng` focuses on a renewed implementation and documentation experience for this repository.
-- It keeps a migration-friendly path for legacy virtual module ids, while recommending the newer module ids:
+- `vite-plugin-svg-icons-ng` provides a fresh feature implementation, code organization, and documentation workflow for this repository.
+- To lower migration cost, it keeps compatibility paths for legacy virtual module ids while recommending the newer virtual module ids:
   - `virtual:svg-icons/register`
   - `virtual:svg-icons/ids`

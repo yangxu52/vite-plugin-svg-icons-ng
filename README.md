@@ -17,6 +17,7 @@
 - Runtime sprite injection with no extra network request
 - Cached compilation with HMR for a smoother development loop
 - Consistent output across dev, build, and SSR flows
+- Safer icon sets with duplicate `symbolId` detection and optional build failure
 - Ready-to-use virtual modules for register, ids, and sprite access
 
 ## Repository

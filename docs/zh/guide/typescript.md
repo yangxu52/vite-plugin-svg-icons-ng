@@ -3,7 +3,7 @@
 vite-plugin-svg-icons-ng 支持 `TypeScript`.  
 根据你的工作区配置, 你可以选择 **其中一种** 方式来配置 `TypeScript` 支持.
 
-## 方式 1
+## 方式一 （推荐）
 
 如果你的工作区使用 `tsconfig.json` 文件.
 
@@ -18,11 +18,11 @@ vite-plugin-svg-icons-ng 支持 `TypeScript`.
 }
 ```
 
-## 方式 2
+## 方式二
 
-如果你的工作区使用环境类型声明文件.
+如果你的工作区使用 环境类型声明文件，比如 `env.d.ts`.
 
-在环境类型声明文件中添加三斜线指令 `/// <reference types="vite-plugin-svg-icons-ng/client" />`。
+在 环境类型声明 文件中添加三斜线指令 `/// <reference types="vite-plugin-svg-icons-ng/client" />`。
 
 ```ts
 /// <reference types="vite-plugin-svg-icons-ng/client" />

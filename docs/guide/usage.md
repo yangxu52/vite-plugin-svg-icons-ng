@@ -15,7 +15,7 @@ src/icons/
 └── icon2.svg
 ```
 
-The plugin option `symbolId` uses the default value: `icon-[dir]-[name]`.
+The plugin option `symbolId` uses the default value `'icon-[dir]-[name]'`.
 
 ## Use icons directly in templates
 
@@ -31,7 +31,7 @@ The plugin option `symbolId` uses the default value: `icon-[dir]-[name]`.
 
 ## Build reusable framework components
 
-Instead of repeating raw `<svg><use /></svg>`, wrap it in a component and reuse it across pages.
+Instead of repeating raw `<svg><use xxx /></svg>`, wrap it in a component and reuse it across pages.
 
 See [Component Examples](/guide/component/).
 

@@ -25,7 +25,7 @@
 ## 与 `vite-plugin-svg-icons` 的关系
 
 - 本项目受到 [`vite-plugin-svg-icons`](https://github.com/vbenjs/vite-plugin-svg-icons) 的启发，并延续其基于 sprite 的核心思路。
-- `vite-plugin-svg-icons-ng` 在此基础上做了新的实现与文档组织，面向本仓库持续演进。
-- 为降低迁移成本，保留了旧 virtual module id 的过渡路径，同时推荐使用新 id：
+- `vite-plugin-svg-icons-ng` 在此基础上做了全新功能实现、代码组织与文档管理，面向本仓库持续演进。
+- 为降低迁移成本，保留了旧 虚拟模块 id 的过渡路径，同时推荐使用新 虚拟模块 id：
   - `virtual:svg-icons/register`
   - `virtual:svg-icons/ids`

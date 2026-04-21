@@ -17,18 +17,19 @@ pnpm add -D vite-plugin-svg-icons-ng
 ```ts
 import { defineConfig } from 'vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons-ng'
-import path from 'node:path'
 
 export default defineConfig({
   plugins: [
     createSvgIconsPlugin({
-      iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+      iconDirs: ['src/icons'],
     }),
   ],
 })
 ```
 
 At this point, the plugin can generate the SVG sprite and expose it through the standard Vite flow.
+
+Path resolution follows Vite: relative `iconDirs` are resolved from your Vite project root, while absolute paths are used as written. In monorepos, use an absolute path when the icon folder lives outside the current app root.
 
 In development, import `virtual:svg-icons/register` to mount it on the client and receive in-place HMR updates.
 
@@ -48,6 +49,7 @@ See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/c
 - Dev mount + build HTML injection with no extra network request
 - Cached compilation with HMR support
 - Consistent output across dev, build, and SSR flows
+- Safer icon sets with duplicate `symbolId` detection and optional build failure
 - Virtual modules for register, ids, and SSR sprite access
 
 ## Virtual Modules
@@ -58,10 +60,12 @@ See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/c
 
 ## Compatibility
 
-Deprecated virtual module ids are removed in `v2.0.0`:
+Deprecated virtual module ids are still supported in the current release and are planned for removal in `v2.0.0`:
 
 - `virtual:svg-icons-register` -> `virtual:svg-icons/register`
 - `virtual:svg-icons-names` -> `virtual:svg-icons/ids`
+
+Migration: update imports to the new slash-based virtual module ids before upgrading to `v2.0.0`.
 
 ## Docs
 

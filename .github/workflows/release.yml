@@ -1,23 +1,54 @@
-name: Create Release Tag
+name: Release Package
 
 on:
   push:
-    tags: ['v*.*.*']
+    tags:
+      - 'v*.*.*'
+      - '*@*.*.*'
+
+permissions:
+  id-token: write
+  contents: write
 
 jobs:
-  release-tag:
-    if: contains(github.event.head_commit.message, 'release')
+  release-package:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Create release for tag
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
         with:
-          prerelease: ${{contains(github.ref, 'alpha') || contains(github.ref, 'beta')|| contains(github.ref, 'rc')}}
+          version: 10
+
+      - name: Setup node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve package from tag
+        id: package
+        run: node scripts/resolve-release.mjs --tag "${GITHUB_REF_NAME}"
+
+      - name: Build package
+        run: pnpm --filter "./packages/${{ steps.package.outputs.dir }}" run build
+
+      - name: Publish package
+        run: pnpm --filter "./packages/${{ steps.package.outputs.dir }}" publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create release for tag
+        uses: softprops/action-gh-release@v3
+        with:
+          name: ${{ steps.package.outputs.name }} v${{ steps.package.outputs.version }}
+          prerelease: ${{ steps.package.outputs.prerelease == 'true' }}
           body: |
-            Please refer to [CHANGELOG.md](https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
+            Please refer to [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/packages/${{ steps.package.outputs.dir }}/CHANGELOG.md) for details.

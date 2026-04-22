@@ -16,9 +16,7 @@
     "format": "prettier --write .",
     "lint": "eslint --fix .",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "release": "pnpm run release:prepare --",
-    "release:prepare": "node scripts/prepare-release.mjs",
-    "release:resolve": "node scripts/resolve-release.mjs",
+    "release": "node scripts/prepare-release.mjs",
     "prepare": "husky"
   },
   "keywords": [

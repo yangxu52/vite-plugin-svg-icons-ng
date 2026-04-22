@@ -31,7 +31,7 @@
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist",
     "prepublishOnly": "npm run build",
-    "log": "conventional-changelog -p angular -i ../../CHANGELOG.md"
+    "log": "conventional-changelog -p angular --commit-path . -t v"
   },
   "keywords": [
     "vite",

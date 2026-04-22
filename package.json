@@ -1,27 +1,25 @@
 {
-  "name": "vite-plugin-svg-icons-ng-monorepo",
-  "private": true,
+  "name": "vite-plugin-svg-icons-ng-workspace",
   "version": "1.0.0",
-  "type": "module",
-  "license": "MIT",
-  "author": "yangxu52",
+  "private": true,
   "scripts": {
-    "prepare": "husky",
-    "preinstall": "npx only-allow pnpm",
-    "postinstall": "pnpm --filter vite-plugin-svg-icons-ng run dev",
-    "dev": "pnpm run build && pnpm -r --filter ./playground/* run dev",
-    "build": "pnpm --filter vite-plugin-svg-icons-ng run build",
-    "build:docs": "pnpm --filter ./docs run docs:build",
-    "build:playground": "pnpm -r --filter ./playground/* run build",
-    "build:gallery": "pnpm --filter playground-test-gallery run build",
-    "test": "pnpm --filter vite-plugin-svg-icons-ng run test",
-    "coverage": "pnpm --filter vite-plugin-svg-icons-ng run coverage",
-    "test:ci": "pnpm build &&pnpm test && pnpm build:gallery",
-    "lint": "eslint --fix .",
+    "dev": "pnpm -r --filter './packages/*' run dev",
+    "dev:playground": "pnpm run build && pnpm -r --filter './playground/*' run dev",
+    "dev:docs": "pnpm --filter ./docs run dev",
+    "build": "pnpm -r --filter './packages/*' run build",
+    "build:playground": "pnpm run build && pnpm -r --filter './playground/*' run build",
+    "build:docs": "pnpm --filter ./docs run build",
+    "test": "pnpm -r --filter './packages/*' run test",
+    "coverage": "pnpm -r --filter './packages/*' run coverage",
+    "clean": "pnpm -r --if-present run clean",
+    "log": "pnpm -r --filter './packages/*' run log",
     "format": "prettier --write .",
+    "lint": "eslint --fix .",
     "tsc": "tsc --noEmit --skipLibCheck",
-    "log": "pnpm --filter vite-plugin-svg-icons-ng run log",
-    "release": "node scripts/release.mjs"
+    "release": "pnpm run release:prepare --",
+    "release:prepare": "node scripts/prepare-release.mjs",
+    "release:resolve": "node scripts/resolve-release.mjs",
+    "prepare": "husky"
   },
   "keywords": [
     "vite",
@@ -30,14 +28,17 @@
     "sprite",
     "svgo"
   ],
+  "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
+  "bugs": {
+    "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yangxu52/vite-plugin-svg-icons-ng.git"
   },
-  "bugs": {
-    "url": "https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues"
-  },
-  "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
+  "license": "MIT",
+  "author": "yangxu52",
+  "type": "module",
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
@@ -52,10 +53,14 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.1",
+    "rimraf": "^6.1.3",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.1",
     "vite": "^6.4.2",
     "vitest": "^4.1.0"
+  },
+  "engines": {
+    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [

@@ -7,7 +7,8 @@
     "dev": "node server.js",
     "build": "vite build --outDir dist/client --emptyOutDir",
     "build:ssr": "vite build --ssr src/entry-server.ts --outDir dist/server --emptyOutDir false",
-    "preview": "node server.js --prod"
+    "preview": "node server.js --prod",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "vite-plugin-svg-icons-ng": "workspace:*"

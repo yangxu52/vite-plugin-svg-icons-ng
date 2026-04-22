@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "docs": "vitepress dev",
-    "docs:build": "vitepress build",
-    "docs:serve": "vitepress serve"
+    "dev": "vitepress",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "clean": "rimraf .vitepress/dist"
   },
   "devDependencies": {
     "vitepress": "^1.6.4",

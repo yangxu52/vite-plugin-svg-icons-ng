@@ -1,3 +1,13 @@
+## 1.8.0 (2026-04-23)
+
+- ci: unify package release workflow ([cceca37](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cceca37))
+- chore: unify and standardize package file ([539a905](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/539a905))
+- test: add coverage workflow scripts ([01ba09e](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/01ba09e))
+- test: cover svg icon hmr and ssr regressions ([798a00e](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/798a00e))
+- docs: align svg icon runtime behavior ([22c2cb3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/22c2cb3))
+- feat: report duplicate svg symbol ids ([822a5da](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/822a5da))
+- refactor: resolve icon dirs from vite root ([9028fa2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/9028fa2))
+
 ## <small>1.7.1 (2026-04-20)</small>
 
 - docs: align runtime and hmr descriptions ([767559a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/767559a))

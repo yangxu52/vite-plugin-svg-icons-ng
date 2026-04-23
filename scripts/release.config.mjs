@@ -12,5 +12,8 @@ export const releaseConfig = {
     'vite-plugin-svg-icons-ng': {
       tagType: TAG_TYPES.VERSION_ONLY,
     },
+    'svg-icon-baker': {
+      tagType: TAG_TYPES.DIR_AT_VERSION,
+    },
   },
 }

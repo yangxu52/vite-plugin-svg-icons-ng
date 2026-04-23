@@ -1,0 +1,118 @@
+import { describe, expect, test } from 'vitest'
+import { bakeIcon, bakeIcons } from '../baker.ts'
+
+describe('feature tests', () => {
+  const svg = `\uFEFF<?xml version="1.0" encoding="UTF-8"?>
+                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="16px">
+                   <defs>
+                     <clipPath id="clipA"><rect x="0" y="0" width="24" height="12"/></clipPath>
+                     <mask id="maskA"><rect x="0" y="0" width="24" height="24" fill="#fff"/></mask>
+                     <filter id="filterA"><feGaussianBlur stdDeviation="2"/></filter>
+                     <pattern id="patternA" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4"/></pattern>
+                     <marker id="markerA" markerWidth="4" markerHeight="4"><path d="M0,0 L4,2 L0,4 z"/></marker><path id="p1" d="M0 0L24 0"/>
+                     <linearGradient id="grad1"><stop offset="0"/></linearGradient>
+                   </defs>
+                   <rect fill="url(#grad1)" x="0" y="0" width="24" height="24"/>
+                   <rect clip-path="url(#clipA)" x="0" y="0" width="24" height="24"/>
+                   <rect mask="url(#maskA)" x="0" y="0" width="24" height="24"/>
+                   <rect filter="url(#filterA)" x="0" y="0" width="24" height="24"/>
+                   <rect fill="url(#patternA)" x="0" y="0" width="24" height="24"/>
+                   <path d="M0 12L24 12" marker-start="url(#markerA)" marker-end="url(#markerA)"/>
+                   <use href="#p" x="0" y="0"/>
+                   <use xlink:href="#p" x="0" y="2"/>
+                 </svg>`
+  const result = bakeIcon({ name: 'icon-test', content: svg })
+  describe('complete structure ', () => {
+    test('complete symbol start tag', () => {
+      expect(result.content.startsWith('<symbol')).toBe(true)
+    })
+    test('complete symbol end tag', () => {
+      expect(result.content.endsWith('</symbol>')).toBe(true)
+    })
+  })
+  describe('prefix ids and references', () => {
+    test('rename symbol id', () => {
+      expect(result.content).toContain('id="icon-test"')
+    })
+    test('prefix internal id', () => {
+      expect(result.content).toMatch(/\bid="icon-test-[^"]*"/)
+    })
+    test('prefix url reference', () => {
+      expect(result.content).toMatch(/\burl\(#icon-test-[^"]*\)/)
+      expect(result.content).not.toMatch(/\burl\(#(?!icon-test-)[^")]*\)/)
+    })
+    test('use href instead of xlink:href and it is prefixed', () => {
+      expect(result.content).toMatch(/href="#icon-test-[^"]+"/)
+      expect(result.content).not.toMatch(/xlink:href="#icon-test-[^"]+"/)
+    })
+  })
+  describe('infers viewBox from width/height and removes width/height', () => {
+    test('infers viewBox from width/height', () => {
+      expect(result.content).toContain('viewBox="0 0 32 16"')
+    })
+    test('not contain width/height attributes', () => {
+      expect(result.content).not.toContain('width="32px"')
+      expect(result.content).not.toContain('height="16px"')
+    })
+  })
+  describe('removes xml/comment declaration', () => {
+    test('not contain BOM', () => {
+      expect(result.content).not.toContain('\uFEFF')
+    })
+    test('not contain xml declaration', () => {
+      expect(result.content).not.toContain('<?xml')
+    })
+    test('not contain comment', () => {
+      expect(result.content).not.toContain('<!--')
+    })
+  })
+})
+
+describe('root attribute preservation', () => {
+  test('keep root fill and replace root id when converting svg to symbol', () => {
+    const svg = `<svg id="legacy-root" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 1v8"/></svg>`
+    const result = bakeIcon({ name: 'icon-exit', content: svg })
+    expect(result.content).toContain('<symbol')
+    expect(result.content).toContain('id="icon-exit"')
+    expect(result.content).not.toContain('id="legacy-root"')
+    expect(result.content).toContain('viewBox="0 0 18 18"')
+    expect(result.content).toContain('fill="none"')
+  })
+})
+
+describe('validation tests', () => {
+  test('name is required', () => {
+    const testFn = () => bakeIcon({ content: '<svg></svg>' } as never)
+    expect(testFn).toThrow('Property name and content are required.')
+  })
+  test('content is required', () => {
+    const testFn = () => bakeIcon({ name: 'icon-test' } as never)
+    expect(testFn).toThrow('Property name and content are required.')
+  })
+  test('invalid name', () => {
+    const testFn = () => bakeIcon({ name: '1 bad name', content: '<svg viewBox="0 0 1 1"/>' })
+    expect(testFn).toThrow(/Invalid name/)
+  })
+  test('svgo parsing failed', () => {
+    const testFn = () => bakeIcon({ name: 'icon-test', content: `<div></vid>` })
+    expect(testFn).toThrow('Parsing failed.')
+  })
+  test('viewBox cannot be determined', () => {
+    const svg = `<svg><rect height="16" width="32" /></svg>`
+    const testFn = () => bakeIcon({ name: 'icon-test', content: svg })
+    expect(testFn).toThrow('Cannot determine viewBox.')
+  })
+})
+
+describe('batch process tests', () => {
+  const svg1 = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 16"><title>test</title><rect id="r" width="32" height="16"/></svg>`
+  const svg2 = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 16"><title>test</title><rect id="r" width="32" height="16"/></svg>`
+  const sources = [
+    { name: 'icon1', content: svg1 },
+    { name: 'icon2', content: svg2 },
+  ]
+  test('batch process', () => {
+    const testFn = () => bakeIcons(sources)
+    expect(testFn).not.toThrow('Error')
+  })
+})

@@ -59,7 +59,7 @@
   },
   "homepage": "https://blog.yangxu52.top/vite-plugin-svg-icons-ng",
   "dependencies": {
-    "svg-icon-baker": "^1.2.0",
+    "svg-icon-baker": "workspace:*",
     "tinyglobby": "^0.2.16"
   },
   "peerDependencies": {

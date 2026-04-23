@@ -4,7 +4,9 @@
     "module": "ESNext",
     "lib": ["ES2022"],
     "moduleResolution": "bundler",
-
+    "paths": {
+      "svg-icon-baker": ["./packages/svg-icon-baker/src/index.ts"]
+    },
     /* Bundler mode */
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",

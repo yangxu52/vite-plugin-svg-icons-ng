@@ -1,0 +1,4 @@
+interface:
+  display_name: 'SVG Icon Baker'
+  short_description: 'A domain skill for understanding and working with svg-icon-baker'
+  default_prompt: 'Use $svg-icon-baker to understand svg-icon-baker before making changes.'

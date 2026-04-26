@@ -1,3 +1,9 @@
+## <small>1.8.1 (2026-04-26)</small>
+
+### Bug Fixes
+
+- fix(svg-icon-baker): allow svg preamble before root ([07b2996](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/07b2996))
+
 ## 1.8.0 (2026-04-23)
 
 - ci: unify package release workflow ([cceca37](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cceca37))

@@ -25,9 +25,13 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions): string {
   if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(source.name)) {
     throw new TypeError('Invalid name. Use letters, numbers, dash, or underscore, starting with a letter.')
   }
+  const normalizedSource = stripLeadingSvgPreamble(source.content)
+  if (!/^\s*<svg\b/i.test(normalizedSource)) {
+    throw new Error('Parsing failed. Input must start with an <svg> root element.')
+  }
   let result: SvgoOutput
   try {
-    result = optimize(source.content, createSvgoConfig(source.name, options))
+    result = optimize(normalizedSource, createSvgoConfig(source.name, options))
   } catch (err) {
     throw new Error(`Parsing failed. ${String(err)}`)
   }
@@ -35,8 +39,12 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions): string {
   if (!viewBox) {
     throw new Error('Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
   }
-  const cleanedSvg = result.data.replace(/^\s*<\?xml[^>]*\?>\s*/i, '')
+  const cleanedSvg = stripLeadingSvgPreamble(result.data)
   return toSymbolRootTag(cleanedSvg, source.name, viewBox)
+}
+
+function stripLeadingSvgPreamble(content: string): string {
+  return content.replace(/^(?:\uFEFF|\s|<\?xml[\s\S]*?\?>|<!--[\s\S]*?-->|<!DOCTYPE[\s\S]*?>)+/i, '')
 }
 
 function toSymbolRootTag(svg: string, symbolId: string, viewBox: string): string {

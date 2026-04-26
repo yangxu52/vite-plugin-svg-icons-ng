@@ -80,6 +80,23 @@ describe('root attribute preservation', () => {
   })
 })
 
+describe('svg preamble handling', () => {
+  test('accepts xml declaration comments and doctype before svg root', () => {
+    const svg = `\uFEFF
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!-- exported by tooling -->
+      <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z"/></svg>`
+    const result = bakeIcon({ name: 'icon-preamble', content: svg })
+    expect(result.content).toContain('<symbol')
+    expect(result.content).toContain('id="icon-preamble"')
+    expect(result.content).toContain('viewBox="0 0 24 24"')
+    expect(result.content).not.toContain('<?xml')
+    expect(result.content).not.toContain('<!--')
+    expect(result.content).not.toContain('<!DOCTYPE')
+  })
+})
+
 describe('validation tests', () => {
   test('name is required', () => {
     const testFn = () => bakeIcon({ content: '<svg></svg>' } as never)

@@ -68,8 +68,7 @@ type BakeResult = {
 }
 
 type BakeIssue = {
-  level: 'warning' | 'error'
-  code: 'unresolved-reference' | 'duplicate-definition' | 'unsupported-reference-carrier' | 'style-parse-failed' | 'prune-skipped'
+  code: 'ResolveReferenceFailed' | 'DetectDefinitionDuplicate' | 'DetectReferenceCarrierUnsupported' | 'ParseStyleFailed'
   message: string
   targetId?: string
 }

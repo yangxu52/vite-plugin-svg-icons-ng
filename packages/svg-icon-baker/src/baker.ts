@@ -1,6 +1,7 @@
 import { optimize } from 'svgo'
 import { rewriteSvgIds } from './oven/rewrite.ts'
 import { createSvgoConfig, resolveOptions } from './options.ts'
+import { BakeError } from './types.ts'
 import type { BakeResult, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types.ts'
 
 export function bakeIcon(source: BakeSource, options?: Options): BakeResult {
@@ -27,34 +28,42 @@ export function bakeIcons(sources: BakeSource[], options?: Options): BakeResult[
 
 function convertToSymbol(source: BakeSource, options: ResolvedOptions): Pick<BakeResult, 'content' | 'issues'> {
   if (!source || !source.name || !source.content) {
-    throw new TypeError('Property name and content are required.')
+    throw new BakeError('ValidateSourceInvalid', 'Property name and content are required.')
   }
   if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(source.name)) {
-    throw new TypeError('Invalid name. Use letters, numbers, dash, or underscore, starting with a letter.')
+    throw new BakeError('ValidateNameInvalid', 'Invalid name. Use letters, numbers, dash, or underscore, starting with a letter.')
   }
   const normalizedSource = stripLeadingSvgPreamble(source.content)
   if (!/^\s*<svg\b/i.test(normalizedSource)) {
-    throw new Error('Parsing failed. Input must start with an <svg> root element.')
+    throw new BakeError('ValidateSvgRootInvalid', 'Input must start with an <svg> root element.')
   }
-  let result: SvgoOutput
   let issues: BakeResult['issues'] = []
+  const baked = options.idPolicy.rewrite
+    ? safelyRewriteSvgIds(normalizedSource, source.name, options.idPolicy)
+    : { code: normalizedSource, idMap: new Map<string, string>(), issues: [] }
+  issues = baked.issues
+  let result: SvgoOutput
   try {
-    const baked = options.idPolicy.rewrite
-      ? rewriteSvgIds(normalizedSource, source.name, options.idPolicy)
-      : { code: normalizedSource, idMap: new Map<string, string>(), issues: [] }
-    issues = baked.issues
     result = optimize(baked.code, createSvgoConfig(options))
-  } catch (err) {
-    throw new Error(`Parsing failed. ${String(err)}`)
+  } catch (cause) {
+    throw new BakeError('OptimizeSvgFailed', 'SVGO optimization failed.', { cause })
   }
   const viewBox = result.data.match(/viewBox="([^"]+)"/)?.[1]
   if (!viewBox) {
-    throw new Error('Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
+    throw new BakeError('ResolveViewBoxFailed', 'Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
   }
   const cleanedSvg = stripLeadingSvgPreamble(result.data)
   return {
     content: toSymbolRootTag(cleanedSvg, source.name, viewBox),
     issues,
+  }
+}
+
+function safelyRewriteSvgIds(source: string, symbolId: string, options: ResolvedOptions['idPolicy']) {
+  try {
+    return rewriteSvgIds(source, symbolId, options)
+  } catch (cause) {
+    throw new BakeError('ParseSvgFailed', 'SVG parsing failed during id rewrite.', { cause })
   }
 }
 

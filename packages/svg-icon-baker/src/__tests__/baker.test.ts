@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { bakeIcon, bakeIcons } from '../baker.ts'
+import { BakeError } from '../types.ts'
 
 describe('feature tests', () => {
   const svg = `\uFEFF<?xml version="1.0" encoding="UTF-8"?>
@@ -46,7 +47,7 @@ describe('feature tests', () => {
       expect(result.content).not.toContain('xlink:href=')
       expect(result.issues).toEqual([
         expect.objectContaining({
-          code: 'unresolved-reference',
+          code: 'ResolveReferenceFailed',
           targetId: 'p',
         }),
       ])
@@ -107,25 +108,89 @@ describe('svg preamble handling', () => {
 
 describe('validation tests', () => {
   test('name is required', () => {
-    const testFn = () => bakeIcon({ content: '<svg></svg>' } as never)
-    expect(testFn).toThrow('Property name and content are required.')
+    try {
+      bakeIcon({ content: '<svg></svg>' } as never)
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ValidateSourceInvalid')
+      expect((error as Error).message).toBe('Property name and content are required.')
+    }
   })
   test('content is required', () => {
-    const testFn = () => bakeIcon({ name: 'icon-test' } as never)
-    expect(testFn).toThrow('Property name and content are required.')
+    try {
+      bakeIcon({ name: 'icon-test' } as never)
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ValidateSourceInvalid')
+      expect((error as Error).message).toBe('Property name and content are required.')
+    }
   })
   test('invalid name', () => {
-    const testFn = () => bakeIcon({ name: '1 bad name', content: '<svg viewBox="0 0 1 1"/>' })
-    expect(testFn).toThrow(/Invalid name/)
+    try {
+      bakeIcon({ name: '1 bad name', content: '<svg viewBox="0 0 1 1"/>' })
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ValidateNameInvalid')
+      expect((error as Error).message).toBe('Invalid name. Use letters, numbers, dash, or underscore, starting with a letter.')
+    }
   })
-  test('svgo parsing failed', () => {
-    const testFn = () => bakeIcon({ name: 'icon-test', content: `<div></vid>` })
-    expect(testFn).toThrow('Parsing failed.')
+  test('svg root validation failed', () => {
+    try {
+      bakeIcon({ name: 'icon-test', content: `<div></vid>` })
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ValidateSvgRootInvalid')
+      expect((error as Error).message).toBe('Input must start with an <svg> root element.')
+    }
   })
   test('viewBox cannot be determined', () => {
     const svg = `<svg><rect height="16" width="32" /></svg>`
-    const testFn = () => bakeIcon({ name: 'icon-test', content: svg })
-    expect(testFn).toThrow('Cannot determine viewBox.')
+    try {
+      bakeIcon({ name: 'icon-test', content: svg })
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ResolveViewBoxFailed')
+      expect((error as Error).message).toBe('Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
+    }
+  })
+  test('id rewrite parse failure is reported as BakeError with cause', () => {
+    const svg = `<svg viewBox="0 0 1 1"><style>#a{fill:red}</style><path id="a"`
+    try {
+      bakeIcon({ name: 'icon-test', content: svg }, { optimize: false })
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('ParseSvgFailed')
+      expect((error as Error).message).toBe('SVG parsing failed during id rewrite.')
+      expect((error as BakeError).cause).toBeDefined()
+    }
+  })
+  test('svgo optimization failure is reported as BakeError with cause', () => {
+    const svg = `<svg viewBox="0 0 1 1"><path d="M0 0"/></svg>`
+    const plugin = {
+      name: 'boom',
+      fn: () => ({
+        root: {
+          enter() {
+            throw new Error('boom')
+          },
+        },
+      }),
+    }
+    try {
+      bakeIcon({ name: 'icon-test', content: svg }, { svgoOptions: { plugins: [plugin] } })
+      expect.unreachable()
+    } catch (error) {
+      expect(error).toBeInstanceOf(BakeError)
+      expect((error as BakeError).code).toBe('OptimizeSvgFailed')
+      expect((error as Error).message).toBe('SVGO optimization failed.')
+      expect((error as BakeError).cause).toBeInstanceOf(Error)
+    }
   })
 })
 
@@ -150,7 +215,7 @@ describe('id policy options', () => {
     expect(result.content).toContain('href="#ghost"')
     expect(result.issues).toEqual([
       expect.objectContaining({
-        code: 'unresolved-reference',
+        code: 'ResolveReferenceFailed',
         targetId: 'ghost',
       }),
     ])
@@ -179,7 +244,7 @@ describe('id policy options', () => {
     expect(result.content).toContain('href="#icon-ghost_ghost"')
     expect(result.issues).toEqual([
       expect.objectContaining({
-        code: 'unresolved-reference',
+        code: 'ResolveReferenceFailed',
         targetId: 'ghost',
       }),
     ])

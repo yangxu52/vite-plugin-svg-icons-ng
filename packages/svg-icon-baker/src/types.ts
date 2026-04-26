@@ -8,11 +8,32 @@ export type BakeSource = {
   content: string
 }
 
+export type BakeIssueCode = 'ResolveReferenceFailed' | 'DetectDefinitionDuplicate' | 'DetectReferenceCarrierUnsupported' | 'ParseStyleFailed'
+
 export type BakeIssue = {
-  level: 'warning' | 'error'
-  code: 'unresolved-reference' | 'duplicate-definition' | 'unsupported-reference-carrier' | 'style-parse-failed' | 'prune-skipped'
+  code: BakeIssueCode
   message: string
   targetId?: string
+}
+
+export type BakeErrorCode =
+  | 'ValidateSourceInvalid'
+  | 'ValidateNameInvalid'
+  | 'ValidateSvgRootInvalid'
+  | 'ParseSvgFailed'
+  | 'OptimizeSvgFailed'
+  | 'ResolveViewBoxFailed'
+
+export class BakeError extends Error {
+  readonly code: BakeErrorCode
+  override readonly cause?: unknown
+
+  constructor(code: BakeErrorCode, message: string, options?: { cause?: unknown }) {
+    super(message, options)
+    this.name = 'BakeError'
+    this.code = code
+    this.cause = options?.cause
+  }
 }
 
 export type IdPolicyOptions = {

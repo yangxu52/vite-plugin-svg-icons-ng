@@ -299,9 +299,8 @@ function rewriteUnresolvedReference(
   format: (resolved: string) => string
 ): string {
   pushIssue(issues, {
-    level: 'warning',
-    code: 'unresolved-reference',
-    message: `Unresolved local reference "${targetId}" was ${options.unresolved === 'prefix' ? 'prefixed' : 'preserved'}.`,
+    code: 'ResolveReferenceFailed',
+    message: `Resolve reference failed for local target "${targetId}"; reference was ${options.unresolved === 'prefix' ? 'prefixed' : 'preserved'}.`,
     targetId,
   })
 
@@ -324,9 +323,8 @@ function collectIssues(state: CollectResult): BakeIssue[] {
   for (const [id, definitions] of state.definedIds) {
     if (definitions.length > 1) {
       pushIssue(issues, {
-        level: 'warning',
-        code: 'duplicate-definition',
-        message: `Duplicate local definition "${id}" keeps the first occurrence.`,
+        code: 'DetectDefinitionDuplicate',
+        message: `Detect definition duplicate for local target "${id}"; first occurrence was kept.`,
         targetId: id,
       })
     }
@@ -334,9 +332,8 @@ function collectIssues(state: CollectResult): BakeIssue[] {
 
   if (state.styleParseFailureCount > 0) {
     pushIssue(issues, {
-      level: 'warning',
-      code: 'style-parse-failed',
-      message: 'Some <style> blocks could not be parsed and were preserved as-is.',
+      code: 'ParseStyleFailed',
+      message: 'Parse style failed for one or more <style> blocks; original content was preserved.',
     })
   }
 

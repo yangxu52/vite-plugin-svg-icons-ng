@@ -2,20 +2,35 @@
 
 > Bake the `svg` icon into `symbol` 🍪
 
-The core library for transforming SVG icons into optimized SVG symbol sprites.
+`svg-icon-baker` is the core library for transforming SVG icons into optimized SVG symbol sprites.
+It converts SVG content into `<symbol>` markup for SVG sprite usage while preserving structure and handling local id references safely across multiple icons.
 
-If you like this project, please give it a [Star](https://github.com/yangxu52/svg-icon-baker).
+## Installation
+
+```bash
+pnpm add svg-icon-baker
+```
 
 ## Usage
 
 ```ts
 import { bakeIcon, bakeIcons } from 'svg-icon-baker'
 
-const source = { name: 'home', content: '<svg viewBox="0 0 16 16">...</svg>' }
-const result = bakeIcon(source)
-// result: { name: 'home', content: '<symbol id="home" viewBox="0 0 16 16">...</symbol>', issues: [] }
+const source = {
+  name: 'icon-home',
+  content: '<svg viewBox="0 0 16 16"><path d="..."/></svg>',
+}
 
-const results = bakeIcons([source])
+const result = bakeIcon(source)
+
+console.log(result)
+// {
+//   name: 'icon-home',
+//   content: '<symbol id="icon-home" viewBox="0 0 16 16">...</symbol>',
+//   issues: []
+// }
+
+const batch = bakeIcons([source])
 ```
 
 `bakeIcon` and `bakeIcons` are synchronous.
@@ -24,32 +39,141 @@ const results = bakeIcons([source])
 
 ### `bakeIcon(source: BakeSource, options?: Options): BakeResult`
 
-Convert one SVG into one symbol result.
+Convert one SVG input into one symbol result.
 
 ### `bakeIcons(sources: BakeSource[], options?: Options): BakeResult[]`
 
-Convert multiple SVG inputs with one inferred option set.
+Convert multiple SVG inputs with one resolved option set.
+
+## Return Value
+
+```ts
+type BakeResult = {
+  name: string
+  content: string
+  issues: BakeIssue[]
+}
+```
+
+- `name` is the original source name.
+- `content` is the generated `<symbol>...</symbol>` markup.
+- `issues` contains non-fatal diagnostics. Conversion still succeeds when issues are reported.
 
 ## Options
 
-| name          | type              | default                                                                 | description                                      |
-| ------------- | ----------------- | ----------------------------------------------------------------------- | ------------------------------------------------ |
-| `optimize`    | `boolean`         | `true`                                                                  | Enable default safe SVGO optimization preset.    |
-| `svgoOptions` | `SvgoOptions`     | `{}`                                                                    | Custom SVGO options into the optimization layer. |
-| `idPolicy`    | `IdPolicyOptions` | `{ rewrite: true, unresolved: 'prefix', idStyle: 'named', delim: '_' }` | Sprite-safe local id rewriting behavior.         |
+| name          | type              | default                                                                 | description                                  |
+| ------------- | ----------------- | ----------------------------------------------------------------------- | -------------------------------------------- |
+| `optimize`    | `boolean`         | `true`                                                                  | Enable the built-in safe SVGO optimization.  |
+| `svgoOptions` | `SvgoOptions`     | `{}`                                                                    | Merge custom SVGO options into optimization. |
+| `idPolicy`    | `IdPolicyOptions` | `{ rewrite: true, unresolved: 'prefix', idStyle: 'named', delim: '_' }` | Control local id rewriting for sprite use.   |
 
-Notes:
+### `idPolicy`
 
-- Behavior matrix:
-  - `optimize: true` + no `svgoOptions`: run default safe optimization.
-  - `optimize: true` + `svgoOptions`: run default safe optimization, then merge custom options.
-  - `optimize: false` + no `svgoOptions`: skip optimization layer.
-  - `optimize: false` + `svgoOptions`: run custom optimization settings only.
-- When `svgoOptions.plugins` is provided, custom plugins run after default safe optimization plugins.
-- `svg-icon-baker` always appends its own `removeDimensions` pass.
-- User-supplied `prefixIds` and `cleanupIds` plugins are filtered out. This is intentional:
-  `preset-default` already includes `cleanupIds`, and the package keeps one authoritative internal
-  sprite id rewrite flow.
+```ts
+type IdPolicyOptions = {
+  rewrite?: boolean
+  unresolved?: 'prefix' | 'preserve'
+  idStyle?: 'named' | 'minified' | 'hashed'
+  delim?: '-' | '_'
+}
+```
+
+| name         | type                                | default    | description                                                                                                                          |
+| ------------ | ----------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `rewrite`    | `boolean`                           | `true`     | Rewrite local ids and local references for sprite safety.                                                                            |
+| `unresolved` | `'prefix' \| 'preserve'`            | `'prefix'` | For unresolved local references, either rewrite them into the icon namespace or keep them unchanged. Both behaviors report an issue. |
+| `idStyle`    | `'named' \| 'minified' \| 'hashed'` | `'named'`  | Choose readable ids such as `icon_home`, short ids such as `icon_a`, or hashed ids such as `icon_k9x2m`.                             |
+| `delim`      | `'-' \| '_'`                        | `'_'`      | Separator between the icon name and the generated id part.                                                                           |
+
+## Diagnostics
+
+### Issues
+
+```ts
+type BakeIssue = {
+  code: 'ResolveReferenceFailed' | 'DetectDefinitionDuplicate' | 'DetectReferenceCarrierUnsupported' | 'ParseStyleFailed'
+  message: string
+  targetId?: string
+}
+```
+
+Issues are returned in `BakeResult.issues` instead of throwing.
+Currently emitted issue codes include:
+
+- unresolved local references
+- duplicate local definitions
+- style content that cannot be safely parsed
+
+`ParseStyleFailed` means one or more `<style>` blocks could not be safely parsed.
+In that case, the original style content is preserved and conversion still succeeds.
+
+`DetectReferenceCarrierUnsupported` is reserved for unsupported local reference carriers.
+It is part of the public type contract, but it is not currently emitted by the implementation.
+
+Example:
+
+```ts
+const result = bakeIcon(
+  {
+    name: 'icon-alert',
+    content: '<svg viewBox="0 0 16 16"><use href="#ghost"/></svg>',
+  },
+  {
+    idPolicy: { unresolved: 'preserve' },
+  }
+)
+
+console.log(result.issues)
+// [
+//   {
+//     code: 'ResolveReferenceFailed',
+//     message: 'Resolve reference failed for local target "ghost"; reference was preserved.',
+//     targetId: 'ghost'
+//   }
+// ]
+```
+
+### Errors
+
+Fatal failures throw `BakeError`.
+
+```ts
+class BakeError extends Error {
+  code: 'ValidateSourceInvalid' | 'ValidateNameInvalid' | 'ValidateSvgRootInvalid' | 'ParseSvgFailed' | 'OptimizeSvgFailed' | 'ResolveViewBoxFailed'
+  cause?: unknown
+}
+```
+
+Typical fatal cases:
+
+- missing `name` or `content`
+- invalid icon names
+- input that does not start with an `<svg>` root
+- malformed SVG that cannot be parsed for rewriting
+- SVGO plugin failures
+- output where `viewBox` cannot be determined
+
+## SVGO Behavior
+
+`svg-icon-baker` uses SVGO as an optimization layer after conversion preparation.
+
+- When `optimize` is `true`, the package applies a built-in safe preset.
+- User `svgoOptions` are merged into that optimization step.
+- `removeDimensions` is always applied so the output keeps `viewBox` as the sizing contract.
+- User-supplied `prefixIds` and `cleanupIds` plugins are ignored to keep id rewriting behavior stable.
+
+This means local id handling is controlled through `idPolicy`, not through external SVGO id plugins.
+
+## Output Guarantees
+
+On success, the output keeps these behaviors:
+
+- the root is always `<symbol>...</symbol>`
+- the symbol root `id` equals `source.name`
+- `viewBox` is required in the final output
+- root `width` and `height` are removed
+- non-structural root attributes such as `fill` are preserved
+- XML declarations, BOM, comments, and doctype preamble are stripped
 
 ## Type Definitions
 
@@ -73,6 +197,14 @@ type BakeIssue = {
   targetId?: string
 }
 
+type BakeErrorCode =
+  | 'ValidateSourceInvalid'
+  | 'ValidateNameInvalid'
+  | 'ValidateSvgRootInvalid'
+  | 'ParseSvgFailed'
+  | 'OptimizeSvgFailed'
+  | 'ResolveViewBoxFailed'
+
 type SvgoOptions = Pick<Config, 'multipass' | 'floatPrecision' | 'js2svg' | 'plugins'>
 
 type IdPolicyOptions = {
@@ -88,21 +220,6 @@ type Options = {
   idPolicy?: IdPolicyOptions
 }
 ```
-
-## Features
-
-- Optimization: Reduce file size, and improve efficiency through `SVGO`
-- Reference Handling: ID and reference prefixing for sprite safety
-- Reporting: unresolved and duplicate local id issues are exposed through `issues` without forcing a throw
-- Size Unify: `viewBox` preservation or inference from root dimensions
-
-## SVGO v4 Notes
-
-- `prefixIds` in SVGO v4 rewrites element ids, `href`/`xlink:href`, `url(#...)`, style selectors,
-  and SMIL `begin`/`end` references.
-- `cleanupIds` in SVGO v4 can remove unused ids and minify referenced ids.
-- Because `preset-default` includes `cleanupIds`, `svg-icon-baker` keeps `prefixIds` as the final
-  id-related plugin in the pipeline.
 
 ## License
 

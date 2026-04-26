@@ -45,6 +45,8 @@
     "log": "conventional-changelog -p angular --commit-path . -t svg-icon-baker@v"
   },
   "dependencies": {
+    "css-tree": "^3.2.1",
+    "fast-xml-parser": "^5.7.2",
     "svgo": "^4.0.1"
   },
   "devDependencies": {

@@ -35,15 +35,21 @@ describe('feature tests', () => {
       expect(result.content).toContain('id="icon-test"')
     })
     test('prefix internal id', () => {
-      expect(result.content).toMatch(/\bid="icon-test-[^"]*"/)
+      expect(result.content).toMatch(/\bid="icon-test_[^"]*"/)
     })
     test('prefix url reference', () => {
-      expect(result.content).toMatch(/\burl\(#icon-test-[^"]*\)/)
-      expect(result.content).not.toMatch(/\burl\(#(?!icon-test-)[^")]*\)/)
+      expect(result.content).toMatch(/\burl\(#icon-test_[^"]*\)/)
+      expect(result.content).not.toMatch(/\burl\(#(?!icon-test_)[^")]*\)/)
     })
-    test('use href instead of xlink:href and it is prefixed', () => {
-      expect(result.content).toMatch(/href="#icon-test-[^"]+"/)
-      expect(result.content).not.toMatch(/xlink:href="#icon-test-[^"]+"/)
+    test('use href instead of xlink:href and unresolved href is reported', () => {
+      expect(result.content).toContain('href="#icon-test_p"')
+      expect(result.content).not.toContain('xlink:href=')
+      expect(result.issues).toEqual([
+        expect.objectContaining({
+          code: 'unresolved-reference',
+          targetId: 'p',
+        }),
+      ])
     })
   })
   describe('infers viewBox from width/height and removes width/height', () => {
@@ -77,6 +83,7 @@ describe('root attribute preservation', () => {
     expect(result.content).not.toContain('id="legacy-root"')
     expect(result.content).toContain('viewBox="0 0 18 18"')
     expect(result.content).toContain('fill="none"')
+    expect(result.issues).toEqual([])
   })
 })
 
@@ -94,6 +101,7 @@ describe('svg preamble handling', () => {
     expect(result.content).not.toContain('<?xml')
     expect(result.content).not.toContain('<!--')
     expect(result.content).not.toContain('<!DOCTYPE')
+    expect(result.issues).toEqual([])
   })
 })
 
@@ -131,5 +139,57 @@ describe('batch process tests', () => {
   test('batch process', () => {
     const testFn = () => bakeIcons(sources)
     expect(testFn).not.toThrow('Error')
+  })
+})
+
+describe('id policy options', () => {
+  test('preserves unresolved references when configured', () => {
+    const svg = `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>`
+    const result = bakeIcon({ name: 'icon-ghost', content: svg }, { idPolicy: { unresolved: 'preserve' } })
+
+    expect(result.content).toContain('href="#ghost"')
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        code: 'unresolved-reference',
+        targetId: 'ghost',
+      }),
+    ])
+  })
+
+  test('supports minified id style', () => {
+    const svg = `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>`
+    const result = bakeIcon({ name: 'icon-mini', content: svg }, { optimize: false, idPolicy: { idStyle: 'minified' } })
+
+    expect(result.content).toContain('id="icon-mini_a"')
+    expect(result.content).toContain('href="#icon-mini_a"')
+  })
+
+  test('supports hashed id style', () => {
+    const svg = `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>`
+    const result = bakeIcon({ name: 'icon-hash', content: svg }, { optimize: false, idPolicy: { idStyle: 'hashed' } })
+
+    expect(result.content).toMatch(/\bid="icon-hash_[a-z0-9]+"/)
+    expect(result.content).toMatch(/\bhref="#icon-hash_[a-z0-9]+"/)
+  })
+
+  test('prefixes unresolved references with named style by default', () => {
+    const svg = `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>`
+    const result = bakeIcon({ name: 'icon-ghost', content: svg }, { optimize: false })
+
+    expect(result.content).toContain('href="#icon-ghost_ghost"')
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        code: 'unresolved-reference',
+        targetId: 'ghost',
+      }),
+    ])
+  })
+
+  test('supports explicit delim override for named style', () => {
+    const svg = `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>`
+    const result = bakeIcon({ name: 'icon-name', content: svg }, { optimize: false, idPolicy: { idStyle: 'named', delim: '-' } })
+
+    expect(result.content).toContain('id="icon-name-shape"')
+    expect(result.content).toContain('href="#icon-name-shape"')
   })
 })

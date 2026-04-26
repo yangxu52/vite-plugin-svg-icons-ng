@@ -8,6 +8,12 @@ describe('options module', () => {
     const resolved = resolveOptions()
     expect(resolved.optimize).toBe(true)
     expect(resolved.svgoOptions).toEqual({})
+    expect(resolved.idPolicy).toEqual({
+      rewrite: true,
+      unresolved: 'prefix',
+      idStyle: 'named',
+      delim: '_',
+    })
   })
 
   test('resolveOptions keeps explicit optimize and svgoOptions', () => {
@@ -23,6 +29,29 @@ describe('options module', () => {
       multipass: true,
       floatPrecision: 2,
     })
+    expect(resolved.idPolicy).toEqual({
+      rewrite: true,
+      unresolved: 'prefix',
+      idStyle: 'named',
+      delim: '_',
+    })
+  })
+
+  test('resolveOptions keeps explicit id policy settings', () => {
+    const resolved = resolveOptions({
+      idPolicy: {
+        rewrite: false,
+        idStyle: 'hashed',
+        delim: '-',
+      },
+    })
+
+    expect(resolved.idPolicy).toEqual({
+      rewrite: false,
+      unresolved: 'prefix',
+      idStyle: 'hashed',
+      delim: '-',
+    })
   })
 
   test('createSvgoConfig includes safe preset plugins then custom plugins then core plugins', () => {
@@ -32,22 +61,20 @@ describe('options module', () => {
         plugins: [{ name: 'cleanupIds', params: { minify: true, remove: false } }],
       },
     })
-    const config = createSvgoConfig('icon-order', resolved)
+    const config = createSvgoConfig(resolved)
     expect(config.plugins).toEqual([
-      { name: 'preset-default', params: { overrides: expect.any(Object) } },
+      { name: 'preset-default', params: { overrides: expect.objectContaining({ cleanupIds: false }) } },
       { name: 'removeTitle' },
       { name: 'removeXMLNS' },
       { name: 'removeXlink' },
-      { name: 'cleanupIds', params: { minify: true, remove: false } },
       { name: 'removeDimensions' },
-      { name: 'prefixIds', params: { prefix: 'icon-order-', delim: '' } },
     ])
   })
 
   test('createSvgoConfig omits safe preset plugins when optimize=false', () => {
     const resolved = resolveOptions({ optimize: false })
-    const config = createSvgoConfig('icon-off', resolved)
-    expect(config.plugins).toEqual([{ name: 'removeDimensions' }, { name: 'prefixIds', params: { prefix: 'icon-off-', delim: '' } }])
+    const config = createSvgoConfig(resolved)
+    expect(config.plugins).toEqual([{ name: 'removeDimensions' }])
   })
 
   test('createSvgoConfig filters prefixIds but keeps string plugins and malformed entries', () => {
@@ -55,16 +82,20 @@ describe('options module', () => {
     const resolved = resolveOptions({
       optimize: false,
       svgoOptions: {
-        plugins: ['cleanupIds', { name: 'prefixIds', params: { prefix: 'blocked-', delim: '' } }, malformed] as SvgoPlugins,
+        plugins: ['removeTitle', 'cleanupIds', { name: 'prefixIds', params: { prefix: 'blocked-', delim: '' } }, malformed] as SvgoPlugins,
       },
     })
-    const config = createSvgoConfig('icon-filter', resolved)
-    expect(config.plugins).toEqual([
-      'cleanupIds',
-      malformed,
-      { name: 'removeDimensions' },
-      { name: 'prefixIds', params: { prefix: 'icon-filter-', delim: '' } },
-    ])
+    const config = createSvgoConfig(resolved)
+    expect(config.plugins).toEqual(['removeTitle', malformed, { name: 'removeDimensions' }])
+  })
+
+  test('createSvgoConfig disables preset-default cleanupIds', () => {
+    const resolved = resolveOptions({ optimize: true })
+    const config = createSvgoConfig(resolved)
+    expect(config.plugins?.[0]).toEqual({
+      name: 'preset-default',
+      params: { overrides: expect.objectContaining({ cleanupIds: false }) },
+    })
   })
 })
 
@@ -82,7 +113,17 @@ describe('options integration', () => {
     const svg = `<svg width="32" height="16"><defs><linearGradient id="a"><stop offset="0"/></linearGradient></defs><rect fill="url(#a)" width="32" height="16"/></svg>`
     const result = bakeIcon({ name: 'icon-core', content: svg }, { optimize: false })
     expect(result.content).toContain('id="icon-core"')
-    expect(result.content).toMatch(/\bid="icon-core-[^"]+"/)
+    expect(result.content).toMatch(/\bid="icon-core_[^"]+"/)
     expect(result.content).toContain('viewBox="0 0 32 16"')
+    expect(result.issues).toEqual([])
+  })
+
+  test('idPolicy.rewrite=false skips id rewriting', () => {
+    const svg = `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>`
+    const result = bakeIcon({ name: 'icon-raw', content: svg }, { optimize: false, idPolicy: { rewrite: false } })
+
+    expect(result.content).toContain('id="shape"')
+    expect(result.content).toContain('href="#shape"')
+    expect(result.issues).toEqual([])
   })
 })

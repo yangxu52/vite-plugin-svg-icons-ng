@@ -1,10 +1,11 @@
 import type { Config, PluginConfig } from 'svgo'
-import type { Options, ResolvedOptions, SvgoPlugins } from './types.ts'
+import type { IdPolicyOptions, Options, ResolvedIdPolicyOptions, ResolvedOptions, SvgoPlugins } from './types.ts'
 
 const DEFAULT_SAFE_PRESET: PluginConfig = {
   name: 'preset-default',
   params: {
     overrides: {
+      cleanupIds: false,
       removeUselessDefs: false,
       removeHiddenElems: false,
       removeUnknownsAndDefaults: false,
@@ -17,17 +18,18 @@ const DEFAULT_SAFE_PRESET: PluginConfig = {
 
 const DEFAULT_SAFE_PLUGINS: SvgoPlugins = [{ name: 'removeTitle' }, { name: 'removeXMLNS' }, { name: 'removeXlink' }]
 
-const CORE_PLUGIN_BLOCKLIST = new Set(['prefixIds'])
+const CORE_PLUGIN_BLOCKLIST = new Set(['prefixIds', 'cleanupIds'])
 
 export function resolveOptions(userOption?: Options): ResolvedOptions {
   const userObject = userOption ?? {}
   return {
     optimize: userObject.optimize ?? true,
     svgoOptions: userObject.svgoOptions ?? {},
+    idPolicy: resolveIdPolicyOptions(userObject.idPolicy),
   }
 }
 
-export function createSvgoConfig(sourceName: string, options: ResolvedOptions): Config {
+export function createSvgoConfig(options: ResolvedOptions): Config {
   const plugins: SvgoPlugins = []
   if (options.optimize) {
     plugins.push(DEFAULT_SAFE_PRESET)
@@ -36,7 +38,7 @@ export function createSvgoConfig(sourceName: string, options: ResolvedOptions): 
   if (options.svgoOptions.plugins != null) {
     plugins.push(...filterPlugins(options.svgoOptions.plugins))
   }
-  plugins.push(...createCorePlugins(sourceName))
+  plugins.push(...createCorePlugins())
 
   return {
     multipass: options.svgoOptions.multipass,
@@ -66,6 +68,15 @@ function resolvePluginName(plugin: PluginConfig): string | null {
   return null
 }
 
-function createCorePlugins(sourceName: string): SvgoPlugins {
-  return [{ name: 'removeDimensions' }, { name: 'prefixIds', params: { prefix: `${sourceName}-`, delim: '' } }]
+function createCorePlugins(): SvgoPlugins {
+  return [{ name: 'removeDimensions' }]
+}
+
+function resolveIdPolicyOptions(idPolicy: IdPolicyOptions | undefined): ResolvedIdPolicyOptions {
+  return {
+    rewrite: idPolicy?.rewrite ?? true,
+    unresolved: idPolicy?.unresolved ?? 'prefix',
+    idStyle: idPolicy?.idStyle ?? 'named',
+    delim: idPolicy?.delim ?? '_',
+  }
 }

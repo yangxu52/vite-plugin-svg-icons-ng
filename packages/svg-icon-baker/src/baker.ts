@@ -1,24 +1,31 @@
 import { optimize } from 'svgo'
+import { rewriteSvgIds } from './oven/rewrite.ts'
 import { createSvgoConfig, resolveOptions } from './options.ts'
 import type { BakeResult, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types.ts'
 
 export function bakeIcon(source: BakeSource, options?: Options): BakeResult {
   const resolvedOptions = resolveOptions(options)
+  const baked = convertToSymbol(source, resolvedOptions)
   return {
     name: source.name,
-    content: convertToSymbol(source, resolvedOptions),
+    content: baked.content,
+    issues: baked.issues,
   }
 }
 
 export function bakeIcons(sources: BakeSource[], options?: Options): BakeResult[] {
   const resolvedOptions = resolveOptions(options)
-  return sources.map((source) => ({
-    name: source.name,
-    content: convertToSymbol(source, resolvedOptions),
-  }))
+  return sources.map((source) => {
+    const baked = convertToSymbol(source, resolvedOptions)
+    return {
+      name: source.name,
+      content: baked.content,
+      issues: baked.issues,
+    }
+  })
 }
 
-function convertToSymbol(source: BakeSource, options: ResolvedOptions): string {
+function convertToSymbol(source: BakeSource, options: ResolvedOptions): Pick<BakeResult, 'content' | 'issues'> {
   if (!source || !source.name || !source.content) {
     throw new TypeError('Property name and content are required.')
   }
@@ -30,8 +37,13 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions): string {
     throw new Error('Parsing failed. Input must start with an <svg> root element.')
   }
   let result: SvgoOutput
+  let issues: BakeResult['issues'] = []
   try {
-    result = optimize(normalizedSource, createSvgoConfig(source.name, options))
+    const baked = options.idPolicy.rewrite
+      ? rewriteSvgIds(normalizedSource, source.name, options.idPolicy)
+      : { code: normalizedSource, idMap: new Map<string, string>(), issues: [] }
+    issues = baked.issues
+    result = optimize(baked.code, createSvgoConfig(options))
   } catch (err) {
     throw new Error(`Parsing failed. ${String(err)}`)
   }
@@ -40,7 +52,10 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions): string {
     throw new Error('Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
   }
   const cleanedSvg = stripLeadingSvgPreamble(result.data)
-  return toSymbolRootTag(cleanedSvg, source.name, viewBox)
+  return {
+    content: toSymbolRootTag(cleanedSvg, source.name, viewBox),
+    issues,
+  }
 }
 
 function stripLeadingSvgPreamble(content: string): string {

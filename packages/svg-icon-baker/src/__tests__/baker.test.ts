@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { bakeIcon, bakeIcons } from '../baker.ts'
 import { BakeError } from '../types.ts'
 
@@ -205,6 +205,24 @@ describe('batch process tests', () => {
     const testFn = () => bakeIcons(sources)
     expect(testFn).not.toThrow('Error')
   })
+
+  test('returns issues independently per icon', () => {
+    const results = bakeIcons(
+      [
+        { name: 'icon-clean', content: `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/></svg>` },
+        { name: 'icon-warn', content: `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>` },
+      ],
+      { optimize: false }
+    )
+
+    expect(results[0].issues).toEqual([])
+    expect(results[1].issues).toEqual([
+      expect.objectContaining({
+        code: 'ResolveReferenceFailed',
+        targetId: 'ghost',
+      }),
+    ])
+  })
 })
 
 describe('id policy options', () => {
@@ -256,5 +274,36 @@ describe('id policy options', () => {
 
     expect(result.content).toContain('id="icon-name-shape"')
     expect(result.content).toContain('href="#icon-name-shape"')
+  })
+
+  test('reports parse style failure and preserves original style content in baked output', async () => {
+    vi.resetModules()
+    vi.doMock('css-tree', async () => {
+      const actual = await vi.importActual<typeof import('css-tree')>('css-tree')
+      return {
+        ...actual,
+        parse: () => {
+          throw new Error('bad css')
+        },
+      }
+    })
+
+    try {
+      const { bakeIcon: bakeIconWithMock } = await import('../baker.ts')
+      const svg = `<svg viewBox="0 0 10 10"><style>#a{fill:url(#g)}</style><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs><rect id="a" width="10" height="10"/></svg>`
+      const result = bakeIconWithMock({ name: 'icon-style', content: svg }, { optimize: false })
+
+      expect(result.content).toContain('<style>#a{fill:url(#g)}</style>')
+      expect(result.content).toContain('id="icon-style_g"')
+      expect(result.content).toContain('id="icon-style_a"')
+      expect(result.issues).toEqual([
+        expect.objectContaining({
+          code: 'ParseStyleFailed',
+        }),
+      ])
+    } finally {
+      vi.doUnmock('css-tree')
+      vi.resetModules()
+    }
   })
 })

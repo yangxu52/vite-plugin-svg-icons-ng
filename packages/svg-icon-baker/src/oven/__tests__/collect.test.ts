@@ -12,4 +12,14 @@ describe('collectSvgState', () => {
       expect.arrayContaining(['a', 'b', 'c', 'g'])
     )
   })
+
+  test('collects xml:id definitions and aria token references', () => {
+    const code = `<svg viewBox="0 0 10 10"><title id="titleId">title</title><desc xml:id="descId">desc</desc><g aria-labelledby="titleId descId" aria-describedby="ghost"/></svg>`
+    const state = collectSvgState(parseSvg(code))
+
+    expect([...state.definedIds.keys()]).toEqual(['titleId', 'descId'])
+    expect(state.referenceIds.flatMap((reference) => reference.attributeRefs.flatMap((ref) => ref.targetIds))).toEqual(
+      expect.arrayContaining(['titleId', 'descId', 'ghost'])
+    )
+  })
 })

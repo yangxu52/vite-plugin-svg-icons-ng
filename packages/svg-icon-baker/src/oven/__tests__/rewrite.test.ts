@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { rewriteSvgIds } from '../rewrite.ts'
 
 describe('rewriteSvgIds', () => {
@@ -62,6 +62,22 @@ describe('rewriteSvgIds', () => {
     expect(result.code).toContain('#icon_b')
   })
 
+  test('rewrites aria token references and xml:id definitions', () => {
+    const code = `<svg viewBox="0 0 10 10"><title id="titleId">title</title><desc xml:id="descId">desc</desc><g aria-labelledby="titleId descId" aria-describedby="ghost"/></svg>`
+    const result = rewriteSvgIds(code, 'icon', { unresolved: 'prefix', idStyle: 'named', delim: '_' })
+
+    expect(result.code).toContain('id="icon_titleId"')
+    expect(result.code).toContain('xml:id="icon_descId"')
+    expect(result.code).toContain('aria-labelledby="icon_titleId icon_descId"')
+    expect(result.code).toContain('aria-describedby="icon_ghost"')
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        code: 'ResolveReferenceFailed',
+        targetId: 'ghost',
+      }),
+    ])
+  })
+
   test('issues and prefixes unresolved href by default named style', () => {
     const code = `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>`
     const result = rewriteSvgIds(code, 'icon', { unresolved: 'prefix', idStyle: 'named', delim: '_' })
@@ -117,5 +133,51 @@ describe('rewriteSvgIds', () => {
         targetId: 'ghost',
       }),
     ])
+  })
+
+  test('reports duplicate definitions and keeps only the first rewritten definition', () => {
+    const code = `<svg viewBox="0 0 10 10"><defs><linearGradient id="dup"><stop offset="0"/></linearGradient><linearGradient id="dup"><stop offset="1"/></linearGradient></defs><rect fill="url(#dup)"/></svg>`
+    const result = rewriteSvgIds(code, 'icon', { unresolved: 'prefix', idStyle: 'named', delim: '_' })
+
+    expect(result.code).toContain('id="icon_dup"')
+    expect(result.code).toContain('fill="url(#icon_dup)"')
+    expect(result.code.match(/id="icon_dup"/g)).toHaveLength(1)
+    expect(result.issues).toEqual([
+      expect.objectContaining({
+        code: 'DetectDefinitionDuplicate',
+        targetId: 'dup',
+      }),
+    ])
+  })
+
+  test('reports parse style failure and preserves original style content', async () => {
+    vi.resetModules()
+    vi.doMock('css-tree', async () => {
+      const actual = await vi.importActual<typeof import('css-tree')>('css-tree')
+      return {
+        ...actual,
+        parse: () => {
+          throw new Error('bad css')
+        },
+      }
+    })
+
+    try {
+      const { rewriteSvgIds: rewriteSvgIdsWithMock } = await import('../rewrite.ts')
+      const code = `<svg viewBox="0 0 10 10"><style>#a{fill:url(#g)}</style><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs><rect id="a" width="10" height="10"/></svg>`
+      const result = rewriteSvgIdsWithMock(code, 'icon', { unresolved: 'prefix', idStyle: 'named', delim: '_' })
+
+      expect(result.code).toContain('<style>#a{fill:url(#g)}</style>')
+      expect(result.code).toContain('id="icon_g"')
+      expect(result.code).toContain('id="icon_a"')
+      expect(result.issues).toEqual([
+        expect.objectContaining({
+          code: 'ParseStyleFailed',
+        }),
+      ])
+    } finally {
+      vi.doUnmock('css-tree')
+      vi.resetModules()
+    }
   })
 })

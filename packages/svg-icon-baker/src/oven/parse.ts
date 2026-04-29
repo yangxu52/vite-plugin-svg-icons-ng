@@ -69,6 +69,16 @@ export function getElementEntry(node: XmlNode): ElementEntry | null {
   return null
 }
 
+export function getRootElementEntry(document: XmlDocument): ElementEntry | null {
+  for (const node of document) {
+    const entry = getElementEntry(node)
+    if (entry) {
+      return entry
+    }
+  }
+  return null
+}
+
 function isMetaNode(node: XmlNode): boolean {
   return '#text' in node || '#cdata' in node || '#comment' in node
 }

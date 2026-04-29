@@ -199,9 +199,14 @@ describe('validation tests', () => {
       const actual = await vi.importActual<typeof import('../oven/rewrite.ts')>('../oven/rewrite.ts')
       return {
         ...actual,
-        rewriteSvgIds: (code: string, prefix: string, options: Parameters<typeof actual.rewriteSvgIds>[2]) => {
+        rewriteIds: (
+          root: Parameters<typeof actual.rewriteIds>[0],
+          prefix: string,
+          options: Parameters<typeof actual.rewriteIds>[2],
+          issues: Parameters<typeof actual.rewriteIds>[3]
+        ) => {
           calls.push('rewrite')
-          return actual.rewriteSvgIds(code, prefix, options)
+          return actual.rewriteIds(root, prefix, options, issues)
         },
       }
     })

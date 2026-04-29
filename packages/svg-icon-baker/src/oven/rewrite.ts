@@ -9,8 +9,18 @@ const HREF_REFERENCE_RE = /^#(.+)$/
 const SMIL_REFERENCE_RE = /^([A-Za-z0-9_-]+)\.(begin|end)([+-].+)?$/
 export function rewriteSvgIds(code: string, prefix: string, options: RewriteInputOptions): RewriteResult {
   const root = parseSvg(code)
+  const issues: BakeIssue[] = []
+  const idMap = rewriteIds(root, prefix, options, issues)
+  return {
+    code: buildSvg(root),
+    idMap,
+    issues,
+  }
+}
+
+export function rewriteIds(root: CollectResult['root'], prefix: string, options: RewriteInputOptions, issues: BakeIssue[]): Map<string, string> {
   const state = collectSvgState(root)
-  const issues = collectIssues(state)
+  collectIssues(state, issues)
   const idMap = createIdMap(state, prefix, options)
   const unresolvedIdMap = new Map<string, string>()
   let nextGeneratedIndex = idMap.size
@@ -18,11 +28,7 @@ export function rewriteSvgIds(code: string, prefix: string, options: RewriteInpu
   rewriteElementIds(state, idMap)
   rewriteReferences(state, idMap, prefix, unresolvedIdMap, () => nextGeneratedIndex++, options, issues)
 
-  return {
-    code: buildSvg(root),
-    idMap,
-    issues,
-  }
+  return idMap
 }
 
 function createIdMap(state: CollectResult, prefix: string, options: RewriteInputOptions): Map<string, string> {
@@ -318,8 +324,7 @@ function resolveDelim(options: RewriteInputOptions): '-' | '_' {
   return '_'
 }
 
-function collectIssues(state: CollectResult): BakeIssue[] {
-  const issues: BakeIssue[] = []
+function collectIssues(state: CollectResult, issues: BakeIssue[]): void {
   for (const [id, definitions] of state.definedIds) {
     if (definitions.length > 1) {
       pushIssue(issues, {
@@ -336,8 +341,6 @@ function collectIssues(state: CollectResult): BakeIssue[] {
       message: 'Parse style failed for one or more <style> blocks; original content was preserved.',
     })
   }
-
-  return issues
 }
 
 function pushIssue(issues: BakeIssue[], issue: BakeIssue): void {
@@ -355,12 +358,8 @@ function unquote(value: string): string {
 }
 
 export function rewriteCollectedSvg(state: CollectResult, prefix: string, options: RewriteInputOptions): RewriteResult {
-  const issues = collectIssues(state)
-  const idMap = createIdMap(state, prefix, options)
-  const unresolvedIdMap = new Map<string, string>()
-  let nextGeneratedIndex = idMap.size
-  rewriteElementIds(state, idMap)
-  rewriteReferences(state, idMap, prefix, unresolvedIdMap, () => nextGeneratedIndex++, options, issues)
+  const issues: BakeIssue[] = []
+  const idMap = rewriteIds(state.root, prefix, options, issues)
   return {
     code: buildSvg(state.root),
     idMap,

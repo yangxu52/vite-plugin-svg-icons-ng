@@ -165,8 +165,8 @@ describe('validation tests', () => {
       expect.unreachable()
     } catch (error) {
       expect(error).toBeInstanceOf(BakeError)
-      expect((error as BakeError).code).toBe('ParseSvgFailed')
-      expect((error as Error).message).toBe('SVG parsing failed during id rewrite.')
+      expect((error as BakeError).code).toBe('OptimizeSvgFailed')
+      expect((error as Error).message).toBe('SVGO optimization failed.')
       expect((error as BakeError).cause).toBeDefined()
     }
   })
@@ -190,6 +190,52 @@ describe('validation tests', () => {
       expect((error as BakeError).code).toBe('OptimizeSvgFailed')
       expect((error as Error).message).toBe('SVGO optimization failed.')
       expect((error as BakeError).cause).toBeInstanceOf(Error)
+    }
+  })
+
+  test('optimization runs before id rewrite', async () => {
+    const calls: string[] = []
+    vi.doMock('../oven/rewrite.ts', async () => {
+      const actual = await vi.importActual<typeof import('../oven/rewrite.ts')>('../oven/rewrite.ts')
+      return {
+        ...actual,
+        rewriteSvgIds: (code: string, prefix: string, options: Parameters<typeof actual.rewriteSvgIds>[2]) => {
+          calls.push('rewrite')
+          return actual.rewriteSvgIds(code, prefix, options)
+        },
+      }
+    })
+
+    try {
+      vi.resetModules()
+      const { bakeIcon: bakeIconWithMock } = await import('../baker.ts')
+      bakeIconWithMock(
+        {
+          name: 'icon-order',
+          content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
+        },
+        {
+          svgoOptions: {
+            plugins: [
+              {
+                name: 'track-order',
+                fn: () => ({
+                  root: {
+                    enter() {
+                      calls.push('optimize')
+                    },
+                  },
+                }),
+              },
+            ],
+          },
+        }
+      )
+
+      expect(calls).toEqual(['optimize', 'rewrite'])
+    } finally {
+      vi.doUnmock('../oven/rewrite.ts')
+      vi.resetModules()
     }
   })
 })
@@ -316,6 +362,7 @@ describe('id policy options', () => {
 
   test('reports parse style failure and preserves original style content in baked output', async () => {
     vi.resetModules()
+    vi.doUnmock('../oven/rewrite.ts')
     vi.doMock('css-tree', async () => {
       const actual = await vi.importActual<typeof import('css-tree')>('css-tree')
       return {

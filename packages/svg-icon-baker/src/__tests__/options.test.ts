@@ -54,7 +54,7 @@ describe('options module', () => {
     })
   })
 
-  test('createSvgoConfig includes safe preset plugins then custom plugins then core plugins', () => {
+  test('createSvgoConfig includes safe preset plugins then custom plugins', () => {
     const resolved = resolveOptions({
       optimize: true,
       svgoOptions: {
@@ -81,14 +81,13 @@ describe('options module', () => {
       { name: 'removeTitle' },
       { name: 'removeXMLNS' },
       { name: 'removeXlink' },
-      { name: 'removeDimensions' },
     ])
   })
 
   test('createSvgoConfig omits safe preset plugins when optimize=false', () => {
     const resolved = resolveOptions({ optimize: false })
     const config = createSvgoConfig(resolved)
-    expect(config.plugins).toEqual([{ name: 'removeDimensions' }])
+    expect(config.plugins).toEqual([])
   })
 
   test('createSvgoConfig filters blocked pre-rewrite plugins but keeps string plugins and malformed entries', () => {
@@ -108,7 +107,7 @@ describe('options module', () => {
       },
     })
     const config = createSvgoConfig(resolved)
-    expect(config.plugins).toEqual(['removeTitle', malformed, { name: 'removeDimensions' }])
+    expect(config.plugins).toEqual(['removeTitle', malformed])
   })
 
   test('createSvgoConfig filters user preset-default so blocked overrides cannot be re-enabled', () => {
@@ -130,7 +129,7 @@ describe('options module', () => {
       },
     })
     const config = createSvgoConfig(resolved)
-    expect(config.plugins).toEqual(['removeTitle', { name: 'removeDimensions' }])
+    expect(config.plugins).toEqual(['removeTitle'])
   })
 
   test('createSvgoConfig disables blocked preset-default plugins', () => {

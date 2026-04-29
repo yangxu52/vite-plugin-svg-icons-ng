@@ -43,7 +43,6 @@ export function createSvgoConfig(options: ResolvedOptions): Config {
   if (options.svgoOptions.plugins != null) {
     plugins.push(...filterPlugins(options.svgoOptions.plugins))
   }
-  plugins.push(...createCorePlugins())
 
   return {
     multipass: options.svgoOptions.multipass,
@@ -71,10 +70,6 @@ function resolvePluginName(plugin: PluginConfig): string | null {
     return plugin.name
   }
   return null
-}
-
-function createCorePlugins(): SvgoPlugins {
-  return [{ name: 'removeDimensions' }]
 }
 
 function resolveIdPolicyOptions(idPolicy: IdPolicyOptions | undefined): ResolvedIdPolicyOptions {

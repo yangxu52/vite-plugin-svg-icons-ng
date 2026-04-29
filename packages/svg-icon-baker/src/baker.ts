@@ -46,26 +46,26 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions, svgoConfi
   if (!/^\s*<svg\b/i.test(normalizedSource)) {
     throw new BakeError('ValidateSvgRootInvalid', 'Input must start with an <svg> root element.')
   }
+  const optimized = optimizeSvg(normalizedSource, svgoConfig)
   let issues: BakeResult['issues'] = []
   const baked = options.idPolicy.rewrite
-    ? safelyRewriteSvgIds(normalizedSource, source.name, options.idPolicy)
-    : { code: normalizedSource, idMap: new Map<string, string>(), issues: [] }
+    ? safelyRewriteSvgIds(optimized, source.name, options.idPolicy)
+    : { code: optimized, idMap: new Map<string, string>(), issues: [] }
   issues = baked.issues
+  return {
+    content: toSymbol(baked.code, source.name),
+    issues,
+  }
+}
+
+function optimizeSvg(content: string, svgoConfig: Config): string {
   let result: SvgoOutput
   try {
-    result = optimize(baked.code, svgoConfig)
+    result = optimize(content, svgoConfig)
   } catch (cause) {
     throw new BakeError('OptimizeSvgFailed', 'SVGO optimization failed.', { cause })
   }
-  const viewBox = result.data.match(/viewBox="([^"]+)"/)?.[1]
-  if (!viewBox) {
-    throw new BakeError('ResolveViewBoxFailed', 'Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
-  }
-  const cleanedSvg = stripLeadingSvgPreamble(result.data)
-  return {
-    content: toSymbolRootTag(cleanedSvg, source.name, viewBox),
-    issues,
-  }
+  return result.data
 }
 
 function safelyRewriteSvgIds(source: string, symbolId: string, options: ResolvedOptions['idPolicy']) {
@@ -80,7 +80,11 @@ function stripLeadingSvgPreamble(content: string): string {
   return content.replace(/^(?:\uFEFF|\s|<\?xml[\s\S]*?\?>|<!--[\s\S]*?-->|<!DOCTYPE[\s\S]*?>)+/i, '')
 }
 
-function toSymbolRootTag(svg: string, symbolId: string, viewBox: string): string {
+function toSymbol(svg: string, symbolId: string): string {
+  const viewBox = resolveViewBox(svg)
+  if (!viewBox) {
+    throw new BakeError('ResolveViewBoxFailed', 'Cannot determine viewBox. Provide an SVG with viewBox or width/height attributes.')
+  }
   const rootOpenTag = svg.match(/^\s*<svg\b[^>]*>/i)![0]
   const preservedAttrs = rootOpenTag
     .replace(/^\s*<svg\b/i, '')
@@ -96,4 +100,36 @@ function toSymbolRootTag(svg: string, symbolId: string, viewBox: string): string
     .replace(/^\s*<svg\b[^>]*>/i, symbolOpenTag)
     .replace(/<\/svg>\s*$/i, '</symbol>')
     .trim()
+}
+
+function resolveViewBox(svg: string): string | null {
+  const rootOpenTag = svg.match(/^\s*<svg\b[^>]*>/i)?.[0]
+  if (!rootOpenTag) {
+    return null
+  }
+  const explicitViewBox = rootOpenTag.match(/\sviewBox=(['"])([^'"]*)\1/i)?.[2]
+  if (explicitViewBox) {
+    return explicitViewBox
+  }
+  const width = resolveDimension(rootOpenTag, 'width')
+  const height = resolveDimension(rootOpenTag, 'height')
+  if (width == null || height == null) {
+    return null
+  }
+  return `0 0 ${width} ${height}`
+}
+
+function resolveDimension(tag: string, name: 'width' | 'height'): string | null {
+  const raw = tag.match(new RegExp(`\\s${name}=(['"])([^'"]*)\\1`, 'i'))?.[2]
+  if (!raw) {
+    return null
+  }
+  const normalized = raw.trim()
+  if (/^-?\d+(?:\.\d+)?$/.test(normalized)) {
+    return String(Number(normalized))
+  }
+  if (/^-?\d+(?:\.\d+)?px$/i.test(normalized)) {
+    return String(Number(normalized.slice(0, -2)))
+  }
+  return null
 }

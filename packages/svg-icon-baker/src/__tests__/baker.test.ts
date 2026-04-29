@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { bakeIcon, bakeIcons } from '../baker.ts'
+import { bakeIcon, bakeIcons, createBaker } from '../baker.ts'
 import { BakeError } from '../types.ts'
 
 describe('feature tests', () => {
@@ -216,6 +216,44 @@ describe('batch process tests', () => {
     )
 
     expect(results[0].issues).toEqual([])
+    expect(results[1].issues).toEqual([
+      expect.objectContaining({
+        code: 'ResolveReferenceFailed',
+        targetId: 'ghost',
+      }),
+    ])
+  })
+})
+
+describe('baker instance', () => {
+  test('reuses one resolved configuration across multiple conversions', () => {
+    const baker = createBaker({ optimize: false, idPolicy: { idStyle: 'named', delim: '-' } })
+
+    const first = baker.bakeIcon({
+      name: 'icon-first',
+      content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
+    })
+    const second = baker.bakeIcon({
+      name: 'icon-second',
+      content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
+    })
+
+    expect(first.content).toContain('id="icon-first-shape"')
+    expect(first.content).toContain('href="#icon-first-shape"')
+    expect(second.content).toContain('id="icon-second-shape"')
+    expect(second.content).toContain('href="#icon-second-shape"')
+  })
+
+  test('batch api on instance matches top-level behavior', () => {
+    const baker = createBaker({ optimize: false })
+    const results = baker.bakeIcons([
+      { name: 'icon-a', content: '<svg viewBox="0 0 10 10"><path id="a" d="M0 0"/></svg>' },
+      { name: 'icon-b', content: '<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>' },
+    ])
+
+    expect(results[0].name).toBe('icon-a')
+    expect(results[0].issues).toEqual([])
+    expect(results[1].name).toBe('icon-b')
     expect(results[1].issues).toEqual([
       expect.objectContaining({
         code: 'ResolveReferenceFailed',

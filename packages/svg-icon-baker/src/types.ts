@@ -49,6 +49,11 @@ export type BakeResult = {
   issues: BakeIssue[]
 }
 
+export type Baker = {
+  bakeIcon(source: BakeSource): BakeResult
+  bakeIcons(sources: BakeSource[]): BakeResult[]
+}
+
 export type SvgoOptions = Pick<Config, 'multipass' | 'floatPrecision' | 'js2svg' | 'plugins'>
 
 export type Options = {

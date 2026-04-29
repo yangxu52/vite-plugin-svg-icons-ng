@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { bakeIcon } from '../baker.ts'
+import { bakeIcon, createBaker } from '../baker.ts'
 import { createSvgoConfig, resolveOptions } from '../options.ts'
 import type { SvgoPlugins } from '../types.ts'
 
@@ -180,5 +180,20 @@ describe('options integration', () => {
     expect(result.content).toContain('id="shape"')
     expect(result.content).toContain('href="#shape"')
     expect(result.issues).toEqual([])
+  })
+
+  test('createBaker resolves config once and reuses it across calls', () => {
+    const baker = createBaker({ optimize: false, idPolicy: { delim: '-' } })
+    const first = baker.bakeIcon({
+      name: 'icon-a',
+      content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
+    })
+    const second = baker.bakeIcon({
+      name: 'icon-b',
+      content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
+    })
+
+    expect(first.content).toContain('id="icon-a-shape"')
+    expect(second.content).toContain('id="icon-b-shape"')
   })
 })

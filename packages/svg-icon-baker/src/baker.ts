@@ -1,12 +1,33 @@
 import { optimize } from 'svgo'
+import type { Config } from 'svgo'
 import { rewriteSvgIds } from './oven/rewrite.ts'
 import { createSvgoConfig, resolveOptions } from './options.ts'
 import { BakeError } from './types.ts'
-import type { BakeResult, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types.ts'
+import type { BakeResult, Baker, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types.ts'
 
 export function bakeIcon(source: BakeSource, options?: Options): BakeResult {
+  return createBaker(options).bakeIcon(source)
+}
+
+export function bakeIcons(sources: BakeSource[], options?: Options): BakeResult[] {
+  return createBaker(options).bakeIcons(sources)
+}
+
+export function createBaker(options?: Options): Baker {
   const resolvedOptions = resolveOptions(options)
-  const baked = convertToSymbol(source, resolvedOptions)
+  const svgoConfig = createSvgoConfig(resolvedOptions)
+  return {
+    bakeIcon(source) {
+      return convertToBakeResult(source, resolvedOptions, svgoConfig)
+    },
+    bakeIcons(sources) {
+      return sources.map((source) => convertToBakeResult(source, resolvedOptions, svgoConfig))
+    },
+  }
+}
+
+function convertToBakeResult(source: BakeSource, options: ResolvedOptions, svgoConfig: Config): BakeResult {
+  const baked = convertToSymbol(source, options, svgoConfig)
   return {
     name: source.name,
     content: baked.content,
@@ -14,19 +35,7 @@ export function bakeIcon(source: BakeSource, options?: Options): BakeResult {
   }
 }
 
-export function bakeIcons(sources: BakeSource[], options?: Options): BakeResult[] {
-  const resolvedOptions = resolveOptions(options)
-  return sources.map((source) => {
-    const baked = convertToSymbol(source, resolvedOptions)
-    return {
-      name: source.name,
-      content: baked.content,
-      issues: baked.issues,
-    }
-  })
-}
-
-function convertToSymbol(source: BakeSource, options: ResolvedOptions): Pick<BakeResult, 'content' | 'issues'> {
+function convertToSymbol(source: BakeSource, options: ResolvedOptions, svgoConfig: Config): Pick<BakeResult, 'content' | 'issues'> {
   if (!source || !source.name || !source.content) {
     throw new BakeError('ValidateSourceInvalid', 'Property name and content are required.')
   }
@@ -44,7 +53,7 @@ function convertToSymbol(source: BakeSource, options: ResolvedOptions): Pick<Bak
   issues = baked.issues
   let result: SvgoOutput
   try {
-    result = optimize(baked.code, createSvgoConfig(options))
+    result = optimize(baked.code, svgoConfig)
   } catch (cause) {
     throw new BakeError('OptimizeSvgFailed', 'SVGO optimization failed.', { cause })
   }

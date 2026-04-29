@@ -14,7 +14,7 @@ pnpm add svg-icon-baker
 ## Usage
 
 ```ts
-import { bakeIcon, bakeIcons } from 'svg-icon-baker'
+import { bakeIcon, bakeIcons, createBaker } from 'svg-icon-baker'
 
 const source = {
   name: 'icon-home',
@@ -31,9 +31,15 @@ console.log(result)
 // }
 
 const batch = bakeIcons([source])
+
+const baker = createBaker({
+  idPolicy: { idStyle: 'named', delim: '_' },
+})
+
+const reused = baker.bakeIcon(source)
 ```
 
-`bakeIcon` and `bakeIcons` are synchronous.
+`bakeIcon`, `bakeIcons`, and `createBaker(...).bakeIcon()` are synchronous.
 
 ## API
 
@@ -44,6 +50,18 @@ Convert one SVG input into one symbol result.
 ### `bakeIcons(sources: BakeSource[], options?: Options): BakeResult[]`
 
 Convert multiple SVG inputs with one resolved option set.
+
+### `createBaker(options?: Options): Baker`
+
+Create a reusable baker instance with one resolved option set.
+This is the preferred API when the same options are applied to many icons.
+
+```ts
+type Baker = {
+  bakeIcon(source: BakeSource): BakeResult
+  bakeIcons(sources: BakeSource[]): BakeResult[]
+}
+```
 
 ## Return Value
 

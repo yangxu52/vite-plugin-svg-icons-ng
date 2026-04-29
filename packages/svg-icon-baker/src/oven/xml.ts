@@ -1,4 +1,5 @@
-import { XMLBuilder, XMLParser } from 'fast-xml-parser'
+import XMLBuilder from 'fast-xml-builder'
+import { XMLParser } from 'fast-xml-parser'
 import type { ElementEntry, XmlAttributes, XmlDocument, XmlElementNode, XmlNode } from './types.ts'
 
 const parser = new XMLParser({

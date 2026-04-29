@@ -1,4 +1,4 @@
-import type { BakeIssue, ResolvedIdPolicyOptions } from '../types.ts'
+import type { ResolvedIdPolicyOptions } from '../types.ts'
 
 export type XmlAttributes = Record<string, string>
 
@@ -46,36 +46,30 @@ export type DefinedIdRecord = {
 
 export type ReferenceKind = 'href' | 'url' | 'begin' | 'end' | 'aria-labelledby' | 'aria-describedby' | 'style-selector' | 'style-url' | 'style-attr'
 
-export type AttributeReferenceId = {
+export type AttributeReference = {
   kind: ReferenceKind
   attrName: string
   targetIds: string[]
 }
 
-export type StyleReferenceId = {
+export type StyleReference = {
   kind: 'style-selector' | 'style-url'
   textNode: XmlTextNode
   targetIds: string[]
 }
 
-export type ReferenceIdRecord = {
+export type ElementReferences = {
   element: ElementRecord
-  attributeRefs: AttributeReferenceId[]
-  styleRefs: StyleReferenceId[]
+  attributeRefs: AttributeReference[]
+  styleRefs: StyleReference[]
 }
 
-export type CollectResult = {
-  root: XmlDocument
+export type IdCollection = {
+  document: XmlDocument
   elements: ElementRecord[]
   definedIds: Map<string, DefinedIdRecord[]>
-  referenceIds: ReferenceIdRecord[]
+  referenceIds: ElementReferences[]
   styleParseFailureCount: number
 }
 
-export type RewriteInputOptions = Pick<ResolvedIdPolicyOptions, 'unresolved' | 'idStyle' | 'delim'>
-
-export type RewriteResult = {
-  code: string
-  idMap: Map<string, string>
-  issues: BakeIssue[]
-}
+export type RewriteOptions = Pick<ResolvedIdPolicyOptions, 'unresolved' | 'idStyle' | 'delim'>

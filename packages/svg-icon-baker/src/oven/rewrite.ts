@@ -1,25 +1,14 @@
 import * as csstree from 'css-tree'
 import type { BakeIssue } from '../types.ts'
-import type { CollectResult, RewriteInputOptions, RewriteResult, XmlTextNode } from './types.ts'
-import { buildSvg, parseSvg } from './parse.ts'
-import { collectSvgState } from './collect.ts'
+import type { IdCollection, RewriteOptions, XmlTextNode } from './types.ts'
+import { collectIds } from './collect.ts'
 
 const URL_REFERENCE_RE = /\burl\((["'])?#(.+?)\1\)/gi
 const HREF_REFERENCE_RE = /^#(.+)$/
 const SMIL_REFERENCE_RE = /^([A-Za-z0-9_-]+)\.(begin|end)([+-].+)?$/
-export function rewriteSvgIds(code: string, prefix: string, options: RewriteInputOptions): RewriteResult {
-  const root = parseSvg(code)
-  const issues: BakeIssue[] = []
-  const idMap = rewriteIds(root, prefix, options, issues)
-  return {
-    code: buildSvg(root),
-    idMap,
-    issues,
-  }
-}
 
-export function rewriteIds(root: CollectResult['root'], prefix: string, options: RewriteInputOptions, issues: BakeIssue[]): Map<string, string> {
-  const state = collectSvgState(root)
+export function rewriteIds(document: IdCollection['document'], prefix: string, options: RewriteOptions, issues: BakeIssue[]): Map<string, string> {
+  const state = collectIds(document)
   collectIssues(state, issues)
   const idMap = createIdMap(state, prefix, options)
   const unresolvedIdMap = new Map<string, string>()
@@ -31,7 +20,7 @@ export function rewriteIds(root: CollectResult['root'], prefix: string, options:
   return idMap
 }
 
-function createIdMap(state: CollectResult, prefix: string, options: RewriteInputOptions): Map<string, string> {
+function createIdMap(state: IdCollection, prefix: string, options: RewriteOptions): Map<string, string> {
   const idMap = new Map<string, string>()
   const records = [...state.definedIds.entries()]
     .map(([id, definitions]) => ({
@@ -47,7 +36,7 @@ function createIdMap(state: CollectResult, prefix: string, options: RewriteInput
   return idMap
 }
 
-function rewriteElementIds(state: CollectResult, idMap: Map<string, string>): void {
+function rewriteElementIds(state: IdCollection, idMap: Map<string, string>): void {
   for (const [id, definitions] of state.definedIds) {
     const canonical = definitions[0]
     canonical.element.attrs[canonical.attrName] = idMap.get(id)!
@@ -59,12 +48,12 @@ function rewriteElementIds(state: CollectResult, idMap: Map<string, string>): vo
 }
 
 function rewriteReferences(
-  state: CollectResult,
+  state: IdCollection,
   idMap: Map<string, string>,
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): void {
   for (const reference of state.referenceIds) {
@@ -102,7 +91,7 @@ function rewriteHrefValue(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): string {
   const match = HREF_REFERENCE_RE.exec(value)
@@ -123,7 +112,7 @@ function rewriteUrlValue(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): string {
   return value.replace(URL_REFERENCE_RE, (match, quote, body) => {
@@ -146,7 +135,7 @@ function rewriteSmilValue(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): string {
   const parts = value.split(/\s*;\s*/)
@@ -175,7 +164,7 @@ function rewriteTokenList(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): string {
   return value
@@ -197,7 +186,7 @@ function rewriteStyleText(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[]
 ): string {
   let cssAst: csstree.CssNode
@@ -257,7 +246,7 @@ function encodeIndex(index: number): string {
   return result
 }
 
-function createMappedId(sourceId: string, prefix: string, index: number, options: RewriteInputOptions): string {
+function createMappedId(sourceId: string, prefix: string, index: number, options: RewriteOptions): string {
   const delim = resolveDelim(options)
   const style = options.idStyle
   if (style === 'named') {
@@ -282,7 +271,7 @@ function createUnresolvedMappedId(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions
+  options: RewriteOptions
 ): string {
   const existing = unresolvedIdMap.get(sourceId)
   if (existing) {
@@ -300,7 +289,7 @@ function rewriteUnresolvedReference(
   prefix: string,
   unresolvedIdMap: Map<string, string>,
   nextIndex: () => number,
-  options: RewriteInputOptions,
+  options: RewriteOptions,
   issues: BakeIssue[],
   format: (resolved: string) => string
 ): string {
@@ -317,14 +306,14 @@ function rewriteUnresolvedReference(
   return format(createUnresolvedMappedId(targetId, prefix, unresolvedIdMap, nextIndex, options))
 }
 
-function resolveDelim(options: RewriteInputOptions): '-' | '_' {
+function resolveDelim(options: RewriteOptions): '-' | '_' {
   if (options.delim != null) {
     return options.delim
   }
   return '_'
 }
 
-function collectIssues(state: CollectResult, issues: BakeIssue[]): void {
+function collectIssues(state: IdCollection, issues: BakeIssue[]): void {
   for (const [id, definitions] of state.definedIds) {
     if (definitions.length > 1) {
       pushIssue(issues, {
@@ -355,14 +344,4 @@ function unquote(value: string): string {
     return value.slice(1, -1)
   }
   return value
-}
-
-export function rewriteCollectedSvg(state: CollectResult, prefix: string, options: RewriteInputOptions): RewriteResult {
-  const issues: BakeIssue[] = []
-  const idMap = rewriteIds(state.root, prefix, options, issues)
-  return {
-    code: buildSvg(state.root),
-    idMap,
-    issues,
-  }
 }

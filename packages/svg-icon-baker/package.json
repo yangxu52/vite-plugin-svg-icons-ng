@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "css-tree": "^3.2.1",
+    "fast-xml-builder": "^1.1.5",
     "fast-xml-parser": "^5.7.2",
     "svgo": "^4.0.1"
   },

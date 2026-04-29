@@ -1,28 +1,28 @@
 import * as csstree from 'css-tree'
 import type {
-  AttributeReferenceId,
-  CollectResult,
+  AttributeReference,
   DefinedIdRecord,
+  ElementReferences,
   ElementRecord,
-  ReferenceIdRecord,
-  StyleReferenceId,
+  IdCollection,
+  StyleReference,
   XmlAttributes,
   XmlDocument,
   XmlTextNode,
 } from './types.ts'
-import { getElementEntry, visitElements } from './parse.ts'
+import { getElementEntry, visitElements } from './xml.ts'
 
 const URL_REFERENCE_RE = /\burl\((["'])?#(.+?)\1\)/gi
 const HREF_REFERENCE_RE = /^#(.+)$/
 const SMIL_REFERENCE_RE = /^([A-Za-z0-9_-]+)\.(begin|end)([+-].+)?$/
-export function collectSvgState(root: XmlDocument): CollectResult {
+export function collectIds(document: XmlDocument): IdCollection {
   const elements: ElementRecord[] = []
   const definedIds = new Map<string, DefinedIdRecord[]>()
-  const referenceIds: ReferenceIdRecord[] = []
+  const referenceIds: ElementReferences[] = []
   let styleParseFailureCount = 0
   let order = 0
 
-  visitElements(root, (name, node, attrs) => {
+  visitElements(document, (name, node, attrs) => {
     const element: ElementRecord = { name, node, attrs }
     elements.push(element)
 
@@ -54,7 +54,7 @@ export function collectSvgState(root: XmlDocument): CollectResult {
   })
 
   return {
-    root,
+    document,
     elements,
     definedIds,
     referenceIds,
@@ -62,8 +62,8 @@ export function collectSvgState(root: XmlDocument): CollectResult {
   }
 }
 
-function collectAttributeReferences(attrs: XmlAttributes): AttributeReferenceId[] {
-  const refs: AttributeReferenceId[] = []
+function collectAttributeReferences(attrs: XmlAttributes): AttributeReference[] {
+  const refs: AttributeReference[] = []
 
   for (const [attrName, value] of Object.entries(attrs)) {
     if (!value) {
@@ -121,7 +121,7 @@ function collectAttributeReferences(attrs: XmlAttributes): AttributeReferenceId[
   return refs
 }
 
-function collectStyleReferences(element: ElementRecord): { references: StyleReferenceId[]; parseFailureCount: number } {
+function collectStyleReferences(element: ElementRecord): { references: StyleReference[]; parseFailureCount: number } {
   if (element.name !== 'style') {
     return { references: [], parseFailureCount: 0 }
   }
@@ -130,7 +130,7 @@ function collectStyleReferences(element: ElementRecord): { references: StyleRefe
     return { references: [], parseFailureCount: 0 }
   }
 
-  const refs: StyleReferenceId[] = []
+  const refs: StyleReference[] = []
   let parseFailureCount = 0
   for (const child of entry.children) {
     if (!('#text' in child) || typeof child['#text'] !== 'string') {

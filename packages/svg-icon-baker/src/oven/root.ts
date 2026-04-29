@@ -1,8 +1,8 @@
-import { buildSvg, getRootElementEntry } from './parse.ts'
+import { getRootElementEntry } from './xml.ts'
 import type { XmlAttributes, XmlDocument } from './types.ts'
 
-export function buildSymbol(root: XmlDocument, symbolId: string): string {
-  const rootEntry = getRootElementEntry(root)
+export function rewriteRoot(document: XmlDocument, symbolId: string): void {
+  const rootEntry = getRootElementEntry(document)
   if (!rootEntry || rootEntry.name !== 'svg') {
     throw new Error('Input must start with an <svg> root element.')
   }
@@ -18,8 +18,6 @@ export function buildSymbol(root: XmlDocument, symbolId: string): string {
   rootEntry.attrs.viewBox = viewBox
   delete rootEntry.attrs.width
   delete rootEntry.attrs.height
-
-  return buildSvg(root).trim()
 }
 
 function resolveViewBox(attrs: XmlAttributes): string | null {

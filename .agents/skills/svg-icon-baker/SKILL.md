@@ -39,7 +39,7 @@ Inside `packages/svg-icon-baker/src`:
 - `types.ts`: public option and result contracts.
 - `options.ts`: option normalization and SVGO plugin list construction.
 - `baker.ts`: input validation, internal id rewrite, `svgo.optimize`, `viewBox` enforcement, and `<svg>` to `<symbol>` rewrite.
-- `oven/parse.ts`: XML parse/build helpers used by the rewrite core.
+- `oven/xml.ts`: XML parse/build helpers used by the rewrite core.
 - `oven/collect.ts`: local definitions and references collection.
 - `oven/rewrite.ts`: `definedIds -> idMap -> referenceIds` rewrite entry.
 - `oven/types.ts`: internal rewrite data structures and contracts.

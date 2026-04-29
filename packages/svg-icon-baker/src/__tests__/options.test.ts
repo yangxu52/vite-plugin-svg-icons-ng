@@ -63,7 +63,21 @@ describe('options module', () => {
     })
     const config = createSvgoConfig(resolved)
     expect(config.plugins).toEqual([
-      { name: 'preset-default', params: { overrides: expect.objectContaining({ cleanupIds: false }) } },
+      {
+        name: 'preset-default',
+        params: {
+          overrides: expect.objectContaining({
+            cleanupIds: false,
+            removeUselessDefs: false,
+            removeHiddenElems: false,
+            removeUnknownsAndDefaults: false,
+            collapseGroups: false,
+            mergePaths: false,
+            convertShapeToPath: false,
+            removeEmptyContainers: false,
+          }),
+        },
+      },
       { name: 'removeTitle' },
       { name: 'removeXMLNS' },
       { name: 'removeXlink' },
@@ -77,24 +91,65 @@ describe('options module', () => {
     expect(config.plugins).toEqual([{ name: 'removeDimensions' }])
   })
 
-  test('createSvgoConfig filters prefixIds but keeps string plugins and malformed entries', () => {
+  test('createSvgoConfig filters blocked pre-rewrite plugins but keeps string plugins and malformed entries', () => {
     const malformed = { name: 123 } as unknown as SvgoPlugins[number]
     const resolved = resolveOptions({
       optimize: false,
       svgoOptions: {
-        plugins: ['removeTitle', 'cleanupIds', { name: 'prefixIds', params: { prefix: 'blocked-', delim: '' } }, malformed] as SvgoPlugins,
+        plugins: [
+          'removeTitle',
+          'cleanupIds',
+          { name: 'prefixIds', params: { prefix: 'blocked-', delim: '' } },
+          { name: 'reusePaths' },
+          { name: 'removeEmptyContainers' },
+          { name: 'convertOneStopGradients' },
+          malformed,
+        ] as SvgoPlugins,
       },
     })
     const config = createSvgoConfig(resolved)
     expect(config.plugins).toEqual(['removeTitle', malformed, { name: 'removeDimensions' }])
   })
 
-  test('createSvgoConfig disables preset-default cleanupIds', () => {
+  test('createSvgoConfig filters user preset-default so blocked overrides cannot be re-enabled', () => {
+    const resolved = resolveOptions({
+      optimize: false,
+      svgoOptions: {
+        plugins: [
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                cleanupIds: true,
+                mergePaths: true,
+              },
+            },
+          },
+          'removeTitle',
+        ] as SvgoPlugins,
+      },
+    })
+    const config = createSvgoConfig(resolved)
+    expect(config.plugins).toEqual(['removeTitle', { name: 'removeDimensions' }])
+  })
+
+  test('createSvgoConfig disables blocked preset-default plugins', () => {
     const resolved = resolveOptions({ optimize: true })
     const config = createSvgoConfig(resolved)
     expect(config.plugins?.[0]).toEqual({
       name: 'preset-default',
-      params: { overrides: expect.objectContaining({ cleanupIds: false }) },
+      params: {
+        overrides: expect.objectContaining({
+          cleanupIds: false,
+          removeUselessDefs: false,
+          removeHiddenElems: false,
+          removeUnknownsAndDefaults: false,
+          collapseGroups: false,
+          mergePaths: false,
+          convertShapeToPath: false,
+          removeEmptyContainers: false,
+        }),
+      },
     })
   })
 })

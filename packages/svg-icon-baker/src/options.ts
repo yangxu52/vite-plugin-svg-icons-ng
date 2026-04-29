@@ -1,24 +1,29 @@
 import type { Config, PluginConfig } from 'svgo'
 import type { IdPolicyOptions, Options, ResolvedIdPolicyOptions, ResolvedOptions, SvgoPlugins } from './types.ts'
 
+const PRESET_OVERRIDE_BLOCKED_PLUGINS = [
+  'cleanupIds',
+  'removeUselessDefs',
+  'removeHiddenElems',
+  'removeUnknownsAndDefaults',
+  'collapseGroups',
+  'mergePaths',
+  'convertShapeToPath',
+  'removeEmptyContainers',
+] as const
+
+const FILTER_ONLY_BLOCKED_PLUGINS = ['prefixIds', 'reusePaths', 'convertOneStopGradients'] as const
+
+const USER_FILTER_BLOCKED_PLUGINS = ['preset-default', ...PRESET_OVERRIDE_BLOCKED_PLUGINS, ...FILTER_ONLY_BLOCKED_PLUGINS] as const
+
 const DEFAULT_SAFE_PRESET: PluginConfig = {
   name: 'preset-default',
   params: {
-    overrides: {
-      cleanupIds: false,
-      removeUselessDefs: false,
-      removeHiddenElems: false,
-      removeUnknownsAndDefaults: false,
-      collapseGroups: false,
-      mergePaths: false,
-      convertShapeToPath: false,
-    },
+    overrides: Object.fromEntries(PRESET_OVERRIDE_BLOCKED_PLUGINS.map((name) => [name, false])),
   },
 }
 
 const DEFAULT_SAFE_PLUGINS: SvgoPlugins = [{ name: 'removeTitle' }, { name: 'removeXMLNS' }, { name: 'removeXlink' }]
-
-const CORE_PLUGIN_BLOCKLIST = new Set(['prefixIds', 'cleanupIds'])
 
 export function resolveOptions(userOption?: Options): ResolvedOptions {
   const userObject = userOption ?? {}
@@ -54,7 +59,7 @@ function filterPlugins(plugins: SvgoPlugins): SvgoPlugins {
     if (name == null) {
       return true
     }
-    return !CORE_PLUGIN_BLOCKLIST.has(name)
+    return !USER_FILTER_BLOCKED_PLUGINS.includes(name as (typeof USER_FILTER_BLOCKED_PLUGINS)[number])
   })
 }
 

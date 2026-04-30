@@ -18,24 +18,17 @@ export function createBaker(options?: Options): Baker {
   const svgoConfig = createSvgoConfig(resolvedOptions)
   return {
     bakeIcon(source) {
-      return convertToBakeResult(source, resolvedOptions, svgoConfig)
+      return convertSource(source, resolvedOptions, svgoConfig)
     },
     bakeIcons(sources) {
-      return sources.map((source) => convertToBakeResult(source, resolvedOptions, svgoConfig))
+      return sources.map((source) => {
+        return convertSource(source, resolvedOptions, svgoConfig)
+      })
     },
   }
 }
 
-function convertToBakeResult(source: BakeSource, options: ResolvedOptions, svgoConfig: Config): BakeResult {
-  const baked = convertToSymbol(source, options, svgoConfig)
-  return {
-    name: source.name,
-    content: baked.content,
-    issues: baked.issues,
-  }
-}
-
-function convertToSymbol(source: BakeSource, options: ResolvedOptions, svgoConfig: Config): Pick<BakeResult, 'content' | 'issues'> {
+function convertSource(source: BakeSource, options: ResolvedOptions, svgoConfig: Config): BakeResult {
   if (!source || !source.name || !source.content) {
     throw new BakeError('ValidateSourceInvalid', 'Property name and content are required.')
   }

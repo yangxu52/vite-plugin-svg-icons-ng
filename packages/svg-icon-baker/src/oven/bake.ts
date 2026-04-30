@@ -2,20 +2,17 @@ import { rewriteRoot } from './root.ts'
 import { buildSvg, parseSvg } from './xml.ts'
 import { rewriteIds } from './rewrite.ts'
 import type { RewriteOptions } from './types.ts'
-import type { BakeIssue } from '../types.ts'
+import type { BakeIssue, BakeResult } from '../types.ts'
 
-export function bakeSymbol(
-  code: string,
-  symbolId: string,
-  options: RewriteOptions & { rewrite: boolean }
-): { content: string; issues: import('../types.ts').BakeIssue[] } {
-  const document = parseSvg(code)
+export function bakeSymbol(content: string, name: string, options: RewriteOptions & { rewrite: boolean }): BakeResult {
+  const document = parseSvg(content)
   const issues: BakeIssue[] = []
   if (options.rewrite) {
-    rewriteIds(document, symbolId, options, issues)
+    rewriteIds(document, name, options, issues)
   }
-  rewriteRoot(document, symbolId)
+  rewriteRoot(document, name)
   return {
+    name,
     content: buildSvg(document).trim(),
     issues,
   }

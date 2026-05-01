@@ -1,8 +1,13 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { createCompiler } from '../compiler'
+import { transformIcon } from '../transformer'
 import type { CompilerContext } from '../../types'
 
 const hoisted = vi.hoisted(() => ({
+  baker: {
+    bakeIcon: vi.fn(),
+    bakeIcons: vi.fn(),
+  },
   files: [{ file: 'D:/repo/src/icons/a.svg', iconDir: 'D:/repo/src/icons', relativePath: 'a.svg' }],
   source: {
     file: 'D:/repo/src/icons/a.svg',
@@ -17,6 +22,10 @@ const hoisted = vi.hoisted(() => ({
     symbol: '<symbol id="icon-a"></symbol>',
     hash: 'hash-a',
   },
+}))
+
+vi.mock('svg-icon-baker', () => ({
+  createBaker: vi.fn(() => hoisted.baker),
 }))
 
 vi.mock('../scanner', () => ({
@@ -72,6 +81,10 @@ describe('compiler', () => {
       id: 'icon-a',
       symbol: '<symbol id="icon-a"></symbol>',
       hash: 'hash-a',
+    }
+    hoisted.baker = {
+      bakeIcon: vi.fn(),
+      bakeIcons: vi.fn(),
     }
   })
 
@@ -166,5 +179,21 @@ describe('compiler', () => {
     const compiler = createCompiler(ctx)
 
     await expect(compiler.getResult()).rejects.toThrow('Duplicate symbolId "icon-duplicate"')
+  })
+
+  test('should preserve baker error details when failOnError is true', async () => {
+    const ctx = createCompilerContext()
+    ctx.options.failOnError = true
+    const bakeError = Object.assign(new Error('Input must start with an <svg> root element.'), {
+      name: 'BakeError',
+      code: 'ValidateSvgRootInvalid',
+    })
+    vi.mocked(transformIcon).mockRejectedValueOnce(bakeError)
+    const compiler = createCompiler(ctx)
+
+    await expect(compiler.getResult()).rejects.toMatchObject({
+      message: 'Failed on icon D:/repo/src/icons/a.svg, Input must start with an <svg> root element.',
+      cause: bakeError,
+    })
   })
 })

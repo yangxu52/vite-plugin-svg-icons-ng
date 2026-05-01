@@ -1,3 +1,4 @@
+import { createBaker } from 'svg-icon-baker'
 import { normalizePath } from 'vite'
 import { warn } from '../utils/logger'
 import { buildCompileResult } from './builder'
@@ -11,6 +12,7 @@ function normalizeFsPath(filePath: string): string {
 }
 
 export function createCompiler(ctx: CompilerContext): IconCompiler {
+  const baker = createBaker(ctx.options.bakerOptions)
   const iconDirs = ctx.options.iconDirs.map((dir) => {
     const normalized = normalizeFsPath(dir)
     return normalized.endsWith('/') ? normalized : `${normalized}/`
@@ -37,7 +39,7 @@ export function createCompiler(ctx: CompilerContext): IconCompiler {
     if (inFlight) {
       return await inFlight
     }
-    inFlight = compileIcons(ctx)
+    inFlight = compileIcons(ctx, baker)
       .then((result) => {
         state.result = result
         state.dirty = false
@@ -59,7 +61,7 @@ export function createCompiler(ctx: CompilerContext): IconCompiler {
   return { getResult, invalidate, isIconFile }
 }
 
-async function compileIcons(ctx: CompilerContext): Promise<CompileResult> {
+async function compileIcons(ctx: CompilerContext, baker: ReturnType<typeof createBaker>): Promise<CompileResult> {
   const warnings: string[] = []
   const files = await scanIconDirs(ctx.options.iconDirs)
   const compiledIcons = (
@@ -71,7 +73,7 @@ async function compileIcons(ctx: CompilerContext): Promise<CompileResult> {
           if (cached) {
             return cached
           }
-          const icon = await transformIcon(source, ctx.options)
+          const icon = await transformIcon(source, ctx.options, baker)
           ctx.cache.set(icon.file, { hash: icon.hash, icon })
           return icon
         } catch (error) {
@@ -120,7 +122,7 @@ function normalizeBuildError(file: string, error: unknown): Error {
     if (error.message.includes(file)) {
       return error
     }
-    return new Error(`Failed on icon ${file}, ${error.message}`)
+    return new Error(`Failed on icon ${file}, ${error.message}`, { cause: error })
   }
-  return new Error(`Failed on icon ${file}, ${String(error)}`)
+  return new Error(`Failed on icon ${file}, ${String(error)}`, { cause: error })
 }

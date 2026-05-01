@@ -42,7 +42,7 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist",
-    "log": "conventional-changelog -p angular --commit-path . -t svg-icon-baker@v"
+    "release": "commit-and-tag-version --path . -t svg-icon-baker@"
   },
   "dependencies": {
     "css-tree": "^3.2.1",

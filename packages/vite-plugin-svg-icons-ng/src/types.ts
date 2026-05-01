@@ -67,7 +67,7 @@ export type IconSource = IconFile & {
   hash: string
 }
 
-export type CompiledIcon = {
+export type CompiledIconEntry = {
   file: string
   id: string
   symbol: string
@@ -77,11 +77,11 @@ export type CompiledIcon = {
 
 export type IconCacheEntry = {
   hash: string
-  icon: CompiledIcon
+  icon: CompiledIconEntry
 }
 
 export type IconCache = {
-  get(path: string, hash: string): CompiledIcon | null
+  get(path: string, hash: string): CompiledIconEntry | null
   set(path: string, entry: IconCacheEntry): void
   invalidate(path: string): void
 }
@@ -105,7 +105,7 @@ export type CompileResult = {
   symbols: string[]
   ids: string[]
   sprite: string
-  iconsByFile: Map<string, CompiledIcon>
+  iconsByFile: Map<string, CompiledIconEntry>
 }
 
 export type CompilerState = {

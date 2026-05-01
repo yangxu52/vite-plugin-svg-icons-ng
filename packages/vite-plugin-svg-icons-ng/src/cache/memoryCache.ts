@@ -1,9 +1,9 @@
-import type { CompiledIcon, IconCache, IconCacheEntry } from '../types'
+import type { CompiledIconEntry, IconCache, IconCacheEntry } from '../types'
 
 export function createMemoryCache(): IconCache {
   const store = new Map<string, IconCacheEntry>()
   return {
-    get(path: string, hash: string): CompiledIcon | null {
+    get(path: string, hash: string): CompiledIconEntry | null {
       const cached = store.get(path)
       if (!cached) {
         return null

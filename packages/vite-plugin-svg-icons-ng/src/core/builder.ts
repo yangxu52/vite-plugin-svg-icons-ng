@@ -1,7 +1,7 @@
 import { XMLNS } from '../constants'
-import type { CompileResult, CompiledIcon, ResolvedOptions } from '../types'
+import type { CompileResult, CompiledIconEntry, ResolvedOptions } from '../types'
 
-export function buildCompileResult(compiledIcons: CompiledIcon[], options: ResolvedOptions): CompileResult {
+export function buildCompileResult(compiledIcons: CompiledIconEntry[], options: ResolvedOptions): CompileResult {
   const sortedIcons = [...compiledIcons].sort((a, b) => a.id.localeCompare(b.id))
   const symbols = sortedIcons.map((icon) => icon.symbol)
   return {

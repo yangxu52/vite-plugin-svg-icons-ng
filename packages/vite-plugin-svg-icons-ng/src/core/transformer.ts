@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import type { Baker } from 'svg-icon-baker'
-import type { CompiledIcon, IconFile, IconSource, ResolvedOptions } from '../types'
+import type { CompiledIconEntry, IconFile, IconSource, ResolvedOptions } from '../types'
 import { getWeakETag } from '../utils/hash'
 import { generateSymbolId } from '../utils/path'
 
@@ -13,7 +13,7 @@ export async function loadIconSource(iconFile: IconFile): Promise<IconSource> {
   }
 }
 
-export async function transformIcon(source: IconSource, options: ResolvedOptions, baker: Baker): Promise<CompiledIcon> {
+export async function transformIcon(source: IconSource, options: ResolvedOptions, baker: Baker): Promise<CompiledIconEntry> {
   const id = generateSymbolId(source.relativePath, options)
   const { content, issues } = baker.bakeIcon({ name: id, content: source.code })
   return {

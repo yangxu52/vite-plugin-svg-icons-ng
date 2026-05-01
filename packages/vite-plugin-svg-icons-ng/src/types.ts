@@ -1,4 +1,4 @@
-import type { Options as BakerOptions } from 'svg-icon-baker'
+import type { BakeIssue, Options as BakerOptions } from 'svg-icon-baker'
 import type { Logger } from 'vite'
 
 export type InjectMode = 'body-first' | 'body-last'
@@ -72,6 +72,7 @@ export type CompiledIcon = {
   id: string
   symbol: string
   hash: string
+  issues: BakeIssue[]
 }
 
 export type IconCacheEntry = {

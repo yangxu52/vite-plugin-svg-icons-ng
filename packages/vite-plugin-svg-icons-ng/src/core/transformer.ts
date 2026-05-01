@@ -15,12 +15,13 @@ export async function loadIconSource(iconFile: IconFile): Promise<IconSource> {
 
 export async function transformIcon(source: IconSource, options: ResolvedOptions, baker: Baker): Promise<CompiledIcon> {
   const id = generateSymbolId(source.relativePath, options)
-  const { content } = baker.bakeIcon({ name: id, content: source.code })
+  const { content, issues } = baker.bakeIcon({ name: id, content: source.code })
   return {
     file: source.file,
     id,
     symbol: applyStrokeOverride(content, options),
     hash: source.hash,
+    issues,
   }
 }
 

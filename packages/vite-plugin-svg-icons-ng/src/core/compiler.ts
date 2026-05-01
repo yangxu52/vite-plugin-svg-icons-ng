@@ -62,7 +62,6 @@ export function createCompiler(ctx: CompilerContext): IconCompiler {
 }
 
 async function compileIcons(ctx: CompilerContext, baker: ReturnType<typeof createBaker>): Promise<CompileResult> {
-  const warnings: string[] = []
   const files = await scanIconDirs(ctx.options.iconDirs)
   const compiledIcons = (
     await Promise.all(
@@ -81,17 +80,17 @@ async function compileIcons(ctx: CompilerContext, baker: ReturnType<typeof creat
           if (ctx.options.failOnError) {
             throw normalizedError
           }
-          warnings.push(`Skip broken icon: ${normalizedError.message}`)
+          warn(ctx, `Skip broken icon: ${normalizedError.message}`)
           return null
         }
       })
     )
   ).filter((icon): icon is CompiledIcon => icon !== null)
 
-  const icons = resolveSymbolIdConflicts(compiledIcons, ctx)
-  for (const warning of warnings) {
-    warn(ctx, warning)
+  for (const icon of compiledIcons) {
+    reportBakeIssues(ctx, icon)
   }
+  const icons = resolveSymbolIdConflicts(compiledIcons, ctx)
   return buildCompileResult(icons, ctx.options)
 }
 
@@ -125,4 +124,11 @@ function normalizeBuildError(file: string, error: unknown): Error {
     return new Error(`Failed on icon ${file}, ${error.message}`, { cause: error })
   }
   return new Error(`Failed on icon ${file}, ${String(error)}`, { cause: error })
+}
+
+function reportBakeIssues(ctx: CompilerContext, icon: CompiledIcon): void {
+  for (const issue of icon.issues) {
+    const targetSuffix = issue.targetId ? ` (targetId: ${issue.targetId})` : ''
+    warn(ctx, `Bake issue in "${icon.file}" [${issue.code}]: ${issue.message}${targetSuffix}`)
+  }
 }

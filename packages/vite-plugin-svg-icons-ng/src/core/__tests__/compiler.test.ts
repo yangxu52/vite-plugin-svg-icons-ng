@@ -21,6 +21,7 @@ const hoisted = vi.hoisted(() => ({
     id: 'icon-a',
     symbol: '<symbol id="icon-a"></symbol>',
     hash: 'hash-a',
+    issues: [],
   },
 }))
 
@@ -81,6 +82,7 @@ describe('compiler', () => {
       id: 'icon-a',
       symbol: '<symbol id="icon-a"></symbol>',
       hash: 'hash-a',
+      issues: [],
     }
     hoisted.baker = {
       bakeIcon: vi.fn(),
@@ -114,6 +116,7 @@ describe('compiler', () => {
       id: 'icon-b',
       symbol: '<symbol id="icon-b"></symbol>',
       hash: 'hash-b',
+      issues: [],
     }
 
     const third = await compiler.getResult()
@@ -140,12 +143,14 @@ describe('compiler', () => {
       id: 'icon-duplicate',
       symbol: '<symbol id="icon-duplicate"><path id="a"/></symbol>',
       hash: 'hash-a',
+      issues: [],
     })
     vi.mocked(ctx.cache.get).mockReturnValueOnce({
       file: 'D:/repo/src/icons/b.svg',
       id: 'icon-duplicate',
       symbol: '<symbol id="icon-duplicate"><path id="b"/></symbol>',
       hash: 'hash-b',
+      issues: [],
     })
     const compiler = createCompiler(ctx)
 
@@ -169,12 +174,14 @@ describe('compiler', () => {
       id: 'icon-duplicate',
       symbol: '<symbol id="icon-duplicate"></symbol>',
       hash: 'hash-a',
+      issues: [],
     })
     vi.mocked(ctx.cache.get).mockReturnValueOnce({
       file: 'D:/repo/src/icons/b.svg',
       id: 'icon-duplicate',
       symbol: '<symbol id="icon-duplicate"></symbol>',
       hash: 'hash-b',
+      issues: [],
     })
     const compiler = createCompiler(ctx)
 
@@ -195,5 +202,61 @@ describe('compiler', () => {
       message: 'Failed on icon D:/repo/src/icons/a.svg, Input must start with an <svg> root element.',
       cause: bakeError,
     })
+  })
+
+  test('should warn on bake issues from fresh transform result', async () => {
+    const ctx = createCompilerContext()
+    hoisted.icon = {
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-a',
+      symbol: '<symbol id="icon-a"></symbol>',
+      hash: 'hash-a',
+      issues: [
+        {
+          code: 'ResolveReferenceFailed',
+          message: 'Resolve reference failed for local target "ghost"; reference was preserved.',
+          targetId: 'ghost',
+        },
+      ],
+    }
+    const compiler = createCompiler(ctx)
+
+    await compiler.getResult()
+
+    expect(ctx.logger?.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Bake issue in "D:/repo/src/icons/a.svg" [ResolveReferenceFailed]: Resolve reference failed for local target "ghost"; reference was preserved. (targetId: ghost)'
+      )
+    )
+  })
+
+  test('should warn on bake issues from cached result after global invalidation', async () => {
+    const ctx = createCompilerContext()
+    const cachedIcon = {
+      file: 'D:/repo/src/icons/a.svg',
+      id: 'icon-a',
+      symbol: '<symbol id="icon-a"></symbol>',
+      hash: 'hash-a',
+      issues: [
+        {
+          code: 'ParseStyleFailed',
+          message: 'Style content could not be parsed safely; original style content was preserved.',
+        },
+      ],
+    }
+    vi.mocked(ctx.cache.get).mockReturnValue(cachedIcon)
+    const compiler = createCompiler(ctx)
+
+    await compiler.getResult()
+    vi.clearAllMocks()
+
+    compiler.invalidate()
+    await compiler.getResult()
+
+    expect(ctx.logger?.warn).toHaveBeenCalledWith(
+      expect.stringContaining(
+        'Bake issue in "D:/repo/src/icons/a.svg" [ParseStyleFailed]: Style content could not be parsed safely; original style content was preserved.'
+      )
+    )
   })
 })

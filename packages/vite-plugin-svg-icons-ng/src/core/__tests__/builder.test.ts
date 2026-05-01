@@ -5,8 +5,8 @@ describe('builder', () => {
   test('should build stable compile result from compiled icons', () => {
     const result = buildCompileResult(
       [
-        { file: '/repo/icons/b.svg', id: 'icon-b', symbol: '<symbol id="icon-b"></symbol>', hash: 'hash-b' },
-        { file: '/repo/icons/a.svg', id: 'icon-a', symbol: '<symbol id="icon-a"></symbol>', hash: 'hash-a' },
+        { file: '/repo/icons/b.svg', id: 'icon-b', symbol: '<symbol id="icon-b"></symbol>', hash: 'hash-b', issues: [] },
+        { file: '/repo/icons/a.svg', id: 'icon-a', symbol: '<symbol id="icon-a"></symbol>', hash: 'hash-a', issues: [] },
       ],
       {
         iconDirs: ['/repo/icons'],

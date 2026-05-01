@@ -1,3 +1,34 @@
+# Changelog
+
+## [2.0.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@1.2.1...svg-icon-baker@2.0.0) (2026-05-01)
+
+### ⚠ BREAKING CHANGES
+
+- **custom SVGO plugins now run before sprite id rewriting and therefore observe original ids instead of rewritten ids. Error timing and edge-case behavior may differ from the previous rewrite-then-optimize flow.**
+- **sprite id rewriting no longer follows the previous SVGO-based flow. Generated ids and custom SVGO setups that relied on the old behavior may produce different results.**
+
+### Features
+
+- add reusable baker instance API ([8eab428](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/8eab428a56606caa2f1dcc229cb3c5f60791449b))
+- decouple sprite id rewrite pipeline from svgo ([62ad050](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/62ad0508ea72578cac0668b867f12fce20191c65))
+
+### Documentation
+
+- align skill docs with rewrite core ([5241148](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/5241148e5c602880517df90a3d80f5d92cb1e330))
+
+### Code Refactoring
+
+- harden safe svgo plugin blacklist ([30bf3a6](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/30bf3a6320d711f8d9cc4056197811e4a5eb8075))
+- move symbol build into oven ([e1d1d9d](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/e1d1d9d067e1be9a7d2c0a7a58b5cf9e765c9ce0))
+- run svgo before sprite id rewrite ([d45a39e](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/d45a39eddfa95cb6059164bf8fe8b26877b88143))
+- simplify oven ast rewrite flow ([363ccc5](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/363ccc5f24faeda788332b6b2fb428ec3b2276cf))
+- simplify source conversion flow ([dcd8013](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/dcd801354057bf4872bc08f7a4a551a41a573889))
+- unify bake issue and error model ([c46dfe5](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/c46dfe5c3de2f2c310346bfe4bd99894b42c0172))
+
+### Tests
+
+- cover issue and reference edges ([7387067](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/7387067f45067ef0cbaf66ebad9b0118c435886c))
+
 ## 1.2.1 (2026-04-26)
 
 ### Bug Fixes

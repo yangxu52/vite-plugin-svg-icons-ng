@@ -3,30 +3,41 @@ import type { CompileResult, ResolvedOptions } from '../types'
 
 type RenderMountCodeOptions = {
   withHmr: boolean
-  asModule: boolean
+  exportDefault: boolean
+  stringContext: 'html' | 'module'
 }
 
 export function renderRegisterModule(result: CompileResult, options: ResolvedOptions): string {
-  return renderSpriteMountCode(result.sprite, options, { withHmr: true, asModule: true })
+  return renderSpriteMountCode(result.sprite, options, {
+    withHmr: true,
+    exportDefault: true,
+    stringContext: 'module',
+  })
 }
 
 export function renderInlineMountScript(result: CompileResult, options: ResolvedOptions): string {
-  return renderSpriteMountCode(result.sprite, options, { withHmr: false, asModule: false })
+  return renderSpriteMountCode(result.sprite, options, {
+    withHmr: true,
+    exportDefault: false,
+    stringContext: 'html',
+  })
 }
 
 function renderSpriteMountCode(sprite: string, options: ResolvedOptions, renderOptions: RenderMountCodeOptions): string {
-  const spriteLiteral = toRuntimeStringLiteral(sprite, renderOptions.asModule ? 'module' : 'html')
+  const spriteLiteral = toRuntimeStringLiteral(sprite, renderOptions.stringContext)
   const svgNsLiteral = JSON.stringify(XMLNS)
   const domIdLiteral = JSON.stringify(options.customDomId)
+  const runtimeKeyLiteral = JSON.stringify('__SVG_ICONS_RUNTIME_STORE__')
   const insertBeforeExpr = options.inject === 'body-first' ? 'body.firstChild' : 'null'
   const hmrCode = renderOptions.withHmr
     ? `
-    if (import.meta.hot) {
+    if (import.meta.hot && !state.hmrBound) {
       import.meta.hot.on(${JSON.stringify(HMR_EVENT_SVG_ICONS_UPDATE)}, function(data) {
-        if (data && typeof data.sprite === 'string') {
-          mountSvgSprite(data.sprite);
+        if (data && typeof data.sprite === 'string' && typeof state.mountSvgSprite === 'function') {
+          state.mountSvgSprite(data.sprite);
         }
       });
+      state.hmrBound = true;
     }`
     : ''
 
@@ -34,7 +45,10 @@ function renderSpriteMountCode(sprite: string, options: ResolvedOptions, renderO
   (function() {
     const SVG_NS = ${svgNsLiteral};
     const DOM_ID = ${domIdLiteral};
+    const RUNTIME_KEY = ${runtimeKeyLiteral};
     const parser = new DOMParser();
+    const runtimeStore = window[RUNTIME_KEY] || (window[RUNTIME_KEY] = {});
+    const state = runtimeStore[DOM_ID] || (runtimeStore[DOM_ID] = {});
     const getAttributeNames = function(node) {
       if (typeof node.getAttributeNames === 'function') {
         return node.getAttributeNames();
@@ -52,24 +66,32 @@ function renderSpriteMountCode(sprite: string, options: ResolvedOptions, renderO
       }
       return root;
     };
-    const ensureSpriteRoot = function() {
-      let svg = document.getElementById(DOM_ID);
-      if (svg) {
-        return svg;
+    const isSvgRoot = function(node) {
+      return !!node && typeof node.nodeName === 'string' && node.nodeName.toLowerCase() === 'svg';
+    };
+    const createSpriteRoot = function() {
+      const svg = document.createElementNS(SVG_NS, 'svg');
+      svg.setAttribute('id', DOM_ID);
+      svg.setAttribute('xmlns', SVG_NS);
+      return svg;
+    };
+    const resolveMountTarget = function() {
+      const current = document.getElementById(DOM_ID);
+      if (isSvgRoot(current)) {
+        return current;
+      }
+      const replacement = createSpriteRoot();
+      const parent = current && current.parentNode;
+      if (current && parent && typeof parent.replaceChild === 'function') {
+        parent.replaceChild(replacement, current);
+        return replacement;
       }
       const body = document.body;
       if (!body) {
         return null;
       }
-      svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('id', DOM_ID);
-      svg.setAttribute('xmlns', SVG_NS);
-      svg.setAttribute('aria-hidden', 'true');
-      svg.style.position = 'absolute';
-      svg.style.width = '0';
-      svg.style.height = '0';
-      body.insertBefore(svg, ${insertBeforeExpr});
-      return svg;
+      body.insertBefore(replacement, ${insertBeforeExpr});
+      return replacement;
     };
     const syncAttributes = function(target, source) {
       const sourceAttrNames = getAttributeNames(source);
@@ -99,13 +121,14 @@ function renderSpriteMountCode(sprite: string, options: ResolvedOptions, renderO
       if (!source) {
         return;
       }
-      const target = ensureSpriteRoot();
+      const target = resolveMountTarget();
       if (!target) {
         return;
       }
       syncAttributes(target, source);
       syncChildren(target, source);
     };
+    state.mountSvgSprite = mountSvgSprite;
     const loadSvgSprite = function() {
       mountSvgSprite(${spriteLiteral});
     };${hmrCode}
@@ -116,7 +139,7 @@ function renderSpriteMountCode(sprite: string, options: ResolvedOptions, renderO
     }
   })();
 }
-${renderOptions.asModule ? 'export default {}' : ''}`
+${renderOptions.exportDefault ? 'export default {}' : ''}`
 }
 
 function toRuntimeStringLiteral(value: string, context: 'html' | 'module'): string {

@@ -2,6 +2,7 @@ import type { BakeIssue, Options as BakerOptions } from 'svg-icon-baker'
 import type { Logger } from 'vite'
 
 export type InjectMode = 'body-first' | 'body-last'
+export type HtmlMode = 'script' | 'inline' | 'none'
 export type StrokeOverride = boolean | string
 export type ResolvedStrokeOverride = false | string
 
@@ -22,6 +23,11 @@ export type Options = {
    * @default 'body-last'
    */
   inject?: InjectMode
+  /**
+   * html sprite generation mode
+   * @default 'inline'
+   */
+  htmlMode?: HtmlMode
 
   /**
    * custom dom id

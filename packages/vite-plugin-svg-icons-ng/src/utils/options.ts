@@ -3,6 +3,7 @@ import { normalizePath } from 'vite'
 import type { Options, ResolvedOptions, ResolvedStrokeOverride, ResolveOptionsContext } from '../types'
 import {
   ERR_CUSTOM_DOM_ID_SYNTAX,
+  ERR_HTML_MODE,
   ERR_ICON_DIRS_REQUIRED,
   ERR_INJECT_MODE,
   ERR_SYMBOL_ID_NO_NAME,
@@ -15,6 +16,7 @@ import {
 const defaultOptions = {
   symbolId: 'icon-[dir]-[name]',
   inject: 'body-last',
+  htmlMode: 'inline',
   customDomId: SVG_DOM_ID,
   strokeOverride: false,
   failOnError: false,
@@ -36,6 +38,7 @@ export function resolveOptions(userOptions: Options): ResolvedOptions {
     iconDirs: userOptions.iconDirs.map((dir) => resolveIconDir(dir, process.cwd())),
     symbolId: userOptions.symbolId ?? defaultOptions.symbolId,
     inject: userOptions.inject ?? defaultOptions.inject,
+    htmlMode: userOptions.htmlMode ?? defaultOptions.htmlMode,
     customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
     strokeOverride: normalizeStrokeOverride(userOptions.strokeOverride),
     failOnError: userOptions.failOnError ?? defaultOptions.failOnError,
@@ -73,6 +76,9 @@ export function validateOptions(opt: Options) {
   }
   if (opt.inject && !['body-first', 'body-last'].includes(opt.inject)) {
     throw new Error(ERR_INJECT_MODE)
+  }
+  if (opt.htmlMode && !['script', 'inline', 'none'].includes(opt.htmlMode)) {
+    throw new Error(ERR_HTML_MODE)
   }
   // customDomId must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline
   if (opt.customDomId && !REGEXP_DOM_ID.test(opt.customDomId)) {

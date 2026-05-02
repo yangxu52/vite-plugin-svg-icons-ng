@@ -28,8 +28,13 @@ export function createSvgIconsPlugin(userOptions: Options): Plugin {
     resolveId(id) {
       return resolveVirtualId(id)
     },
-    load: async (id, loadOptions) => await pluginLoad(getContext(), id, isBuild, loadOptions),
-    transformIndexHtml: async (html) => await pluginTransformIndexHtml(getContext(), html),
+    load: {
+      handler: async (id, loadOptions) => await pluginLoad(getContext(), id, isBuild, loadOptions),
+    },
+    transformIndexHtml: {
+      order: userOptions.htmlMode === 'script' ? 'pre' : null,
+      handler: async (html) => await pluginTransformIndexHtml(getContext(), html),
+    },
     configureServer: (server) => pluginConfigureServer(getContext(), server),
     handleHotUpdate: (hotUpdateCtx) => pluginHandleHotUpdate(getContext(), hotUpdateCtx),
   }

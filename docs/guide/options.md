@@ -67,11 +67,29 @@ src/icons/
 - default: `body-last`
 - options: `body-first` | `body-last`
 
-The position where SVG sprite is injected into HTML.
+Control where the plugin inserts generated HTML output.
+
+- `htmlMode: 'script'`: controls where the injected sprite script is placed, and where the mounted sprite is inserted in `document.body`.
+- `htmlMode: 'inline'`: controls where the static sprite markup is injected into HTML.
+- `htmlMode: 'none'`: no HTML is injected automatically.
 
 > [!WARNING] NOTE
-> This option only applies to the client-side rendering.
+> This option only applies to the plugin-managed HTML flow.
 > If you inject manually via `virtual:svg-icons/sprite` (for SSR templates), `inject` is not used.
+
+## htmlMode
+
+- type: `string`
+- default: `inline`
+- options: `script` | `inline` | `none`
+
+Control how the plugin generates sprite-related HTML:
+
+- `script`: inject a script that contains the sprite, then mount the sprite at runtime. In dev, sprite updates still work. Safer for complex SVGs such as `foreignObject`.
+- `inline`: inject the full sprite markup directly into HTML during `transformIndexHtml`. This is the default mode.
+- `none`: disable automatic HTML generation completely.
+
+If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'` to disable automatic HTML injection.
 
 ## customDomId
 

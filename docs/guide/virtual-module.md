@@ -4,9 +4,11 @@ The plugin exposes a few virtual modules for different usage scenarios.
 
 ## `virtual:svg-icons/register`
 
-In development, import this module from a client entry such as `src/main.ts` when you want the plugin to mount the generated sprite into the page.
+Import this module from a client entry such as `src/main.ts` when you want to mount the generated sprite from client code.
 
-The same module listens for icon HMR updates and replaces the existing sprite DOM in place:
+In dev, the mounted sprite stays in sync when icons change.
+
+This module is optional. With `htmlMode: 'inline'`, the sprite is already injected into HTML. With `htmlMode: 'script'`, it is already mounted automatically. If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'` to disable automatic HTML injection.
 
 ```ts
 import 'virtual:svg-icons/register'

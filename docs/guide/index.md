@@ -4,15 +4,15 @@
 
 `vite-plugin-svg-icons-ng` is a high-performance SVG icon plugin built for Vite.
 
-It automatically generates SVG sprites from local files and injects them at runtime, allowing you to use SVG icons as easily as regular icons.
+It automatically generates SVG sprites from local files and configurable injects them at runtime, allowing you to use SVG icons as easily as regular icons.
 
 No manual sprite management, no extra requests, and no complex setup—just a clean and reusable icon system.
 
 ### What you get
 
 - File-based icon input, auto-generated SVG sprite output.
-- Dev client mount with no extra network request
-- Build can inline the same sprite output.
+- Configurable HTML generation with `script`, `inline`, or `none`
+- Optional client-side mount with no extra network request
 - Stable behavior across dev, build, and SSR flows.
 - Built-in cache + HMR for a smoother icon iteration loop.
 
@@ -61,7 +61,8 @@ At this point, the SVG sprite can already be generated from your icon directorie
 > In monorepos, use an absolute path when the icon folder lives outside the current app root.
 
 > [!TIP]
-> Import `virtual:svg-icons/register` from your client entry when you want the sprite mounted in development and updated in place during HMR.
+> Default: `htmlMode: 'inline'`, which injects the sprite into HTML.
+> Use `htmlMode: 'script'` for runtime mount + dev HMR. If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'`.
 
 ### Step 3: Continue
 

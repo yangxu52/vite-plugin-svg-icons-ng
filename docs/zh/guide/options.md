@@ -66,11 +66,29 @@ src/icons/
 - 默认值: `body-last`
 - 选项: `body-first` | `body-last`
 
-SVG 精灵图注入到 HTML 的位置。
+控制插件生成的 HTML 内容插入位置。
+
+- `htmlMode: 'script'`：控制包含 sprite 的注入脚本位置，以及挂载后 sprite 在 `document.body` 中的位置。
+- `htmlMode: 'inline'`：控制静态 sprite 标记注入到 HTML 的位置。
+- `htmlMode: 'none'`：插件不会自动注入 HTML。
 
 > [!WARNING] 注意
-> 该选项仅作用于 客户端渲染（CSR）自动注入。  
+> 该选项仅作用于插件管理的 HTML 生成流程。  
 > 如果通过 `virtual:svg-icons/sprite` 手动注入（SSR 模板场景），`inject` 不生效。
+
+## htmlMode
+
+- 类型: `string`
+- 默认值: `inline`
+- 选项: `script` | `inline` | `none`
+
+控制插件如何生成与 sprite 相关的 HTML：
+
+- `script`：注入包含 sprite 的脚本，再在运行时挂载 sprite。开发环境下图标更新仍然可用，也更适合包含 `foreignObject` 的复杂 SVG。
+- `inline`：在 `transformIndexHtml` 阶段直接把完整 sprite 标记注入 HTML。这是默认模式。
+- `none`：完全关闭自动 HTML 生成。
+
+使用 `virtual:svg-icons/register` 时，推荐将 `htmlMode` 设为 `none`，关闭自动 HTML 注入。
 
 ## customDomId
 

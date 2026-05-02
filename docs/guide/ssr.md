@@ -4,7 +4,10 @@ This page focuses on practical usage in SSR apps.
 
 ## Rule of Thumb
 
-- Default behavior: in standard Vite HTML flow, development can mount the sprite through `virtual:svg-icons/register`, and build can inject the sprite into HTML output.
+- Default Vite HTML flow follows `htmlMode`.
+- `inline`: inject sprite markup into HTML.
+- `script`: mount at runtime and keep updates working in dev.
+- `virtual:svg-icons/register`: optional; use it only for explicit client-side mount, and prefer `htmlMode: 'none'`.
 - SSR behavior: if your server builds the final HTML response itself, inject sprite manually.
 - In SSR dev, `virtual:svg-icons/sprite` reads from the same compiler state as dev HMR, so the next server render gets the latest sprite after icon changes.
 
@@ -22,11 +25,11 @@ table th:nth-of-type(3) {
 }
 </style>
 
-| Scenario                                            | Do I inject sprite manually?    | What to do                                                                                |
-| --------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
-| Standard Vite app (CSR)                             | No (handled by the plugin flow) | Use the client register module in dev, and let the plugin inject the sprite during build. |
-| Custom SSR server (Express/<br />Koa/Fastify, etc.) | Yes (you assemble HTML)         | Import `virtual:svg-icons/sprite` in server render and inject into template HTML.         |
-| Framework SSR (Nuxt, etc.)                          | Usually yes                     | Inject sprite in the framework's server HTML hook/template pipeline.                      |
+| Scenario                                            | Do I inject sprite manually?    | What to do                                                                                                               |
+| --------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Standard Vite app (CSR)                             | No (handled by the plugin flow) | Choose `htmlMode: 'script'` or `htmlMode: 'inline'`. If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'`. |
+| Custom SSR server (Express/<br />Koa/Fastify, etc.) | Yes (you assemble HTML)         | Import `virtual:svg-icons/sprite` in server render and inject into template HTML.                                        |
+| Framework SSR (Nuxt, etc.)                          | Usually yes                     | Inject sprite in the framework's server HTML hook/template pipeline.                                                     |
 
 ## SSR Example
 
@@ -52,5 +55,6 @@ export async function render(url: string, template: string) {
 
 ## Related Virtual Modules
 
+- `virtual:svg-icons/register`: optional client-side module for explicit sprite mounting.
 - `virtual:svg-icons/sprite`: sprite string for SSR template injection.
 - `virtual:svg-icons/ids`: all generated symbol ids.

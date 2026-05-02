@@ -4,9 +4,11 @@
 
 ## `virtual:svg-icons/register`
 
-开发环境中，如果需要从客户端入口挂载生成后的 sprite，可在 `src/main.ts` 这类入口中导入这个模块。
+如果你需要从客户端代码中挂载生成后的 sprite，可在 `src/main.ts` 这类入口中导入这个模块。
 
-它同时会监听图标 HMR 更新，并直接替换页面中现有的 sprite DOM：
+在开发环境下，挂载后的 sprite 会随着图标变更自动更新。
+
+这个模块是可选的。默认的 `htmlMode: 'inline'` 会把 sprite 注入 HTML；`htmlMode: 'script'` 也会自动挂载。使用 `virtual:svg-icons/register` 时，推荐将 `htmlMode` 设为 `none`，关闭自动 HTML 注入。
 
 ```ts
 import 'virtual:svg-icons/register'

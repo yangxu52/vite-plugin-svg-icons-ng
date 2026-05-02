@@ -4,7 +4,10 @@ SSR 场景下的使用方式。
 
 ## 核心原则
 
-- 默认情况：在标准 Vite HTML 流程下，开发环境可通过 `virtual:svg-icons/register` 挂载 sprite，构建阶段则由插件注入到 HTML。
+- 标准 Vite HTML 流程下，插件会按 `htmlMode` 生成 HTML。
+- `inline`：直接注入 sprite 标记。
+- `script`：运行时挂载，并在开发环境下保持更新可用。
+- `virtual:svg-icons/register`：可选，仅在需要从客户端代码显式挂载时使用，推荐同时设置 `htmlMode: 'none'`。
 - SSR 情况：如果最终 HTML 是由你的服务端代码拼接输出，需要手动注入 sprite。
 - SSR 开发模式下，`virtual:svg-icons/sprite` 与 dev HMR 使用同一份编译状态，图标变更后的下一次服务端渲染会读取最新 sprite。
 
@@ -22,11 +25,11 @@ table th:nth-of-type(3) {
 }
 </style>
 
-| 场景                                          | 是否需要手动注入 sprite  | 建议做法                                                          |
-| --------------------------------------------- | ------------------------ | ----------------------------------------------------------------- |
-| 标准 Vite 应用（CSR）                         | 否（由插件流程处理）     | 开发环境使用客户端 register 模块挂载，构建阶段由插件注入 sprite。 |
-| 自建 SSR 服务（Express/<br />Koa/Fastify 等） | 是（需要手动拼装HTML）   | 在服务端渲染入口导入 `virtual:svg-icons/sprite`，并注入模板。     |
-| 框架 SSR（Nuxt 等）                           | 通常是（使用钩子或同上） | 在框架提供的服务端 HTML 钩子/模板流程中注入 sprite。              |
+| 场景                                          | 是否需要手动注入 sprite  | 建议做法                                                                                                                    |
+| --------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| 标准 Vite 应用（CSR）                         | 否（由插件流程处理）     | 选择 `htmlMode: 'script'` 或 `htmlMode: 'inline'`。如果使用 `virtual:svg-icons/register`，推荐同时设置 `htmlMode: 'none'`。 |
+| 自建 SSR 服务（Express/<br />Koa/Fastify 等） | 是（需要手动拼装HTML）   | 在服务端渲染入口导入 `virtual:svg-icons/sprite`，并注入模板。                                                               |
+| 框架 SSR（Nuxt 等）                           | 通常是（使用钩子或同上） | 在框架提供的服务端 HTML 钩子/模板流程中注入 sprite。                                                                        |
 
 ## SSR 示例
 
@@ -52,5 +55,6 @@ export async function render(url: string, template: string) {
 
 ## 相关虚拟模块
 
+- `virtual:svg-icons/register`：可选的客户端挂载模块。
 - `virtual:svg-icons/sprite`：用于 SSR 模板注入的 sprite 字符串。
 - `virtual:svg-icons/ids`：导出当前全部 symbol id。

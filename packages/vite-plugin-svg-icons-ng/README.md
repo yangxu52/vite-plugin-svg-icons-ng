@@ -2,7 +2,7 @@
 
 > A high-performance SVG icon plugin for Vite.
 >
-> Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient.
+> Automatically generates SVG sprites from files and configurable injects them at runtime, making icon usage simpler and more efficient.
 
 [Documentation](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [中文文档](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/)
 
@@ -27,11 +27,13 @@ export default defineConfig({
 })
 ```
 
-At this point, the plugin can generate the SVG sprite and expose it through the standard Vite flow.
+At this point, the plugin can generate the SVG sprite and expose it through the standard Vite HTML flow.
 
 Path resolution follows Vite: relative `iconDirs` are resolved from your Vite project root, while absolute paths are used as written. In monorepos, use an absolute path when the icon folder lives outside the current app root.
 
-In development, import `virtual:svg-icons/register` to mount it on the client and receive in-place HMR updates.
+Default: `htmlMode: 'inline'`, which injects the sprite into HTML. Use `script` for runtime mount + dev HMR, or `none` to disable automatic HTML injection.
+
+If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'` to disable automatic HTML injection.
 
 Use icons directly in templates, or encapsulate them in reusable components.
 
@@ -46,7 +48,7 @@ See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/c
 ## Highlights
 
 - File-based SVG icons with automatic sprite generation
-- Dev mount + build HTML injection with no extra network request
+- Configurable HTML generation: `script` / `inline` / `none`
 - Cached compilation with HMR support
 - Consistent output across dev, build, and SSR flows
 - Safer icon sets with duplicate `symbolId` detection and optional build failure
@@ -54,7 +56,7 @@ See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/c
 
 ## Virtual Modules
 
-- `virtual:svg-icons/register`: mount the sprite on the client and keep it updated during dev HMR
+- `virtual:svg-icons/register`: explicitly mount the sprite from a client entry
 - `virtual:svg-icons/ids`: read all generated symbol ids
 - `virtual:svg-icons/sprite`: read sprite markup for SSR template injection
 

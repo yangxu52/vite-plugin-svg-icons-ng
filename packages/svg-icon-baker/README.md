@@ -79,11 +79,11 @@ type BakeResult = {
 
 ## Options
 
-| name          | type              | default                                                                 | description                                  |
-| ------------- | ----------------- | ----------------------------------------------------------------------- | -------------------------------------------- |
-| `optimize`    | `boolean`         | `true`                                                                  | Enable the built-in safe SVGO optimization.  |
-| `svgoOptions` | `SvgoOptions`     | `{}`                                                                    | Merge custom SVGO options into optimization. |
-| `idPolicy`    | `IdPolicyOptions` | `{ rewrite: true, unresolved: 'prefix', idStyle: 'named', delim: '_' }` | Control local id rewriting for sprite use.   |
+| name          | type              | default                                                                    | description                                  |
+| ------------- | ----------------- | -------------------------------------------------------------------------- | -------------------------------------------- |
+| `optimize`    | `boolean`         | `true`                                                                     | Enable the built-in safe SVGO optimization.  |
+| `svgoOptions` | `SvgoOptions`     | `{}`                                                                       | Merge custom SVGO options into optimization. |
+| `idPolicy`    | `IdPolicyOptions` | `{ rewrite: true, unresolved: 'prefix', idStyle: 'minified', delim: '_' }` | Control local id rewriting for sprite use.   |
 
 ### `idPolicy`
 
@@ -96,12 +96,12 @@ type IdPolicyOptions = {
 }
 ```
 
-| name         | type                                | default    | description                                                                                                                          |
-| ------------ | ----------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `rewrite`    | `boolean`                           | `true`     | Rewrite local ids and local references for sprite safety.                                                                            |
-| `unresolved` | `'prefix' \| 'preserve'`            | `'prefix'` | For unresolved local references, either rewrite them into the icon namespace or keep them unchanged. Both behaviors report an issue. |
-| `idStyle`    | `'named' \| 'minified' \| 'hashed'` | `'named'`  | Choose readable ids such as `icon_home`, short ids such as `icon_a`, or hashed ids such as `icon_k9x2m`.                             |
-| `delim`      | `'-' \| '_'`                        | `'_'`      | Separator between the icon name and the generated id part.                                                                           |
+| name         | type                                | default      | description                                                                                                                          |
+| ------------ | ----------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `rewrite`    | `boolean`                           | `true`       | Rewrite local ids and local references for sprite safety.                                                                            |
+| `unresolved` | `'prefix' \| 'preserve'`            | `'prefix'`   | For unresolved local references, either rewrite them into the icon namespace or keep them unchanged. Both behaviors report an issue. |
+| `idStyle`    | `'named' \| 'minified' \| 'hashed'` | `'minified'` | Choose readable ids such as `icon_home`, short ids such as `icon_a`, or hashed ids such as `icon_dgxZM` (base62 characters).         |
+| `delim`      | `'-' \| '_'`                        | `'_'`        | Separator between the icon name and the generated id part.                                                                           |
 
 ## Diagnostics
 

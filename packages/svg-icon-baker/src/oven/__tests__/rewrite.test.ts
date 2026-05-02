@@ -124,7 +124,7 @@ describe('rewriteIds', () => {
     const code = `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>`
     const result = runRewrite(code, { unresolved: 'prefix', idStyle: 'hashed', delim: '_' })
 
-    expect(result.code).toMatch(/href="#icon_[a-z0-9]+"/)
+    expect(result.code).toMatch(/href="#icon_[0-9A-Za-z]+"/)
     expect(result.issues).toEqual([
       expect.objectContaining({
         code: 'ResolveReferenceFailed',

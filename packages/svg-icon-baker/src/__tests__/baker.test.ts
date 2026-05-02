@@ -43,7 +43,7 @@ describe('feature tests', () => {
       expect(result.content).not.toMatch(/\burl\(#(?!icon-test_)[^")]*\)/)
     })
     test('use href instead of xlink:href and unresolved href is reported', () => {
-      expect(result.content).toContain('href="#icon-test_p"')
+      expect(result.content).toContain('href="#icon-test_h"')
       expect(result.content).not.toContain('xlink:href=')
       expect(result.issues).toEqual([
         expect.objectContaining({
@@ -340,15 +340,15 @@ describe('id policy options', () => {
     const svg = `<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>`
     const result = bakeIcon({ name: 'icon-hash', content: svg }, { optimize: false, idPolicy: { idStyle: 'hashed' } })
 
-    expect(result.content).toMatch(/\bid="icon-hash_[a-z0-9]+"/)
-    expect(result.content).toMatch(/\bhref="#icon-hash_[a-z0-9]+"/)
+    expect(result.content).toMatch(/\bid="icon-hash_[0-9A-Za-z]+"/)
+    expect(result.content).toMatch(/\bhref="#icon-hash_[0-9A-Za-z]+"/)
   })
 
-  test('prefixes unresolved references with named style by default', () => {
+  test('prefixes unresolved references with minified style by default', () => {
     const svg = `<svg viewBox="0 0 10 10"><use href="#ghost"/></svg>`
     const result = bakeIcon({ name: 'icon-ghost', content: svg }, { optimize: false })
 
-    expect(result.content).toContain('href="#icon-ghost_ghost"')
+    expect(result.content).toContain('href="#icon-ghost_a"')
     expect(result.issues).toEqual([
       expect.objectContaining({
         code: 'ResolveReferenceFailed',
@@ -384,8 +384,8 @@ describe('id policy options', () => {
       const result = bakeIconWithMock({ name: 'icon-style', content: svg }, { optimize: false })
 
       expect(result.content).toContain('<style>#a{fill:url(#g)}</style>')
-      expect(result.content).toContain('id="icon-style_g"')
       expect(result.content).toContain('id="icon-style_a"')
+      expect(result.content).toContain('id="icon-style_b"')
       expect(result.issues).toEqual([
         expect.objectContaining({
           code: 'ParseStyleFailed',

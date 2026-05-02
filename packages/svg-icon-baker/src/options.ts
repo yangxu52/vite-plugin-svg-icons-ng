@@ -76,7 +76,7 @@ function resolveIdPolicyOptions(idPolicy: IdPolicyOptions | undefined): Resolved
   return {
     rewrite: idPolicy?.rewrite ?? true,
     unresolved: idPolicy?.unresolved ?? 'prefix',
-    idStyle: idPolicy?.idStyle ?? 'named',
+    idStyle: idPolicy?.idStyle ?? 'minified',
     delim: idPolicy?.delim ?? '_',
   }
 }

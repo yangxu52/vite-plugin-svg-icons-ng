@@ -68,7 +68,7 @@ export type Options = {
   svgoOptions?: SvgoOptions
   /**
    * sprite-safe local id rewriting
-   * @default { rewrite: true, unresolved: 'prefix', idStyle: 'named', delim: '_' }
+   * @default { rewrite: true, unresolved: 'prefix', idStyle: 'minified', delim: '_' }
    */
   idPolicy?: IdPolicyOptions
 }

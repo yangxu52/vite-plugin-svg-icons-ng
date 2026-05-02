@@ -11,7 +11,7 @@ describe('options module', () => {
     expect(resolved.idPolicy).toEqual({
       rewrite: true,
       unresolved: 'prefix',
-      idStyle: 'named',
+      idStyle: 'minified',
       delim: '_',
     })
   })
@@ -32,7 +32,7 @@ describe('options module', () => {
     expect(resolved.idPolicy).toEqual({
       rewrite: true,
       unresolved: 'prefix',
-      idStyle: 'named',
+      idStyle: 'minified',
       delim: '_',
     })
   })
@@ -192,7 +192,7 @@ describe('options integration', () => {
       content: '<svg viewBox="0 0 10 10"><path id="shape" d="M0 0"/><use href="#shape"/></svg>',
     })
 
-    expect(first.content).toContain('id="icon-a-shape"')
-    expect(second.content).toContain('id="icon-b-shape"')
+    expect(first.content).toContain('id="icon-a-a"')
+    expect(second.content).toContain('id="icon-b-a"')
   })
 })

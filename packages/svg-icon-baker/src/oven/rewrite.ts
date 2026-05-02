@@ -232,15 +232,13 @@ function rewriteStyleText(
 
   return csstree.generate(cssAst)
 }
-
+const BASE52_ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 function encodeIndex(index: number): string {
-  const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   let current = index
   let result = ''
-
   do {
-    result = alphabet[current % alphabet.length] + result
-    current = Math.floor(current / alphabet.length) - 1
+    result = BASE52_ALPHABET[current % 52] + result
+    current = Math.floor(current / 52) - 1
   } while (current >= 0)
 
   return result
@@ -259,13 +257,25 @@ function createMappedId(sourceId: string, prefix: string, index: number, options
 }
 
 function hashId(value: string): string {
-  let hash = 5381
-  for (const char of value) {
+  return toBase62(digest_djb2(value))
+}
+function digest_djb2(str: string): number {
+  let hash = 0x1505
+  for (const char of str) {
     hash = ((hash << 5) + hash) ^ char.charCodeAt(0)
   }
-  return Math.abs(hash >>> 0).toString(36)
+  return hash >>> 0
 }
-
+const BASE62_ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+function toBase62(value: number): string {
+  let current = value
+  let result = ''
+  do {
+    result = BASE62_ALPHABET[current % 62] + result
+    current = Math.floor(current / 62)
+  } while (current > 0)
+  return result
+}
 function createUnresolvedMappedId(
   sourceId: string,
   prefix: string,

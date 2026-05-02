@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import type { BakeIssue } from 'svg-icon-baker'
 import { createCompiler } from '../compiler'
 import { transformIcon } from '../transformer'
-import type { CompilerContext } from '../../types'
+import type { CompiledIconEntry, CompilerContext } from '../../types'
 
 const hoisted = vi.hoisted(() => ({
   baker: {
@@ -21,7 +22,7 @@ const hoisted = vi.hoisted(() => ({
     id: 'icon-a',
     symbol: '<symbol id="icon-a"></symbol>',
     hash: 'hash-a',
-    issues: [],
+    issues: [] as BakeIssue[],
   },
 }))
 
@@ -58,6 +59,7 @@ function createCompilerContext(): CompilerContext {
       iconDirs: ['D:/repo/src/icons'],
       symbolId: 'icon-[dir]-[name]',
       inject: 'body-last',
+      htmlMode: 'script',
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
       failOnError: false,
@@ -82,7 +84,7 @@ describe('compiler', () => {
       id: 'icon-a',
       symbol: '<symbol id="icon-a"></symbol>',
       hash: 'hash-a',
-      issues: [],
+      issues: [] as BakeIssue[],
     }
     hoisted.baker = {
       bakeIcon: vi.fn(),
@@ -206,18 +208,19 @@ describe('compiler', () => {
 
   test('should warn on bake issues from fresh transform result', async () => {
     const ctx = createCompilerContext()
+    const issues: BakeIssue[] = [
+      {
+        code: 'ResolveReferenceFailed',
+        message: 'Resolve reference failed for local target "ghost"; reference was preserved.',
+        targetId: 'ghost',
+      },
+    ]
     hoisted.icon = {
       file: 'D:/repo/src/icons/a.svg',
       id: 'icon-a',
       symbol: '<symbol id="icon-a"></symbol>',
       hash: 'hash-a',
-      issues: [
-        {
-          code: 'ResolveReferenceFailed',
-          message: 'Resolve reference failed for local target "ghost"; reference was preserved.',
-          targetId: 'ghost',
-        },
-      ],
+      issues,
     }
     const compiler = createCompiler(ctx)
 
@@ -232,7 +235,7 @@ describe('compiler', () => {
 
   test('should warn on bake issues from cached result after global invalidation', async () => {
     const ctx = createCompilerContext()
-    const cachedIcon = {
+    const cachedIcon: CompiledIconEntry = {
       file: 'D:/repo/src/icons/a.svg',
       id: 'icon-a',
       symbol: '<symbol id="icon-a"></symbol>',

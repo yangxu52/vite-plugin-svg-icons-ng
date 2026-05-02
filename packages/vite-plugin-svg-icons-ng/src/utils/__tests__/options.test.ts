@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../constants'
+import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_HTML_MODE, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../constants'
 import { resolveOptions, resolveOptionsWithContext, validateOptions } from '../options'
 
 describe('Test ValidateOption', () => {
@@ -71,6 +71,23 @@ describe('Test ValidateOption', () => {
       expect(() => {
         validateOptions(options)
       }).toThrow(ERR_CUSTOM_DOM_ID_SYNTAX)
+    })
+  })
+
+  describe('option: htmlMode', () => {
+    test('htmlMode defaults to inline', () => {
+      const options = resolveOptions({
+        iconDirs: ['icons'],
+      })
+      expect(options.htmlMode).toBe('inline')
+    })
+
+    test('htmlMode must comply with the allowed values', () => {
+      const options = { ...template, htmlMode: 'virtual' } as never
+
+      expect(() => {
+        validateOptions(options)
+      }).toThrow(ERR_HTML_MODE)
     })
   })
 

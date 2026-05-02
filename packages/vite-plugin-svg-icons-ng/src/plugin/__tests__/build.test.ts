@@ -27,6 +27,7 @@ function createPluginContext(): PluginContext {
       iconDirs: ['icons'],
       symbolId: 'icon-[dir]-[name]',
       inject: 'body-last',
+      htmlMode: 'script',
       customDomId: '__svg__icons__dom__',
       strokeOverride: false,
       failOnError: false,

@@ -114,15 +114,73 @@ describe('index entry', () => {
     })
     const plugin = createSvgIconsPlugin({
       iconDirs: ['icons'],
+      htmlMode: 'script',
     })
     await runConfigResolved(plugin)
 
     const html = '<html><body><div id="app"></div></body></html>'
     const transformed = await runTransform(plugin, html)
 
-    expect(transformed).toContain('id="__svg__icons__dom__"')
-    expect(transformed).toContain('<symbol id="icon-a"></symbol>')
+    expect(transformed).toContain('<script type="module">')
+    expect(transformed).toContain('new DOMParser()')
+    expect(transformed).toContain('document.createElementNS')
+    expect(transformed).toContain('import.meta.hot')
+    expect(transformed).not.toContain('<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>')
     expect(hoisted.compiler.getResult).toHaveBeenCalledTimes(1)
+  })
+
+  test('should inject inline sprite markup when htmlMode is inline', async () => {
+    hoisted.compiler.getResult.mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
+    })
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'inline',
+    })
+    await runConfigResolved(plugin)
+
+    const html = '<html><body><div id="app"></div></body></html>'
+    const transformed = await runTransform(plugin, html)
+
+    expect(transformed).toContain('<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>')
+    expect(transformed).not.toContain('new DOMParser()')
+  })
+
+  test('should skip html generation when htmlMode is none', async () => {
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'none',
+    })
+    await runConfigResolved(plugin)
+
+    const html = '<html><body><div id="app"></div></body></html>'
+    const transformed = await runTransform(plugin, html)
+
+    expect(transformed).toBe(html)
+    expect(hoisted.compiler.getResult).not.toHaveBeenCalled()
+  })
+
+  test('should escape inline script closing tags when injecting mount script', async () => {
+    hoisted.compiler.getResult.mockResolvedValue({
+      symbols: ['<symbol id="icon-script"></symbol>'],
+      ids: ['icon-script'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-script"></symbol></svg></script><script>alert(1)</script>',
+      iconsByFile: new Map(),
+    })
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'script',
+    })
+    await runConfigResolved(plugin)
+
+    const html = '<html><body><div id="app"></div></body></html>'
+    const transformed = await runTransform(plugin, html)
+
+    expect(transformed).toContain('\\u003C/script>')
+    expect(transformed).not.toContain('</script><script>alert(1)</script>')
   })
 
   test('should skip html injection when sprite dom id already exists', async () => {
@@ -136,6 +194,27 @@ describe('index entry', () => {
 
     expect(transformed).toBe(html)
     expect(hoisted.compiler.getResult).not.toHaveBeenCalled()
+  })
+
+  test('should still inject mount script when htmlMode is script and sprite dom id already exists', async () => {
+    hoisted.compiler.getResult.mockResolvedValue({
+      symbols: ['<symbol id="icon-a"></symbol>'],
+      ids: ['icon-a'],
+      sprite: '<svg id="__svg__icons__dom__"><symbol id="icon-a"></symbol></svg>',
+      iconsByFile: new Map(),
+    })
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'script',
+    })
+    await runConfigResolved(plugin)
+    const html = '<html><body><div id="__svg__icons__dom__"></div><div id="app"></div></body></html>'
+
+    const transformed = await runTransform(plugin, html)
+
+    expect(transformed).toContain('<script type="module">')
+    expect(transformed).toContain('new DOMParser()')
+    expect(hoisted.compiler.getResult).toHaveBeenCalledTimes(1)
   })
 
   test('should resolve relative iconDirs from vite root', async () => {
@@ -152,5 +231,29 @@ describe('index entry', () => {
         }),
       })
     )
+  })
+
+  test('should register transformIndexHtml as a pre hook for script mode', () => {
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'script',
+    })
+
+    expect(plugin.transformIndexHtml).toMatchObject({
+      order: 'pre',
+      handler: expect.any(Function),
+    })
+  })
+
+  test('should register transformIndexHtml with default order for non-script mode', () => {
+    const plugin = createSvgIconsPlugin({
+      iconDirs: ['icons'],
+      htmlMode: 'inline',
+    })
+
+    expect(plugin.transformIndexHtml).toMatchObject({
+      order: null,
+      handler: expect.any(Function),
+    })
   })
 })

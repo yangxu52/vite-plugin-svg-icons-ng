@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@2.0.0...svg-icon-baker@2.0.1) (2026-05-02)
+
+### Code Refactoring
+
+- default minified ids and base62 hashed ids ([6954b6b](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/6954b6bf6d1dbb8ad8ab62195eb3c9b0c03ca551))
+
 ## [2.0.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@1.2.1...svg-icon-baker@2.0.0) (2026-05-01)
 
 ### ⚠ BREAKING CHANGES

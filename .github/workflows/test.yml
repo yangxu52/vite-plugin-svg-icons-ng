@@ -39,7 +39,42 @@ jobs:
         run: pnpm run tsc
 
       - name: Run test
-        run: pnpm run test
+        run: pnpm -r --filter './packages/*' --filter '!vite-plugin-svg-icons-ng' run test
+
+      - name: Run vite-plugin-svg-icons-ng unit test
+        run: pnpm --filter vite-plugin-svg-icons-ng run test:unit
 
       - name: Run playground build
         run: pnpm run build:playground
+
+  browser-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run vite-plugin-svg-icons-ng browser test
+        run: pnpm --filter vite-plugin-svg-icons-ng run test:browser

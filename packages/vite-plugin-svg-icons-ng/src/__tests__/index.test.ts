@@ -1,8 +1,9 @@
+import { resolve } from 'node:path'
 import { afterEach, describe, expect, test, vi } from 'vitest'
+import { normalizePath, type Plugin, type IndexHtmlTransformHook } from 'vite'
 import { createCompiler } from '../core/compiler'
 import { createSvgIconsPlugin } from '../index'
 import { pluginLoad } from '../plugin/build'
-import type { Plugin, IndexHtmlTransformHook } from 'vite'
 
 const hoisted = vi.hoisted(() => ({
   compiler: {
@@ -22,6 +23,8 @@ vi.mock('../core/compiler', () => ({
 }))
 
 describe('index entry', () => {
+  const viteRoot = normalizePath(resolve('/repo/app'))
+
   afterEach(() => {
     vi.clearAllMocks()
   })
@@ -37,7 +40,7 @@ describe('index entry', () => {
     await plugin.load.handler.call({} as never, id, options as never)
   }
 
-  async function runConfigResolved(plugin: Plugin, root = '/repo/app', command: 'serve' | 'build' = 'serve'): Promise<void> {
+  async function runConfigResolved(plugin: Plugin, root = viteRoot, command: 'serve' | 'build' = 'serve'): Promise<void> {
     if (!plugin.configResolved) {
       throw new Error('plugin.configResolved is required in this test')
     }
@@ -222,12 +225,12 @@ describe('index entry', () => {
       iconDirs: ['src/icons'],
     })
 
-    await runConfigResolved(plugin, '/repo/app')
+    await runConfigResolved(plugin, viteRoot)
 
     expect(createCompiler).toHaveBeenCalledWith(
       expect.objectContaining({
         options: expect.objectContaining({
-          iconDirs: ['/repo/app/src/icons'],
+          iconDirs: [`${viteRoot}/src/icons`],
         }),
       })
     )

@@ -28,6 +28,8 @@
     "dev": "unbuild --stub",
     "build": "unbuild",
     "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:browser": "vitest run --project browser",
     "coverage": "vitest run --coverage",
     "clean": "rimraf dist",
     "prepublishOnly": "npm run build",

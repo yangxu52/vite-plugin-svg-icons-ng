@@ -1,3 +1,26 @@
+# Changelog
+
+## [1.9.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.8.1...v1.9.0) (2026-05-03)
+
+### Features
+
+- add htmlMode for script inline none html generation ([12500bb](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/12500bb5852547ccd1b8287422ecd94442aa1a81)), closes [#25](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/25)
+- report baker issues during compile ([da6e417](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/da6e4171c4b5f0ac2efeb8e18b456b98b6c6be4e))
+
+### Documentation
+
+- document htmlMode and updated html generation behavior ([cc3e2d8](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/cc3e2d82bb66350a9f16b64b833eea5a62952957))
+
+### Code Refactoring
+
+- adapt compiler to instantiated baker ([3b44697](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/3b44697166efd7f09d893e31b9be1fa9c6c0fbc3))
+- extract shared sprite mount runtime ([98ef211](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/98ef211a49ce4547ca4f2f729d8ab2d66ab77f03))
+- rename compiled entry and close compiler scope ([2b5bbc0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/2b5bbc081ccd856fcc7755b3fae12b2bc2f851a7))
+
+### Tests
+
+- cover htmlMode and foreignObject regression ([961f76b](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/961f76b974a5e081ea6f9e1afec06fd47b125958))
+
 ## <small>1.8.1 (2026-04-26)</small>
 
 ### Bug Fixes

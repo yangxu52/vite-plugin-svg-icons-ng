@@ -39,8 +39,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^9.39.4",
-    "@types/node": "^24.12.0",
-    "@vitest/coverage-v8": "4.1.0",
+    "@types/node": "catalog:",
     "commit-and-tag-version": "^12.7.1",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -48,13 +47,10 @@
     "globals": "^17.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "playwright": "^1.59.1",
     "prettier": "^3.8.1",
     "rimraf": "^6.1.3",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.57.1",
-    "vite": "^6.4.2",
-    "vitest": "^4.1.0"
+    "typescript-eslint": "^8.57.1"
   },
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0"

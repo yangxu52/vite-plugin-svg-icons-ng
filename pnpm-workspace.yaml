@@ -3,11 +3,22 @@ packages:
   - packages/**/__tests__/**
   - playground/*
   - docs
+
+catalog:
+  '@types/node': ^24.12.0
+  '@vitejs/plugin-vue': ^5.2.4
+  '@vitest/coverage-v8': ^4.1.0
+  'playwright': '^1.59.1'
+  'unbuild': ^3.6.1
+  'vite': ^6.4.2
+  'vitest': ^4.1.0
+  'vue': ^3.5.30
+
 onlyBuiltDependencies:
   - esbuild
 
-patchedDependencies:
-  svgo: patches/svgo.patch
-
 overrides:
   vite: ^6.0.0
+
+patchedDependencies:
+  svgo: patches/svgo.patch

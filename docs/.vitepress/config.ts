@@ -45,6 +45,7 @@ export default defineConfig({
               },
               { text: 'Virtual Module', link: '/guide/virtual-module' },
               { text: 'Server-Side Rendering', link: '/guide/ssr' },
+              { text: 'Migration from Old Plugin', link: '/guide/migration' },
             ],
           },
           {
@@ -88,6 +89,7 @@ export default defineConfig({
               },
               { text: '虚拟模块', link: '/zh/guide/virtual-module' },
               { text: '服务端渲染（SSR）', link: '/zh/guide/ssr' },
+              { text: '从旧插件迁移', link: '/zh/guide/migration' },
             ],
           },
           {

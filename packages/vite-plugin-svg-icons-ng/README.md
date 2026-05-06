@@ -73,5 +73,6 @@ Migration: update imports to the new slash-based virtual module ids before upgra
 
 - [Getting Started](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/)
 - [Usage Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/usage)
+- [Migration from the Old Plugin](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/migration)
 - [Options](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/options)
 - [SSR Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/ssr)

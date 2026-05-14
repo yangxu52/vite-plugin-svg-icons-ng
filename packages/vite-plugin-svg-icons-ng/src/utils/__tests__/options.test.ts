@@ -59,8 +59,24 @@ describe('Test ValidateOption', () => {
       }).toThrow(ERR_SYMBOL_ID_NO_NAME)
     })
 
+    test.each(['[name]', '[dir]-[name]', 'icon-[name]'])('symbolId should allow supported template %s', (symbolId) => {
+      const options = { ...template, symbolId }
+
+      expect(() => {
+        validateOptions(options)
+      }).not.toThrow()
+    })
+
     test('symbolId must comply with the syntax', () => {
       const options = { ...template, symbolId: '0-[name]' }
+
+      expect(() => {
+        validateOptions(options)
+      }).toThrow(ERR_SYMBOL_ID_SYNTAX)
+    })
+
+    test.each(['[name].svg', 'foo [name]'])('symbolId should reject invalid template %s', (symbolId) => {
+      const options = { ...template, symbolId }
 
       expect(() => {
         validateOptions(options)

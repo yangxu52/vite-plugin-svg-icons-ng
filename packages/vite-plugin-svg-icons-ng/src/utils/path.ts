@@ -3,9 +3,13 @@ import type { Options } from '../types'
 export function generateSymbolId(filePath: string, options: Required<Options>) {
   const { symbolId } = options
   const { dir, name } = splitPath(filePath)
+  return renderSymbolIdTemplate(symbolId, { dir, name })
+}
+
+export function renderSymbolIdTemplate(symbolId: string, placeholder: { dir: string; name: string }) {
   return symbolId
-    .replace(/\[dir]/g, dir)
-    .replace(/\[name]/g, name)
+    .replace(/\[dir]/g, placeholder.dir)
+    .replace(/\[name]/g, placeholder.name)
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
 }

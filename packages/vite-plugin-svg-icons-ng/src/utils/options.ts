@@ -12,6 +12,7 @@ import {
   REGEXP_SYMBOL_ID,
   SVG_DOM_ID,
 } from '../constants'
+import { renderSymbolIdTemplate } from './path'
 
 const defaultOptions = {
   symbolId: 'icon-[dir]-[name]',
@@ -67,9 +68,8 @@ export function validateOptions(opt: Options) {
     if (!opt.symbolId.includes('[name]')) {
       throw new Error(ERR_SYMBOL_ID_NO_NAME)
     } else {
-      // symbolId must be a valid ASCII letter, number, underline, hyphen, and starting with a letter, then cannot contain consecutive hyphens
-      const clearSymbolId = opt.symbolId.replaceAll(/\[name]/g, '').replaceAll(/\[dir]/g, '')
-      if (!REGEXP_SYMBOL_ID.test(clearSymbolId)) {
+      const renderedSymbolId = renderSymbolIdTemplate(opt.symbolId, { dir: 'dir', name: 'name' })
+      if (!REGEXP_SYMBOL_ID.test(renderedSymbolId)) {
         throw new Error(ERR_SYMBOL_ID_SYNTAX)
       }
     }

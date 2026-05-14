@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import type { Baker } from 'svg-icon-baker'
 import type { CompiledIconEntry, IconFile, IconSource, ResolvedOptions } from '../types'
+import { PLUGIN_NAME, REGEXP_SYMBOL_ID } from '../constants'
 import { getWeakETag } from '../utils/hash'
 import { generateSymbolId } from '../utils/path'
 
@@ -15,6 +16,11 @@ export async function loadIconSource(iconFile: IconFile): Promise<IconSource> {
 
 export async function transformIcon(source: IconSource, options: ResolvedOptions, baker: Baker): Promise<CompiledIconEntry> {
   const id = generateSymbolId(source.relativePath, options)
+  if (!REGEXP_SYMBOL_ID.test(id)) {
+    throw new Error(
+      `[${PLUGIN_NAME}]: Generated symbolId "${id}" for "${source.file}" is invalid. Check the file name/path and 'symbolId' template "${options.symbolId}".`
+    )
+  }
   const { content, issues } = baker.bakeIcon({ name: id, content: source.code })
   return {
     file: source.file,

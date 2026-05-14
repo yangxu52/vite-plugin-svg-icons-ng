@@ -190,6 +190,58 @@ describe('compiler', () => {
     await expect(compiler.getResult()).rejects.toThrow('Duplicate symbolId "icon-duplicate"')
   })
 
+  test('should warn and skip icon when generated symbolId is invalid', async () => {
+    const ctx = createCompilerContext()
+    ctx.options.symbolId = '[name]'
+    hoisted.files = [{ file: 'D:/repo/src/icons/1.svg', iconDir: 'D:/repo/src/icons', relativePath: '1.svg' }]
+    hoisted.source = {
+      file: 'D:/repo/src/icons/1.svg',
+      iconDir: 'D:/repo/src/icons',
+      relativePath: '1.svg',
+      code: '<svg></svg>',
+      hash: 'hash-invalid',
+    }
+    vi.mocked(transformIcon).mockImplementationOnce(async (_, options) => {
+      if (options.symbolId === '[name]') {
+        throw new Error(
+          '[vite-plugin-svg-icons-ng]: Generated symbolId "1" for "D:/repo/src/icons/1.svg" is invalid. Check the file name/path and \'symbolId\' template "[name]".'
+        )
+      }
+      return hoisted.icon
+    })
+    const compiler = createCompiler(ctx)
+
+    const result = await compiler.getResult()
+
+    expect(result.ids).toEqual([])
+    expect(ctx.logger?.warn).toHaveBeenCalledWith(expect.stringContaining('Generated symbolId "1" for "D:/repo/src/icons/1.svg" is invalid'))
+  })
+
+  test('should throw when generated symbolId is invalid and failOnError is true', async () => {
+    const ctx = createCompilerContext()
+    ctx.options.symbolId = '[name]'
+    ctx.options.failOnError = true
+    hoisted.files = [{ file: 'D:/repo/src/icons/1.svg', iconDir: 'D:/repo/src/icons', relativePath: '1.svg' }]
+    hoisted.source = {
+      file: 'D:/repo/src/icons/1.svg',
+      iconDir: 'D:/repo/src/icons',
+      relativePath: '1.svg',
+      code: '<svg></svg>',
+      hash: 'hash-invalid',
+    }
+    vi.mocked(transformIcon).mockImplementationOnce(async (_, options) => {
+      if (options.symbolId === '[name]') {
+        throw new Error(
+          '[vite-plugin-svg-icons-ng]: Generated symbolId "1" for "D:/repo/src/icons/1.svg" is invalid. Check the file name/path and \'symbolId\' template "[name]".'
+        )
+      }
+      return hoisted.icon
+    })
+    const compiler = createCompiler(ctx)
+
+    await expect(compiler.getResult()).rejects.toThrow('[vite-plugin-svg-icons-ng]: Generated symbolId "1" for "D:/repo/src/icons/1.svg" is invalid')
+  })
+
   test('should preserve baker error details when failOnError is true', async () => {
     const ctx = createCompilerContext()
     ctx.options.failOnError = true

@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.9.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.0...v1.9.1) (2026-05-14)
+
+### Bug Fixes
+
+- support flexible symbolId templates ([a33f117](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a33f117c181454ed015e36cde61c57c2ba126038)), closes [#26](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/26)
+
+### Documentation
+
+- add migration guides from old-plugin ([3900665](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/390066570e98019350f5ad1d65af87a468a3fcce))
+
+### Miscellaneous Chores
+
+- normalize workspace deps with pnpm catalog ([535902e](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/535902ed18053d09661387a5bdc1eee3997d1aea))
+
+### Tests
+
+- add browser runtime coverage ([4abe45d](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4abe45d615bba8a12ff341ed69c98c819d9f9765))
+
 ## [1.9.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.8.1...v1.9.0) (2026-05-03)
 
 ### Features

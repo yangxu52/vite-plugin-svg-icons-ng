@@ -21,7 +21,15 @@ export default defineConfig({
         nav: [
           { text: 'Guide', link: '/guide/' },
           { text: 'Options', link: '/guide/options' },
-          { text: `v${version}`, items: [{ text: 'Changelog', link: 'https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/main/CHANGELOG.md' }] },
+          {
+            text: `v${version}`,
+            items: [
+              {
+                text: 'Changelog',
+                link: `https://github.com/yangxu52/vite-plugin-svg-icons-ng/blob/v${version}/packages/vite-plugin-svg-icons-ng/CHANGELOG.md`,
+              },
+            ],
+          },
         ],
         sidebar: [
           {

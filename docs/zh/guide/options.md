@@ -57,8 +57,10 @@ src/icons/
 ```
 
 > [!WARNING] 注意
-> `symbolId` 除了占位符本身外，必须是合法的 ASCII `字母`、`数字`、`下划线`和`连字符`。  
-> `symbolId` 必须包含 `[name]` 占位符， 否则会抛出错误。
+> `symbolId` 必须包含 `[name]` 占位符，否则会抛出错误。  
+> 占位符展开后的最终 `symbolId` 必须是合法的 ASCII `字母`、`数字`、`下划线`和 `连字符` 组成的 id，且必须以 `字母` 开头。  
+> 例如 `[name]`、`[dir]-[name]`、`icon-[dir]-[name]` 这类模板都受支持。
+> 如果某个文件生成出的 `symbolId` 非法，插件默认会告警并跳过该图标；设置 `failOnError: true` 时会直接抛错。
 
 ## inject
 

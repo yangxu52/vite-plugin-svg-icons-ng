@@ -57,9 +57,10 @@ src/icons/
 ```
 
 > [!WARNING] NOTE
-> `symbolId` must be a valid ASCII `letter`, `number`, `underline`, `hyphen`,
-> except for placeholder symbols, and starting with a `letter`!  
-> `symbolId` must contain the `[name]` placeholder symbol, otherwise an error will be thrown.
+> `symbolId` must contain the `[name]` placeholder, otherwise an error will be thrown.  
+> After placeholders are rendered, the final `symbolId` must be a valid ASCII `letter`, `number`, `underline`, `hyphen` id, and must start with a `letter`.  
+> Templates such as `[name]`, `[dir]-[name]`, and `icon-[dir]-[name]` are supported.
+> If the generated `symbolId` is invalid for a specific file, the plugin warns and skips that icon by default, or throws when `failOnError: true`.
 
 ## inject
 

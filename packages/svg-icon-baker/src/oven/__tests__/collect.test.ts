@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { parseSvg } from '../xml.ts'
-import { collectIds } from '../collect.ts'
+import { parseSvg } from '../xml'
+import { collectIds } from '../collect'
 
 describe('collectIds', () => {
   test('collects ids and references from href url begin end and style text', () => {

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { bakeIcon, createBaker } from '../baker.ts'
-import { createSvgoConfig, resolveOptions } from '../options.ts'
-import type { SvgoPlugins } from '../types.ts'
+import { bakeIcon, createBaker } from '../baker'
+import { createSvgoConfig, resolveOptions } from '../options'
+import type { SvgoPlugins } from '../types'
 
 describe('options module', () => {
   test('resolveOptions uses defaults when input is empty', () => {

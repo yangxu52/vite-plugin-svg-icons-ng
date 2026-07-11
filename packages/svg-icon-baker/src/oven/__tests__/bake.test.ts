@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { bakeSymbol } from '../bake.ts'
+import { bakeSymbol } from '../bake'
 
 describe('bakeSymbol', () => {
   test('builds symbol from one AST pipeline', () => {

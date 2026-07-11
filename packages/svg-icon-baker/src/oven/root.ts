@@ -1,5 +1,5 @@
-import { getRootElementEntry } from './xml.ts'
-import type { XmlAttributes, XmlDocument } from './types.ts'
+import { getRootElementEntry } from './xml'
+import type { XmlAttributes, XmlDocument } from './types'
 
 export function rewriteRoot(document: XmlDocument, symbolId: string): void {
   const rootEntry = getRootElementEntry(document)

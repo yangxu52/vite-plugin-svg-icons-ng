@@ -9,8 +9,8 @@ import type {
   XmlAttributes,
   XmlDocument,
   XmlTextNode,
-} from './types.ts'
-import { getElementEntry, visitElements } from './xml.ts'
+} from './types'
+import { getElementEntry, visitElements } from './xml'
 
 const URL_REFERENCE_RE = /\burl\((["'])?#(.+?)\1\)/gi
 const HREF_REFERENCE_RE = /^#(.+)$/

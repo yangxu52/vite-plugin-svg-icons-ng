@@ -1,9 +1,9 @@
 import { optimize } from 'svgo'
 import type { Config } from 'svgo'
-import { bakeSymbol } from './oven/bake.ts'
-import { createSvgoConfig, resolveOptions } from './options.ts'
-import { BakeError } from './types.ts'
-import type { BakeResult, Baker, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types.ts'
+import { bakeSymbol } from './oven/bake'
+import { createSvgoConfig, resolveOptions } from './options'
+import { BakeError } from './types'
+import type { BakeResult, Baker, BakeSource, Options, ResolvedOptions, SvgoOutput } from './types'
 
 export function bakeIcon(source: BakeSource, options?: Options): BakeResult {
   return createBaker(options).bakeIcon(source)

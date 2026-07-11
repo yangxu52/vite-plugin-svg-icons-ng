@@ -1,7 +1,7 @@
 import * as csstree from 'css-tree'
-import type { BakeIssue } from '../types.ts'
-import type { IdCollection, RewriteOptions, XmlTextNode } from './types.ts'
-import { collectIds } from './collect.ts'
+import type { BakeIssue } from '../types'
+import type { IdCollection, RewriteOptions, XmlTextNode } from './types'
+import { collectIds } from './collect'
 
 const URL_REFERENCE_RE = /\burl\((["'])?#(.+?)\1\)/gi
 const HREF_REFERENCE_RE = /^#(.+)$/

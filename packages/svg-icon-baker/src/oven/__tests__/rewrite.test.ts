@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from 'vitest'
-import type { BakeIssue } from '../../types.ts'
-import type { RewriteOptions } from '../types.ts'
-import { buildSvg, parseSvg } from '../xml.ts'
-import { rewriteIds } from '../rewrite.ts'
+import type { BakeIssue } from '../../types'
+import type { RewriteOptions } from '../types'
+import { buildSvg, parseSvg } from '../xml'
+import { rewriteIds } from '../rewrite'
 
 const defaultOptions: RewriteOptions = {
   unresolved: 'prefix',
@@ -183,7 +183,7 @@ describe('rewriteIds', () => {
     })
 
     try {
-      const { rewriteIds: rewriteIdsWithMock } = await import('../rewrite.ts')
+      const { rewriteIds: rewriteIdsWithMock } = await import('../rewrite')
       const code = `<svg viewBox="0 0 10 10"><style>#a{fill:url(#g)}</style><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs><rect id="a" width="10" height="10"/></svg>`
       const result = runRewrite(code, { unresolved: 'prefix', idStyle: 'named', delim: '_' }, rewriteIdsWithMock)
 

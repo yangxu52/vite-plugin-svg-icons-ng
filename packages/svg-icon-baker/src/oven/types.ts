@@ -1,4 +1,4 @@
-import type { ResolvedIdPolicyOptions } from '../types.ts'
+import type { ResolvedIdPolicyOptions } from '../types'
 
 export type XmlAttributes = Record<string, string>
 

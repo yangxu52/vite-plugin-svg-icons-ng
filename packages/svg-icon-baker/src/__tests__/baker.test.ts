@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
-import { bakeIcon, bakeIcons, createBaker } from '../baker.ts'
-import { BakeError } from '../types.ts'
+import { bakeIcon, bakeIcons, createBaker } from '../baker'
+import { BakeError } from '../types'
 
 describe('feature tests', () => {
   const svg = `\uFEFF<?xml version="1.0" encoding="UTF-8"?>
@@ -195,7 +195,7 @@ describe('validation tests', () => {
 
   test('optimization runs before id rewrite', async () => {
     const calls: string[] = []
-    vi.doMock('../oven/rewrite.ts', async () => {
+    vi.doMock('../oven/rewrite', async () => {
       const actual = await vi.importActual<typeof import('../oven/rewrite.ts')>('../oven/rewrite.ts')
       return {
         ...actual,
@@ -213,7 +213,7 @@ describe('validation tests', () => {
 
     try {
       vi.resetModules()
-      const { bakeIcon: bakeIconWithMock } = await import('../baker.ts')
+      const { bakeIcon: bakeIconWithMock } = await import('../baker')
       bakeIconWithMock(
         {
           name: 'icon-order',
@@ -379,7 +379,7 @@ describe('id policy options', () => {
     })
 
     try {
-      const { bakeIcon: bakeIconWithMock } = await import('../baker.ts')
+      const { bakeIcon: bakeIconWithMock } = await import('../baker')
       const svg = `<svg viewBox="0 0 10 10"><style>#a{fill:url(#g)}</style><defs><linearGradient id="g"><stop offset="0"/></linearGradient></defs><rect id="a" width="10" height="10"/></svg>`
       const result = bakeIconWithMock({ name: 'icon-style', content: svg }, { optimize: false })
 

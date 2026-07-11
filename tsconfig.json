@@ -8,7 +8,7 @@
       "svg-icon-baker": ["./packages/svg-icon-baker/src/index.ts"]
     },
     /* Bundler mode */
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "skipLibCheck": true,

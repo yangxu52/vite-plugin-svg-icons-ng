@@ -1,5 +1,5 @@
 import type { Config, PluginConfig } from 'svgo'
-import type { IdPolicyOptions, Options, ResolvedIdPolicyOptions, ResolvedOptions, SvgoPlugins } from './types.ts'
+import type { IdPolicyOptions, Options, ResolvedIdPolicyOptions, ResolvedOptions, SvgoPlugins } from './types'
 
 const PRESET_OVERRIDE_BLOCKED_PLUGINS = [
   'cleanupIds',

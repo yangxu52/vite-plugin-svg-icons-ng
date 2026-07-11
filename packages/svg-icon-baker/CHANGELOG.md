@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@2.0.1...svg-icon-baker@2.1.0) (2026-07-11)
+
+### Miscellaneous Chores
+
+- align type checks with project references ([a75a94a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a75a94a6c0f5766cb5c6849160d8e972789e2b73))
+- disable and fix importing-ts-extensions ([0302563](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/030256313314fd20f05680bea98fe1f7663d3dd1))
+- format and ignore lint ([05d1fe1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/05d1fe13f7d2612ca9b1ef3080c1255615480735))
+- normalize workspace deps with pnpm catalog ([535902e](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/535902ed18053d09661387a5bdc1eee3997d1aea))
+- update runtime dependencies ([47fe7d3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/47fe7d39c1e6b5eb7537487c65f142a08aa07c0c))
+- unhoist typescript to respective packages ([1b861c3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/1b861c33a4d8058dbe34061d2bb09873ab498e70))
+- update all dependencies for resolve vulnerabilities ([b448143](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/b44814377ff76490f718e4a07c76d2a64551bfb6))
+
 ## [2.0.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@2.0.0...svg-icon-baker@2.0.1) (2026-05-02)
 
 ### Code Refactoring

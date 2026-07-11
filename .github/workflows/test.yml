@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run type check
-        run: pnpm run tsc
+        run: pnpm run typecheck
 
       - name: Run test
         run: pnpm -r --filter './packages/*' --filter '!vite-plugin-svg-icons-ng' run test

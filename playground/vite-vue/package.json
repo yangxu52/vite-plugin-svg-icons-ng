@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rimraf dist"
+    "typecheck": "vue-tsc -b",
+    "clean": "rimraf dist node_modules/.tmp"
   },
   "dependencies": {
     "vue": "catalog:"
@@ -16,6 +17,7 @@
     "@vitejs/plugin-vue": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-svg-icons-ng": "workspace:*"
+    "vite-plugin-svg-icons-ng": "workspace:*",
+    "vue-tsc": "catalog:"
   }
 }

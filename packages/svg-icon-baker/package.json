@@ -41,7 +41,8 @@
     "build": "unbuild",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "clean": "rimraf dist",
+    "typecheck": "tsc -b",
+    "clean": "rimraf dist node_modules/.tmp",
     "release": "commit-and-tag-version --path . -t svg-icon-baker@"
   },
   "dependencies": {

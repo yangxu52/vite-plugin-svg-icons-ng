@@ -8,11 +8,13 @@
     "build": "vite build --outDir dist/client --emptyOutDir",
     "build:ssr": "vite build --ssr src/entry-server.ts --outDir dist/server --emptyOutDir false",
     "preview": "node server.js --prod",
-    "clean": "rimraf dist"
+    "typecheck": "vue-tsc -b",
+    "clean": "rimraf dist node_modules/.tmp"
   },
   "devDependencies": {
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-svg-icons-ng": "workspace:*"
+    "vite-plugin-svg-icons-ng": "workspace:*",
+    "vue-tsc": "catalog:"
   }
 }

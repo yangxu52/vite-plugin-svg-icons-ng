@@ -14,7 +14,8 @@
     "clean": "pnpm -r --if-present run clean",
     "format": "prettier --write .",
     "lint": "eslint --fix .",
-    "tsc": "tsc --noEmit --skipLibCheck",
+    "typecheck": "tsc -b",
+    "typecheck:playground": "pnpm -r --filter './playground/*' run typecheck",
     "prepare": "husky"
   },
   "keywords": [

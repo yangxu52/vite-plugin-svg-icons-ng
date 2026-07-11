@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
+    /* Language and environment */
     "target": "ES2022",
     "module": "ESNext",
     "lib": ["ES2022"],
+
+    /* Module resolution */
     "moduleResolution": "bundler",
-    "paths": {
-      "svg-icon-baker": ["./packages/svg-icon-baker/src/index.ts"]
-    },
+    "esModuleInterop": true,
+
     /* Bundler mode */
     "allowImportingTsExtensions": false,
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "noEmit": true,
 
     /* Linting */
     "strict": true,
@@ -23,5 +24,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["packages/**/*"]
+  /* Workspace package graph */
+  "files": [],
+  "references": [{ "path": "./packages/svg-icon-baker" }, { "path": "./packages/vite-plugin-svg-icons-ng" }]
 }

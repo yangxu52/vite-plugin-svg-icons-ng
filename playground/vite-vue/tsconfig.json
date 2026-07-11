@@ -1,31 +1,23 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "moduleResolution": "bundler",
-    "esModuleInterop": true,
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": false,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+    // allow js files
     "allowJs": true,
     "jsx": "preserve",
     "jsxImportSource": "vue",
-
-    /* Bundler mode */
-    "allowImportingTsExtensions": true,
-    "moduleDetection": "force",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "types": ["vite/client", "vite-plugin-svg-icons-ng/client"],
-
-    /* Linting */
-    "strict": true,
-    "verbatimModuleSyntax": true,
-    "noUncheckedSideEffectImports": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    // add DOM and DOM.Iterable to prevent empty import errors
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // add types for vite/client and vite-plugin-svg-icons-ng
+    "types": ["vite/client", "vite-plugin-svg-icons-ng/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "references": [{ "path": "../../packages/vite-plugin-svg-icons-ng" }],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
   "exclude": ["dist"]
 }

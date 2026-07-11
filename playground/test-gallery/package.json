@@ -8,7 +8,8 @@
     "build": "vite build",
     "test:gzip": "npm run build && http-server dist --cors --gzip -c-1",
     "test:br": "npm run build && http-server dist --cors --brotli -c-1",
-    "clean": "rimraf dist"
+    "typecheck": "vue-tsc -b",
+    "clean": "rimraf dist node_modules/.tmp"
   },
   "dependencies": {
     "vue": "catalog:"
@@ -18,6 +19,7 @@
     "http-server": "^14.1.1",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plugin-svg-icons-ng": "workspace:*"
+    "vite-plugin-svg-icons-ng": "workspace:*",
+    "vue-tsc": "catalog:"
   }
 }

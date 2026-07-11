@@ -31,7 +31,8 @@
     "test:unit": "vitest run --project unit",
     "test:browser": "vitest run --project browser",
     "coverage": "vitest run --coverage",
-    "clean": "rimraf dist",
+    "typecheck": "tsc -b",
+    "clean": "rimraf dist node_modules/.tmp",
     "prepublishOnly": "npm run build",
     "release": "commit-and-tag-version --path . -t v"
   },

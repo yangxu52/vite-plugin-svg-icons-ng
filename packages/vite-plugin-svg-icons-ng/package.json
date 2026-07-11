@@ -71,6 +71,7 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "playwright": "catalog:",
+    "typescript": "catalog:",
     "unbuild": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"

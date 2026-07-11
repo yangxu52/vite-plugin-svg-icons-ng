@@ -11,6 +11,7 @@
     "clean": "rimraf dist"
   },
   "devDependencies": {
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-svg-icons-ng": "workspace:*"
   }

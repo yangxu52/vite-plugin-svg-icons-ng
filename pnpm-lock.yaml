@@ -18,6 +18,9 @@ catalogs:
     playwright:
       specifier: ^1.61.1
       version: 1.61.1
+    typescript:
+      specifier: ~5.9.3
+      version: 5.9.3
     unbuild:
       specifier: ^3.6.1
       version: 3.6.1
@@ -80,7 +83,7 @@ importers:
         specifier: ^6.1.3
         version: 6.1.3
       typescript:
-        specifier: ~5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
       typescript-eslint:
         specifier: ^8.63.0
@@ -116,6 +119,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.10(vitest@4.1.10)
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
       unbuild:
         specifier: 'catalog:'
         version: 3.6.1(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))
@@ -141,6 +147,9 @@ importers:
       playwright:
         specifier: 'catalog:'
         version: 1.61.1
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
       unbuild:
         specifier: 'catalog:'
         version: 3.6.1(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))
@@ -163,6 +172,9 @@ importers:
       http-server:
         specifier: ^14.1.1
         version: 14.1.1
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
       vite:
         specifier: ^6.0.0
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
@@ -172,6 +184,9 @@ importers:
 
   playground/vite-ssr:
     devDependencies:
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
       vite:
         specifier: ^6.0.0
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
@@ -188,6 +203,9 @@ importers:
       '@vitejs/plugin-vue':
         specifier: 'catalog:'
         version: 5.2.4(vite@6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0))(vue@3.5.39(typescript@5.9.3))
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
       vite:
         specifier: ^6.0.0
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)

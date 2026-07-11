@@ -5,7 +5,7 @@ on:
     branches: ['main']
     paths:
       - 'docs/**'
-      - 'packages/**'
+      - 'packages/vite-plugin-svg-icons-ng/package.json'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
@@ -14,7 +14,7 @@ on:
     branches: ['main']
     paths:
       - 'docs/**'
-      - 'packages/**'
+      - 'packages/vite-plugin-svg-icons-ng/package.json'
       - 'package.json'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'

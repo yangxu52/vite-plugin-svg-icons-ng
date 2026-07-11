@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.9.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.1...v1.9.2) (2026-07-11)
+
+### Miscellaneous Chores
+
+- align type checks with project references ([a75a94a](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/a75a94a6c0f5766cb5c6849160d8e972789e2b73))
+- update runtime dependencies ([39403af](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/39403af223725e9f6911b334157ae531511144d2))
+- unhoist typescript to respective packages ([1b861c3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/1b861c33a4d8058dbe34061d2bb09873ab498e70))
+- update non-major dependencies ([ea206e5](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/ea206e5cfcf70dfd1e8deff7e8d6de6f6b51c305))
+
 ## [1.9.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.0...v1.9.1) (2026-05-14)
 
 ### Bug Fixes

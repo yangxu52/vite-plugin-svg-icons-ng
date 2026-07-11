@@ -72,6 +72,7 @@
     "@vitest/coverage-v8": "catalog:",
     "playwright": "catalog:",
     "unbuild": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
   }
 }

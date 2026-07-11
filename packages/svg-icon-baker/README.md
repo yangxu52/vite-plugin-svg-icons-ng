@@ -216,12 +216,7 @@ type BakeIssue = {
 }
 
 type BakeErrorCode =
-  | 'ValidateSourceInvalid'
-  | 'ValidateNameInvalid'
-  | 'ValidateSvgRootInvalid'
-  | 'ParseSvgFailed'
-  | 'OptimizeSvgFailed'
-  | 'ResolveViewBoxFailed'
+  'ValidateSourceInvalid' | 'ValidateNameInvalid' | 'ValidateSvgRootInvalid' | 'ParseSvgFailed' | 'OptimizeSvgFailed' | 'ResolveViewBoxFailed'
 
 type SvgoOptions = Pick<Config, 'multipass' | 'floatPrecision' | 'js2svg' | 'plugins'>
 

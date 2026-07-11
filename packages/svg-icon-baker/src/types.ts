@@ -17,12 +17,7 @@ export type BakeIssue = {
 }
 
 export type BakeErrorCode =
-  | 'ValidateSourceInvalid'
-  | 'ValidateNameInvalid'
-  | 'ValidateSvgRootInvalid'
-  | 'ParseSvgFailed'
-  | 'OptimizeSvgFailed'
-  | 'ResolveViewBoxFailed'
+  'ValidateSourceInvalid' | 'ValidateNameInvalid' | 'ValidateSvgRootInvalid' | 'ParseSvgFailed' | 'OptimizeSvgFailed' | 'ResolveViewBoxFailed'
 
 export class BakeError extends Error {
   readonly code: BakeErrorCode

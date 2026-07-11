@@ -111,6 +111,7 @@ async function bootstrap() {
 
   server.listen(port, () => {
     const mode = isProd ? 'build-ssr preview' : 'dev-ssr'
+    // eslint-disable-next-line no-console
     console.log(`[playground-ssr] ${mode} server is running at http://localhost:${port}`)
   })
 }

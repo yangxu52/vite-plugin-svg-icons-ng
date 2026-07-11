@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* eslint-disable no-console */
+
 import fs from 'node:fs'
 
 import { resolveRelease } from './release-contract.mjs'

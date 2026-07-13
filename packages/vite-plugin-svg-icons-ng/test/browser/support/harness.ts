@@ -31,23 +31,33 @@ export async function createBrowserHarness(options: FixtureAppOptions): Promise<
     root: project.root,
     iconDir: project.iconDir,
   }
-  const server = await startViteDevServer(resolvedOptions)
-  const browser = await openBrowserPage()
+  let server: Awaited<ReturnType<typeof startViteDevServer>> | undefined
+  let browser: Awaited<ReturnType<typeof openBrowserPage>> | undefined
 
-  const active: ActiveHarness = {
-    close: async () => {
-      await browser.close()
-      await server.close()
-      await project.cleanup()
-    },
-  }
-  activeHarnesses.add(active)
+  try {
+    server = await startViteDevServer(resolvedOptions)
+    browser = await openBrowserPage()
 
-  return {
-    page: browser.page,
-    project,
-    open: async () => {
-      await browser.page.goto(server.origin, { waitUntil: 'networkidle' })
-    },
+    const active: ActiveHarness = {
+      close: async () => {
+        await browser?.close()
+        await server?.close()
+        await project.cleanup()
+      },
+    }
+    activeHarnesses.add(active)
+
+    return {
+      page: browser.page,
+      project,
+      open: async () => {
+        await browser.page.goto(server.origin, { waitUntil: 'networkidle' })
+      },
+    }
+  } catch (error) {
+    await browser?.close()
+    await server?.close()
+    await project.cleanup()
+    throw error
   }
 }

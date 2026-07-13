@@ -27,10 +27,11 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "pnpm run test:unit",
     "test:unit": "vitest run --project unit",
     "test:browser": "vitest run --project browser",
-    "coverage": "vitest run --coverage",
+    "test:all": "pnpm run test:unit && pnpm run test:browser",
+    "coverage": "vitest run --project unit --coverage",
     "typecheck": "tsc -b",
     "clean": "rimraf dist node_modules/.tmp",
     "prepublishOnly": "npm run build",

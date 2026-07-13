@@ -39,7 +39,8 @@ export async function createTempProject(options: FixtureAppOptions): Promise<Tem
 
 async function writeFixtureFiles(root: string, options: FixtureAppOptions): Promise<void> {
   const html = await readFile(appTemplateHtml, 'utf8')
-  await writeFile(path.join(root, 'index.html'), html, 'utf8')
+  const spritePlaceholder = options.spritePlaceholder ? '<div id="__svg__icons__dom__"></div>' : ''
+  await writeFile(path.join(root, 'index.html'), html.replace('<!-- sprite-placeholder -->', spritePlaceholder), 'utf8')
   await writeFile(path.join(root, 'src/main.ts'), renderMainSource(options), 'utf8')
 }
 

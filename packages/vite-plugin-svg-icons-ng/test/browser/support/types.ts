@@ -4,6 +4,7 @@ export type FixtureAppOptions = {
   htmlMode: HtmlModeFixture
   registerRuntime: boolean
   iconsFixture: string
+  spritePlaceholder?: boolean
 }
 
 export type ResolvedFixtureAppOptions = FixtureAppOptions & {

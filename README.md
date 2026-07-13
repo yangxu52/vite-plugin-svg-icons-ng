@@ -26,6 +26,16 @@
 - Documentation site: [`docs`](./docs)
 - Playground: [`playground`](./playground)
 
+## Development
+
+```sh
+pnpm test              # unit tests for both packages
+pnpm run test:browser  # Chromium and Vite integration tests
+pnpm run test:all      # unit and browser tests
+pnpm run coverage      # unit-test coverage for production source
+pnpm run typecheck
+```
+
 ## Package
 
 Install the package:

@@ -10,6 +10,8 @@
     "build:playground": "pnpm run build && pnpm -r --filter './playground/*' run build",
     "build:docs": "pnpm --filter ./docs run build",
     "test": "pnpm -r --filter './packages/*' run test",
+    "test:browser": "pnpm --filter vite-plugin-svg-icons-ng run test:browser",
+    "test:all": "pnpm run test && pnpm run test:browser",
     "coverage": "pnpm -r --filter './packages/*' run coverage",
     "clean": "pnpm -r --if-present run clean",
     "format": "prettier --write .",

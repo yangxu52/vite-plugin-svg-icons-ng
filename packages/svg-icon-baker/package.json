@@ -39,7 +39,8 @@
   "scripts": {
     "dev": "unbuild --stub",
     "build": "unbuild",
-    "test": "vitest run",
+    "test": "pnpm run test:unit",
+    "test:unit": "vitest run",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc -b",
     "clean": "rimraf dist node_modules/.tmp",

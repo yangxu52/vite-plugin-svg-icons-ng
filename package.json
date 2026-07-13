@@ -56,7 +56,7 @@
     "typescript-eslint": "^8.63.0"
   },
   "engines": {
-    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+    "node": "^22.18.0 || >=24.11.0"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [

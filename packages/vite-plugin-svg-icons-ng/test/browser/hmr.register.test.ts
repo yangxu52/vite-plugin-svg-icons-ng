@@ -1,7 +1,7 @@
 import { test } from 'vitest'
-import { createBrowserHarness } from './helpers/harness'
-import { expectSingleSpriteRoot, expectSpriteDesc, expectSpriteSymbols } from './helpers/domAssertions'
-import { waitForSpriteDesc } from './helpers/hmr'
+import { createBrowserHarness } from './support/harness'
+import { expectSingleSpriteRoot, expectSpriteDesc, expectSpriteSymbols } from './support/domAssertions'
+import { waitForSpriteDesc } from './support/hmr'
 
 const UPDATED_AFTER_ICON = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <desc>after-v2</desc>

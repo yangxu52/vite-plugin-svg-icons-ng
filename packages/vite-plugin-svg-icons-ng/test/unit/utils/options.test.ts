@@ -1,8 +1,8 @@
 import { resolve } from 'node:path'
 import { describe, expect, test } from 'vitest'
 import { normalizePath } from 'vite'
-import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_HTML_MODE, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../constants'
-import { resolveOptions, resolveOptionsWithContext, validateOptions } from '../options'
+import { ERR_CUSTOM_DOM_ID_SYNTAX, ERR_HTML_MODE, ERR_ICON_DIRS_REQUIRED, ERR_SYMBOL_ID_NO_NAME, ERR_SYMBOL_ID_SYNTAX } from '../../../src/constants'
+import { resolveOptions, resolveOptionsWithContext, validateOptions } from '../../../src/utils/options'
 
 describe('Test ValidateOption', () => {
   const viteRoot = normalizePath(resolve('/repo/app'))

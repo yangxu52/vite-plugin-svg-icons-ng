@@ -1,6 +1,6 @@
 import { test } from 'vitest'
-import { createBrowserHarness } from './helpers/harness'
-import { expectSingleSpriteRoot, expectSpriteMarkupContains, expectSpriteSymbols } from './helpers/domAssertions'
+import { createBrowserHarness } from './support/harness'
+import { expectSingleSpriteRoot, expectSpriteMarkupContains, expectSpriteSymbols } from './support/domAssertions'
 
 test('htmlMode inline injects normal symbols into real browser DOM', async () => {
   const harness = await createBrowserHarness({

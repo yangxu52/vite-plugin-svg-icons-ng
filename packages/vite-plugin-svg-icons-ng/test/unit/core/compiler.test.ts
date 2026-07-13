@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import type { BakeIssue } from 'svg-icon-baker'
-import { createCompiler } from '../compiler'
-import { transformIcon } from '../transformer'
-import type { CompiledIconEntry, CompilerContext } from '../../types'
+import { createCompiler } from '../../../src/core/compiler'
+import { transformIcon } from '../../../src/core/transformer'
+import type { CompiledIconEntry, CompilerContext } from '../../../src/types'
 
 const hoisted = vi.hoisted(() => ({
   baker: {
@@ -30,11 +30,11 @@ vi.mock('svg-icon-baker', () => ({
   createBaker: vi.fn(() => hoisted.baker),
 }))
 
-vi.mock('../scanner', () => ({
+vi.mock('../../../src/core/scanner', () => ({
   scanIconDirs: vi.fn(async () => hoisted.files),
 }))
 
-vi.mock('../transformer', () => ({
+vi.mock('../../../src/core/transformer', () => ({
   loadIconSource: vi.fn(async () => hoisted.source),
   transformIcon: vi.fn(async () => hoisted.icon),
 }))

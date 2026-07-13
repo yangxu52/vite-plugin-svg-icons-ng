@@ -1,6 +1,6 @@
 import { test } from 'vitest'
-import { createBrowserHarness } from './helpers/harness'
-import { expectSingleSpriteRoot, expectSpriteMarkupContains, expectSpriteSelectorCount, expectSpriteSymbols } from './helpers/domAssertions'
+import { createBrowserHarness } from './support/harness'
+import { expectSingleSpriteRoot, expectSpriteMarkupContains, expectSpriteSelectorCount, expectSpriteSymbols } from './support/domAssertions'
 
 test('htmlMode script keeps later normal symbols after a foreignObject symbol in real browser DOM', async () => {
   const harness = await createBrowserHarness({

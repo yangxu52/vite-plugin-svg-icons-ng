@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { createMemoryCache } from '../memoryCache'
+import { createMemoryCache } from '../../../src/cache/memoryCache'
 
 describe('memory cache', () => {
   test('should return cached icon when hash matches', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { parseSvg } from '../xml'
-import { collectIds } from '../collect'
+import { parseSvg } from '../../../src/oven/xml'
+import { collectIds } from '../../../src/oven/collect'
 
 describe('collectIds', () => {
   test('collects ids and references from href url begin end and style text', () => {

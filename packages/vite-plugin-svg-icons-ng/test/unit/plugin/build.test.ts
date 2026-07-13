@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { VIRTUAL_IDS, VIRTUAL_REGISTER, VIRTUAL_SPRITE } from '../../constants'
-import { pluginLoad, resolveVirtualId } from '../build'
-import { renderVirtualModule } from '../virtual'
-import type { PluginContext } from '../../types'
+import { VIRTUAL_IDS, VIRTUAL_REGISTER, VIRTUAL_SPRITE } from '../../../src/constants'
+import { pluginLoad, resolveVirtualId } from '../../../src/plugin/build'
+import { renderVirtualModule } from '../../../src/plugin/virtual'
+import type { PluginContext } from '../../../src/types'
 
-vi.mock('../virtual', () => ({
+vi.mock('../../../src/plugin/virtual', () => ({
   resolveVirtualTypeFromId: (id: string) => {
     const normalized = id.startsWith('\0') ? id.slice(1) : id
     if (normalized === VIRTUAL_REGISTER) {

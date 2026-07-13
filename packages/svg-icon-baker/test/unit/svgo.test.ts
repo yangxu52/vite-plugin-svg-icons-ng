@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { bakeIcon } from '../baker'
+import { bakeIcon } from '../../src/baker'
 
 const options = { optimize: false }
 

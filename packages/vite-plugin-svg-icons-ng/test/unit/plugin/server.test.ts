@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { pluginConfigureServer, pluginHandleHotUpdate } from '../server'
-import type { PluginContext } from '../../types'
+import { pluginConfigureServer, pluginHandleHotUpdate } from '../../../src/plugin/server'
+import type { PluginContext } from '../../../src/types'
 
 function createPluginContext(): PluginContext {
   return {

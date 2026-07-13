@@ -10,9 +10,9 @@ import {
   VIRTUAL_REGISTER_URL_DEPRECATED,
   VIRTUAL_SPRITE,
   VIRTUAL_SPRITE_URL,
-} from '../../constants'
-import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../virtual'
-import type { PluginContext } from '../../types'
+} from '../../../src/constants'
+import { renderVirtualModule, resolveVirtualTypeFromId, resolveVirtualTypeFromUrl } from '../../../src/plugin/virtual'
+import type { PluginContext } from '../../../src/types'
 
 const createPluginContext = (): PluginContext => ({
   options: {
@@ -443,7 +443,7 @@ describe('plugin virtual module render', () => {
       sprite: '<svg id="__svg__icons__dom__" xmlns="http://www.w3.org/2000/svg"><symbol id="icon-a"></symbol></svg>',
       iconsByFile: new Map(),
     })
-    const { renderInlineMountScript } = await import('../runtime')
+    const { renderInlineMountScript } = await import('../../../src/plugin/runtime')
     const { window, document, getMountedSvg } = createDocumentStub()
     const hot = createHotStub()
     const script = renderInlineMountScript(
@@ -473,7 +473,7 @@ describe('plugin virtual module render', () => {
       sprite: '<svg id="__svg__icons__dom__" xmlns="http://www.w3.org/2000/svg"><symbol id="icon-a"></symbol></svg>',
       iconsByFile: new Map(),
     })
-    const { renderInlineMountScript } = await import('../runtime')
+    const { renderInlineMountScript } = await import('../../../src/plugin/runtime')
     const script = renderInlineMountScript(
       {
         symbols: ['<symbol id="icon-a"></symbol>'],

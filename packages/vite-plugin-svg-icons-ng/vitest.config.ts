@@ -20,7 +20,7 @@ export default defineConfig({
           name: 'unit',
           globals: true,
           environment: 'node',
-          include: ['src/**/*.test.ts'],
+          include: ['test/unit/**/*.test.ts'],
         },
       },
       {
@@ -33,7 +33,7 @@ export default defineConfig({
           name: 'browser',
           globals: true,
           environment: 'node',
-          include: ['test/browser/**/*.spec.ts'],
+          include: ['test/browser/**/*.test.ts'],
           testTimeout: 30000,
           hookTimeout: 30000,
         },

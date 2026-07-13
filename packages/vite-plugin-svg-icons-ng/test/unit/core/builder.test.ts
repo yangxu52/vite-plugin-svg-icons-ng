@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { buildCompileResult } from '../builder'
+import { buildCompileResult } from '../../../src/core/builder'
 
 describe('builder', () => {
   test('should build stable compile result from compiled icons', () => {

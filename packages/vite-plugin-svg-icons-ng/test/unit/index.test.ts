@@ -1,9 +1,9 @@
 import { resolve } from 'node:path'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { normalizePath, type Plugin, type IndexHtmlTransformHook } from 'vite'
-import { createCompiler } from '../core/compiler'
-import { createSvgIconsPlugin } from '../index'
-import { pluginLoad } from '../plugin/build'
+import { createCompiler } from '../../src/core/compiler'
+import { createSvgIconsPlugin } from '../../src/index'
+import { pluginLoad } from '../../src/plugin/build'
 
 const hoisted = vi.hoisted(() => ({
   compiler: {
@@ -13,12 +13,12 @@ const hoisted = vi.hoisted(() => ({
   },
 }))
 
-vi.mock('../plugin/build', () => ({
+vi.mock('../../src/plugin/build', () => ({
   resolveVirtualId: vi.fn(),
   pluginLoad: vi.fn(),
 }))
 
-vi.mock('../core/compiler', () => ({
+vi.mock('../../src/core/compiler', () => ({
   createCompiler: vi.fn(() => hoisted.compiler),
 }))
 

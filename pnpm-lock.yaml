@@ -24,6 +24,9 @@ catalogs:
     unbuild:
       specifier: ^3.6.1
       version: 3.6.1
+    vite:
+      specifier: ^6.4.3
+      version: 6.4.3
     vitest:
       specifier: ^4.1.10
       version: 4.1.10
@@ -35,7 +38,7 @@ catalogs:
       version: 3.3.7
 
 overrides:
-  vite: ^6.0.0
+  vitepress@1>vite: ^6.0.0
 
 patchedDependencies:
   svgo:
@@ -157,7 +160,7 @@ importers:
         specifier: 'catalog:'
         version: 3.6.1(typescript@5.9.3)(vue-tsc@3.3.7(typescript@5.9.3))(vue@3.5.39(typescript@5.9.3))
       vite:
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
       vitest:
         specifier: 'catalog:'
@@ -179,7 +182,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
       vite:
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
       vite-plugin-svg-icons-ng:
         specifier: workspace:*
@@ -194,7 +197,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
       vite:
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
       vite-plugin-svg-icons-ng:
         specifier: workspace:*
@@ -216,7 +219,7 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
       vite:
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.4.3(@types/node@24.13.3)(jiti@2.7.0)(yaml@2.9.0)
       vite-plugin-svg-icons-ng:
         specifier: workspace:*
@@ -1028,7 +1031,7 @@ packages:
     resolution: {integrity: sha512-7Yx/SXSOcQq5HiiV3orevHUFn+pmMB4cgbEkDYgnkUWb0WfeQ/wa2yFv6D5ICiCQOVpjA7vYDXrC7AGO8yjDHA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      vite: ^6.0.0
+      vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
 
   '@vitest/coverage-v8@4.1.10':
@@ -1047,7 +1050,7 @@ packages:
     resolution: {integrity: sha512-v0xaezt+DKEmKfaxg133ldzADrwLGd7Ze1MfQQTYfvs8OqZIwbxyxaYURivwV7sWy5fqn3rH5uOrSp07bp44Ow==}
     peerDependencies:
       msw: ^2.4.9
-      vite: ^6.0.0
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       msw:
         optional: true
@@ -3240,7 +3243,7 @@ packages:
       '@vitest/ui': 4.1.10
       happy-dom: '*'
       jsdom: '*'
-      vite: ^6.0.0
+      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@edge-runtime/vm':
         optional: true

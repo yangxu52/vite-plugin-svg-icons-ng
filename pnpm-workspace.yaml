@@ -20,7 +20,6 @@ onlyBuiltDependencies:
   - esbuild
 
 overrides:
-  vite: ^6.0.0
-
+  'vitepress@1>vite': ^6.0.0
 patchedDependencies:
   svgo: patches/svgo.patch

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm -r --filter './packages/*' run dev",
+    "dev": "pnpm -r --parallel --filter './packages/*' run dev",
     "dev:playground": "pnpm run build && pnpm -r --filter './playground/*' run dev",
     "dev:docs": "pnpm --filter ./docs run dev",
     "build": "pnpm -r --filter './packages/*' run build",
@@ -57,7 +57,7 @@
     "typescript-eslint": "^8.66.0"
   },
   "engines": {
-    "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [

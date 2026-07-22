@@ -1,96 +1,69 @@
 ---
 name: vite-plugin-svg-icons-ng
-description: Plugin-domain skill for vite-plugin-svg-icons-ng internals. Use when changing or reasoning about icon scanning, compile and cache flow, Vite virtual modules, sprite injection, or HMR behavior inside packages/vite-plugin-svg-icons-ng.
+description: Use for packages/vite-plugin-svg-icons-ng implementation work: icon scanning, compilation and caching, symbolId generation, HTML injection, Vite virtual modules, SSR, and HMR. Trigger for changes under src/core, src/plugin, src/cache, src/types, or their tests; use the other skills for workspace release boundaries or svg-icon-baker conversion internals.
 metadata:
   author: yangxu52
-  version: '2026.4.25'
+  version: '2026.7.22'
 ---
 
 # vite-plugin-svg-icons-ng
 
 ## Scope
 
-Use this skill for plugin internals only:
+Use this skill only for the Vite integration and icon compilation behavior in `packages/vite-plugin-svg-icons-ng/`:
 
-- SVG directory scanning
-- compile flow and cache invalidation
-- Vite virtual module ids and rendered module content
-- sprite injection behavior
-- dev-server watch behavior and HMR updates
+- `iconDirs` scanning, `symbolId` generation, compilation cache, and error policy
+- HTML injection, runtime mounting, and virtual module rendering
+- dev-server watching, module invalidation, and sprite HMR
+- package types, unit tests, and browser tests
 
-Do not use this skill for monorepo layout, docs ownership, playground structure, or release scripts.
-Use `vite-plugin-svg-icons-ng-workspace` for repository-level questions.
+Use `svg-icon-baker` for SVG conversion and ID rewriting. Use `vite-plugin-svg-icons-ng-workspace` for workspace, release, or cross-package work.
 
-## Source Of Truth
+## Sources of Truth
 
-1. `packages/vite-plugin-svg-icons-ng/src/index.ts`
-2. `packages/vite-plugin-svg-icons-ng/src/plugin/*`
-3. `packages/vite-plugin-svg-icons-ng/src/core/*`
-4. `packages/vite-plugin-svg-icons-ng/src/cache/*`
-5. `packages/vite-plugin-svg-icons-ng/src/types.ts`
-6. `packages/vite-plugin-svg-icons-ng/src/__tests__/` and `src/plugin/__tests__/`
+Confirm behavior in this order:
 
-## Package Layout
+1. `src/index.ts`, `src/types.ts`, and `src/constants.ts`
+2. `src/core/`, `src/cache/`, and `src/plugin/`
+3. `test/unit/` and `test/browser/`
+4. The package `package.json`, `vitest.config.ts`, and `README.md`
+5. `docs/`, CHANGELOG files, and Git history
 
-Inside `packages/vite-plugin-svg-icons-ng/src`:
+Documentation describes the consumer contract; source and tests define execution semantics. Historical `src/**/__tests__` locations moved to `test/unit/`; do not reintroduce the old paths.
 
-- `index.ts`: plugin entry, hook wiring, and context creation.
-- `core/scanner.ts`: scan `iconDirs` and produce normalized icon file records.
-- `core/compiler.ts`: compile orchestration, in-flight dedupe, cache lookup, invalidation, and duplicate symbol handling.
-- `cache/memoryCache.ts`: default in-memory cache keyed by file path plus content hash.
-- `plugin/virtual.ts`: virtual id resolution and module rendering for `register`, `ids`, and `sprite`.
-- `plugin/server.ts`: watcher registration, module invalidation, and HMR broadcast.
+## Reference Map
 
-## Scan And Cache Model
+- Read [Compiler Contract](references/compiler-contract.md) before changing `src/core/`, `src/cache/`, option resolution, symbol ids, error policy, compile ordering, or `BakeIssue` reporting.
+- Read [Runtime Contract](references/runtime-contract.md) before changing `src/plugin/`, virtual modules, `htmlMode`, SSR loading, sprite mounting, watcher behavior, or HMR.
 
-- `scanIconDirs` uses `tinyglobby` to collect `**/*.svg` under every configured icon directory.
-- Scan results normalize path separators and keep `file`, `iconDir`, and `relativePath`.
-- Compiler caches transformed icons by `file + hash`.
-- `getResult` reuses the last compile result until marked dirty.
-- `inFlight` prevents duplicate concurrent recompilation.
-- `invalidate(file)` marks the compiler dirty and invalidates that file in cache when provided.
+## Immediate Invariants
 
-## Virtual Modules
-
-- Preferred ids:
-  - `virtual:svg-icons/register`
-  - `virtual:svg-icons/ids`
-- Compatible legacy ids:
-  - `virtual:svg-icons-register`
-  - `virtual:svg-icons-names`
-- Additional module:
-  - `virtual:svg-icons/sprite`
-
-Module behavior:
-
-- `register`: emits client code that mounts or replaces the sprite DOM.
-- `ids`: exports the compiled symbol id array.
-- `sprite`: exports the sprite markup string.
-- Dev SSR returns an empty object for `register`.
-
-## HMR Model
-
-- Dev server adds every `iconDirs` path to the watcher.
-- `add`, `unlink`, and `handleHotUpdate` all route through the same icon-change path.
-- On icon change, the plugin invalidates compiler state and known virtual modules.
-- The server sends a custom HMR event with updated `sprite`.
-- Client `register` code replaces the existing mounted sprite in place on update.
-
-## Compatibility Contract
-
-- Keep dev/build using the same compiler result model.
-- Keep virtual id compatibility for both preferred and legacy ids.
-- Keep plugin/context/core/cache responsibilities separated.
-- Keep shared contracts centralized in `src/types.ts`.
+- Dev, build, and SSR must use the same `IconCompiler.getResult()` result model.
+- Keep preferred virtual ids and both deprecated aliases until an explicit breaking change.
+- An icon change must invalidate compiler state and virtual modules, recompile, then broadcast the latest sprite.
 
 ## Validation
 
-- `pnpm --filter vite-plugin-svg-icons-ng run test`
-- `pnpm --filter vite-plugin-svg-icons-ng run build`
-- `pnpm tsc`
+- Types and implementation: `pnpm --filter vite-plugin-svg-icons-ng run typecheck`
+- Unit tests: `pnpm --filter vite-plugin-svg-icons-ng run test:unit`
+- Browser mounting, HMR, and SSR behavior: `pnpm --filter vite-plugin-svg-icons-ng run test:browser`
+- Package build: `pnpm --filter vite-plugin-svg-icons-ng run build`
+- Integration boundaries: `pnpm run build:playground`
+
+## Should Trigger
+
+- "Why do ids not refresh after adding an SVG?"
+- "Change HTML injection or SSR behavior for `htmlMode`."
+- "Add a compatible virtual module alias."
+- "Fix icon caching or HMR on Windows paths."
+
+## Should Not Trigger
+
+- "Change the SVGO safe plugin list."
+- "Change `url(#id)`, SMIL, or `<style>` ID rewriting."
+- "Confirm workspace commands or release tags."
 
 ## Gotchas
 
-- Do not document monorepo structure here; keep this skill package-focused.
-- Do not change virtual module ids lightly; they are part of the compatibility surface.
-- Do not bypass compiler invalidation when touching watch or HMR behavior.
+- Do not change virtual module ids or deprecated aliases without updating types, documentation, and compatibility tests.
+- Do not use automatic `htmlMode` injection and manual `register` mounting as the default for the same sprite.

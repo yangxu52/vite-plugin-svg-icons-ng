@@ -1,43 +1,30 @@
 # Behavior Reference
 
-## Architecture
+This reference describes the current main-branch contract of `packages/svg-icon-baker/`. Read `src/baker.ts`, `src/options.ts`, `src/oven/`, `src/types.ts`, `test/unit/`, and then `README.md`. Use CHANGELOG files to understand breaking changes, never to override current code.
 
-- Workspace package: `packages/svg-icon-baker`
-- Module format: ESM only
-- Build tool: `unbuild`
-- Runtime dependency: `svgo ^4.0.1`
-- Declarations: enabled
-- CommonJS emission: disabled
-- Engine constraints: Node `^18 || ^20 || >=22`
+## Package and Module Ownership
 
-## Ownership
+- The package is ESM-only, built with `unbuild`, and depends at runtime on `svgo v4`, `css-tree`, `fast-xml-parser`, and `fast-xml-builder`.
+- `src/index.ts` exports the public API only.
+- `src/types.ts` defines `BakeSource`, `Options`, `BakeResult`, `BakeIssue`, `BakeError`, `Baker`, and related types.
+- `src/options.ts` resolves defaults and creates the safely filtered SVGO configuration.
+- `src/baker.ts` validates input, removes the SVG preamble, runs SVGO, then delegates symbol construction to `oven/bake.ts`.
+- `src/oven/bake.ts` parses optimized XML, conditionally rewrites IDs according to `idPolicy.rewrite`, then rewrites the root.
+- `src/oven/collect.ts` collects local definitions, reference carriers, and style parse failures.
+- `src/oven/rewrite.ts` builds stable mappings, rewrites definitions and references, and deduplicates issues.
+- `src/oven/root.ts` converts root `<svg>` to `<symbol>`, resolves `viewBox`, and removes old root `id`, `width`, and `height`.
+- `src/oven/xml.ts` parses, traverses, and builds preserve-order XML.
+- Tests live in `test/unit/`, not `src/**/__tests__/`.
 
-- `src/index.ts` owns exports only.
-- `src/types.ts` owns public and shared type contracts.
-- `src/options.ts` owns option normalization and SVGO plugin composition.
-- `src/baker.ts` owns validation, rewrite orchestration, optimization execution, and symbol-root rewriting.
-- `src/oven/parse.ts` owns XML parse/build helpers.
-- `src/oven/collect.ts` owns local definition/reference discovery.
-- `src/oven/rewrite.ts` owns sprite-local id mapping, rewrite execution, and issue collection.
-- `src/oven/types.ts` owns internal rewrite data contracts.
+## Public API and Error Model
 
-## Public API
+Current `index.ts` exports:
 
-Current exports from `packages/svg-icon-baker/src/index.ts`:
+- Functions: `bakeIcon`, `bakeIcons`, `createBaker`
+- Value: `BakeError`
+- Types: `Baker`, `Options`, `BakeSource`, `BakeResult`, `BakeIssue`, `BakeIssueCode`, `BakeErrorCode`, `IdPolicyOptions`, `SvgoOptions`
 
-- `bakeIcon`
-- `bakeIcons`
-- `BakeError`
-- `Options`
-- `BakeSource`
-- `BakeResult`
-- `BakeIssue`
-- `BakeIssueCode`
-- `BakeErrorCode`
-- `IdPolicyOptions`
-- `SvgoOptions`
-
-Current result shape:
+All public conversion APIs are synchronous.
 
 ```ts
 type BakeResult = {
@@ -45,11 +32,7 @@ type BakeResult = {
   content: string
   issues: BakeIssue[]
 }
-```
 
-Current option shape:
-
-```ts
 type Options = {
   optimize?: boolean
   svgoOptions?: Pick<Config, 'multipass' | 'floatPrecision' | 'js2svg' | 'plugins'>
@@ -62,134 +45,56 @@ type Options = {
 }
 ```
 
-Current issue and error model:
+Non-fatal problems are returned in `issues`: unresolved references, duplicate definitions, and unparseable `<style>` content. Fatal errors use `BakeError` codes: `ValidateSourceInvalid`, `ValidateNameInvalid`, `ValidateSvgRootInvalid`, `ParseSvgFailed`, `OptimizeSvgFailed`, and `ResolveViewBoxFailed`.
 
-```ts
-type BakeIssue = {
-  code: 'ResolveReferenceFailed' | 'DetectDefinitionDuplicate' | 'DetectReferenceCarrierUnsupported' | 'ParseStyleFailed'
-  message: string
-  targetId?: string
-}
+## Conversion Order
 
-class BakeError extends Error {
-  code: 'ValidateSourceInvalid' | 'ValidateNameInvalid' | 'ValidateSvgRootInvalid' | 'ParseSvgFailed' | 'OptimizeSvgFailed' | 'ResolveViewBoxFailed'
-  cause?: unknown
-}
-```
+`bakeIcon` creates a baker for one conversion. `bakeIcons` and `createBaker(...).bakeIcons()` reuse resolved options and SVGO configuration within one baker instance.
 
-## Processing Model
+Keep this order for every source:
 
-`baker.ts` is split into two layers:
+1. Validate that source, `name`, and `content` exist. Validate that the name starts with an ASCII letter and contains only letters, numbers, `_`, and `-`.
+2. Remove BOM, whitespace, XML declarations, comments, and doctype preamble. Verify that the remaining root starts with `<svg>`.
+3. Call `svgo.optimize` with `createSvgoConfig`.
+4. Parse optimized XML. If `idPolicy.rewrite` is enabled, collect and rewrite local IDs and references.
+5. Rewrite the root to `<symbol>`, set its id to the original `source.name`, and preserve or derive `viewBox`.
+6. Build and trim final XML and return accumulated `issues`.
 
-1. `resolveOptions` in `options.ts`
-2. `convertToSymbol` and `toSymbolRootTag` in `baker.ts`
+Step 3 before step 4 is the explicit 2.0.0 breaking contract. Custom SVGO plugins observe original IDs, not rewritten IDs.
 
-`bakeIcons` resolves options once per batch, then applies the same option set per source.
+## SVGO Safety Boundary
 
-When `idPolicy.rewrite` is enabled, `convertToSymbol` runs internal sprite rewrite before SVGO:
+`optimize` defaults to `true`. `createSvgoConfig` orders plugins as follows:
 
-1. collect local `definedIds`
-2. build stable `idMap`
-3. rewrite local references against the same map
-4. surface non-fatal rewrite diagnostics through `issues`
+1. `preset-default`, with `cleanupIds`, `removeUselessDefs`, `removeHiddenElems`, `removeUnknownsAndDefaults`, `collapseGroups`, `mergePaths`, `convertShapeToPath`, and `removeEmptyContainers` disabled.
+2. `removeTitle`, `removeXMLNS`, and `removeXlink`.
+3. Allowed plugins from user `svgoOptions.plugins`.
 
-This model is the authoritative sprite namespace layer. SVGO does not own sprite id naming semantics.
+Users cannot add `preset-default`, any of the disabled plugins, `prefixIds`, `reusePaths`, or `convertOneStopGradients`. Filtering prevents the optimizer from deleting, merging, or renaming local IDs before the internal mapping runs.
 
-## SVGO Composition
+`options.ts` does not explicitly register `removeDimensions`. Root `width` and `height` removal and the `viewBox` guarantee are output rules in `oven/root.ts`; do not describe that plugin as current implementation.
 
-`createSvgoConfig` currently builds plugins in this order:
+## ID Rewrite and Root Rules
 
-1. `preset-default` with selected unsafe transforms disabled when `optimize: true`
-2. extra safe plugins: `removeTitle`, `removeXMLNS`, `removeXlink`
-3. user `svgoOptions.plugins`, except blocked plugins
-4. core plugins:
-   - `removeDimensions`
+When rewriting is enabled:
 
-This ordering is intentional.
+1. Collect `id` and `xml:id` definitions in document order and create one stable mapping per original ID. For duplicate definitions, keep the first, remove later definitions, and report a duplicate-definition issue.
+2. Generate namespaced mappings using `named`, `minified`, or `hashed` style, the symbol name, and `delim`.
+3. Apply the same mapping to `href`, `xlink:href`, supported `url(#...)` attributes, SMIL `begin` and `end`, `aria-labelledby`, `aria-describedby`, and ID selectors and URL references in `<style>`.
+4. For unresolved references, `prefix` creates and reuses a mapping with the same strategy; `preserve` keeps the original value. Both report `ResolveReferenceFailed`.
 
-### Why `prefixIds` and `cleanupIds` are blocked
+After rewriting, `rewriteRoot` must:
 
-- sprite naming semantics now live in internal rewrite, not in SVGO plugins
-- user-supplied `prefixIds` is filtered out so external passes cannot override the kernel namespace model
-- user-supplied `cleanupIds` is filtered out so cleanup cannot re-own id naming, minification, or deletion semantics
-- `preset-default` still exists, but its `cleanupIds` entry is explicitly disabled in the safe preset
+- accept root `<svg>` only, otherwise fail;
+- keep a valid `viewBox`, or derive one from numeric or `px` root `width` and `height`, otherwise fail;
+- rename the root to `symbol`, set `id = source.name`, and set `viewBox`;
+- remove old root `id`, `width`, and `height` while preserving other root attributes.
 
-### What the internal rewrite covers
+## Regression Focus
 
-Current rewrite targets include:
-
-- element `id` and `xml:id`
-- `href` and `xlink:href`
-- URL references like `url(#foo)`
-- selectors and URL references inside `<style>`
-- SMIL `begin` and `end` references like `a.begin`, `b.end-0.5s`
-- token list references in `aria-labelledby` and `aria-describedby`
-
-Unresolved local references follow one policy:
-
-- `prefix`: rewrite using the configured `idStyle`
-- `preserve`: keep the original token and report an issue when applicable
-
-Current `idStyle` output forms are:
-
-- `named`: `${symbolId}${delim}${sourceId}`
-- `minified`: `${symbolId}${delim}${a...}`
-- `hashed`: `${symbolId}${delim}${hash(sourceId)}`
-
-## Conversion Pipeline
-
-1. validate `source`, `source.name`, and `source.content`
-2. validate name syntax with `^[A-Za-z][A-Za-z0-9_-]*$`
-3. strip BOM, XML declaration, comments, and doctype preamble
-4. validate input still starts with `<svg>`
-5. run internal id rewrite when `idPolicy.rewrite !== false`
-6. run `optimize(rewrittenOrOriginalSvg, createSvgoConfig(...))`
-7. extract `viewBox` from optimized output
-8. throw if `viewBox` cannot be determined
-9. rewrite root `<svg>` to `<symbol id="..." viewBox="...">`
-10. strip root `id`, `viewBox`, `width`, and `height`
-11. preserve other root attributes
-12. trim final output
-
-## Invariants
-
-- internal id rewrite remains the authoritative sprite namespace layer when enabled
-- `removeDimensions` remains mandatory
-- symbol root `id` remains `source.name`
-- output remains `<symbol>...</symbol>`
-- output must contain `viewBox`
-- root `fill` and other non-structural attrs are preserved
-- local definitions must enter one stable `idMap` before local references are rewritten
-- local references must use one consistent mapping rule across element attrs, URL carriers, `<style>`, and SMIL timing targets
-- output excludes BOM, XML declaration, and comments
-- non-fatal rewrite diagnostics are returned via `BakeResult.issues`
-- fatal validation, parse, optimize, and `viewBox` failures throw `BakeError`
-
-## Test-Backed Behaviors
-
-- invalid or missing `name` or `content` throws `BakeError('ValidateSourceInvalid', ...)`
-- invalid names throw `BakeError('ValidateNameInvalid', ...)`
-- invalid non-`<svg>` roots throw `BakeError('ValidateSvgRootInvalid', ...)`
-- rewrite parse failures throw `BakeError('ParseSvgFailed', ...)`
-- optimize failures throw `BakeError('OptimizeSvgFailed', ...)`
-- missing `viewBox` throws `BakeError('ResolveViewBoxFailed', ...)`
-- width and height on the root are removed from final symbol output
-- legacy root `id` is replaced by the symbol root id
-- root non-structural attrs such as `fill` are preserved
-- local definitions and references are rewritten consistently before optimization
-- unresolved references can be prefixed or preserved based on `idPolicy.unresolved`
-- SMIL timing references remain aligned after rewrite
-- style selectors and style URL references are rewritten
-- user-supplied `cleanupIds` and `prefixIds` are both filtered out
-- `idPolicy.rewrite=false` skips the internal rewrite layer
-
-## Documentation Drift Risks
-
-If source and docs diverge, prefer:
-
-1. `src/baker.ts`
-2. `src/options.ts`
-3. `src/oven/`
-4. tests under `src/__tests__/` and `src/oven/__tests__/`
-5. `src/types.ts`
-6. `README.md`
+- Optimization must precede ID rewriting.
+- `idPolicy.rewrite: false` must skip internal mapping but still rewrite the root.
+- `BakeIssue` is not swallowed-error behavior. Consumers receive a successful result and must be able to observe diagnostics.
+- Repeated calls to one `createBaker` instance reuse options and SVGO configuration while preserving a separate namespace per icon.
+- For reference-carrier changes, cover defined and undefined targets, duplicate definitions, style parse failures, SMIL offsets, and ARIA token lists.
+- For public API or output-markup changes, update `test/unit/` and `README.md`. `vite-plugin-svg-icons-ng` is also a package consumer.

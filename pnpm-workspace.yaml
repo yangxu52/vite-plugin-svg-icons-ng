@@ -8,13 +8,13 @@ catalog:
   '@types/node': ^24.13.3
   '@vitejs/plugin-vue': ^5.2.4
   '@vitest/coverage-v8': ^4.1.10
-  'playwright': '^1.61.1'
+  'playwright': '^1.62.1'
   'typescript': ~5.9.3
   'unbuild': ^3.6.1
   'vite': ^6.4.3
   'vitest': ^4.1.10
-  'vue': ^3.5.39
-  'vue-tsc': ^3.3.7
+  'vue': ^3.5.41
+  'vue-tsc': ^3.3.9
 
 onlyBuiltDependencies:
   - esbuild

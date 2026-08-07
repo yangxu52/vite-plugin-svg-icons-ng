@@ -189,7 +189,7 @@
 
 ---
 
-- docs: online office [homepage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/)
+- docs: online office [homepage](https://vite-plugin-svg-icons-ng.yangxu.cc/)
   ([be09862](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/be098626db100bc0afec034fe3447fb1f5b7ca2e))
 
 ## [1.2.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.2.1...v1.0.0) (2025-03-12)

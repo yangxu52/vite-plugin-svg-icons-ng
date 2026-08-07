@@ -9,7 +9,7 @@
 >
 > Automatically generates SVG sprites from files and injects them at runtime, making icon usage simpler and more efficient.
 
-[Documentation](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [中文文档](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/) | [npm](https://www.npmjs.com/package/vite-plugin-svg-icons-ng)
+[Documentation](https://vite-plugin-svg-icons-ng.yangxu.cc) | [中文文档](https://vite-plugin-svg-icons-ng.yangxu.cc/zh/) | [npm](https://www.npmjs.com/package/vite-plugin-svg-icons-ng)
 
 ## Highlights
 
@@ -47,9 +47,9 @@ pnpm add -D vite-plugin-svg-icons-ng
 Then continue with the package guide:
 
 - [Package README](./packages/vite-plugin-svg-icons-ng/README.md)
-- [Getting Started](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/)
-- [Usage Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/usage)
-- [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/component/)
+- [Getting Started](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/)
+- [Usage Guide](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/usage)
+- [Component Usage](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/component/)
 
 ## Thanks
 

@@ -3,7 +3,8 @@ import { version } from '../../packages/vite-plugin-svg-icons-ng/package.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/vite-plugin-svg-icons-ng/',
+  base: '/',
+  cleanUrls: true,
   title: 'vite-plugin-svg-icons-ng',
   description: 'A high-performance SVG icon plugin for Vite, automatically generates SVG sprites from files and injects them at runtime',
   themeConfig: {

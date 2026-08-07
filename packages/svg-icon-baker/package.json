@@ -11,7 +11,7 @@
     "transform",
     "convert"
   ],
-  "homepage": "https://github.com/yangxu52/svg-icon-baker",
+  "homepage": "https://github.com/yangxu52/vite-plugin-svg-icons-ng",
   "bugs": {
     "url": "https://github.com/yangxu52/svg-icon-baker/issues"
   },

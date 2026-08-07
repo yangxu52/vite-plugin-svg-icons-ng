@@ -4,7 +4,7 @@
 >
 > Automatically generates SVG sprites from files and configurable injects them at runtime, making icon usage simpler and more efficient.
 
-[Documentation](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/) | [中文文档](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/zh/)
+[Documentation](https://vite-plugin-svg-icons-ng.yangxu.cc) | [中文文档](https://vite-plugin-svg-icons-ng.yangxu.cc/zh/)
 
 ## Install
 
@@ -37,7 +37,7 @@ If you use `virtual:svg-icons/register`, prefer `htmlMode: 'none'` to disable au
 
 Use icons directly in templates, or encapsulate them in reusable components.
 
-See [Component Usage](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/component/) for framework examples.
+See [Component Usage](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/component/) for framework examples.
 
 ```html
 <svg aria-hidden="true">
@@ -71,8 +71,8 @@ Migration: update imports to the new slash-based virtual module ids before upgra
 
 ## Docs
 
-- [Getting Started](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/)
-- [Usage Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/usage)
-- [Migration from the Old Plugin](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/migration)
-- [Options](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/options)
-- [SSR Guide](https://blog.yangxu52.top/vite-plugin-svg-icons-ng/guide/ssr)
+- [Getting Started](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/)
+- [Usage Guide](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/usage)
+- [Migration from the Old Plugin](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/migration)
+- [Options](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/options)
+- [SSR Guide](https://vite-plugin-svg-icons-ng.yangxu.cc/guide/ssr)

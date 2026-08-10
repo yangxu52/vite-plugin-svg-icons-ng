@@ -48,9 +48,9 @@
   },
   "dependencies": {
     "css-tree": "^3.2.1",
-    "fast-xml-builder": "^1.2.1",
-    "fast-xml-parser": "^5.9.3",
-    "svgo": "^4.0.1"
+    "fast-xml-builder": "^1.3.0",
+    "fast-xml-parser": "^5.10.1",
+    "svgo": "^4.0.2"
   },
   "devDependencies": {
     "@types/node": "catalog:",

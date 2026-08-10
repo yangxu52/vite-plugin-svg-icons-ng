@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.9.3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.2...v1.9.3) (2026-08-10)
+
+### Miscellaneous Chores
+
+- update domain and refresh docs ([e51d10b](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/e51d10b7418d36b668d56461d042a3849ba59b88))
+
+### Tests
+
+- move tests out of source tree ([fa4a5b6](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/fa4a5b6f37907d5aa90ede2138754119d65b3d0c))
+- streamline test workflows ([56dcec3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/56dcec32c28e7f83c6a35d7f282252ceb85a2739))
+
 ## [1.9.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.1...v1.9.2) (2026-07-11)
 
 ### Miscellaneous Chores

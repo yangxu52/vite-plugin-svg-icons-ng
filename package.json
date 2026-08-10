@@ -59,6 +59,7 @@
   "engines": {
     "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
+  "packageManager": "pnpm@11.21.0",
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts}": [
       "eslint --fix",

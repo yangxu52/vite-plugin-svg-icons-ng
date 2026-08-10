@@ -22,8 +22,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
-        with:
-          version: 10
 
       - name: Setup node
         uses: actions/setup-node@v6
@@ -60,21 +58,19 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
-        with:
-          version: 10
 
       - name: Setup node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: https://registry.npmjs.org/
+          registry-url: https://registry.npmjs.org
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm ci
 
       - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter vite-plugin-svg-icons-ng exec playwright install --with-deps chromium
 
       - name: Run vite-plugin-svg-icons-ng browser test
         run: pnpm --filter vite-plugin-svg-icons-ng run test:browser

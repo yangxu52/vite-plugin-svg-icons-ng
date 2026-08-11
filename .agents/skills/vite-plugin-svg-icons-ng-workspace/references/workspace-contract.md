@@ -14,7 +14,7 @@ Read this reference for package boundaries, root commands, CI, release tags, doc
 
 ## Build and Release Contract
 
-- The plugin package uses `unbuild` for ESM and CommonJS entries. The baker package uses `unbuild` for ESM. Before changing exports, inspect each manifest and the real `dist/` output.
+- The plugin package uses `tsdown` and emits `.mjs`, `.cjs`, `.d.mts`, and `.d.cts`. The baker package uses `tsdown` for ESM `.js` and `.d.ts` output under `type: module`. Before changing exports, inspect each manifest and the real `dist/` output.
 - `v<version>` identifies `vite-plugin-svg-icons-ng` only.
 - `<package-dir>@<version>` identifies a directory-scoped release; `svg-icon-baker@<version>` currently uses it.
 - The release workflow verifies the tag version against `packages/<dir>/package.json`, then builds and publishes only that package.
@@ -29,7 +29,7 @@ Choose the smallest sufficient validation set:
 - Plugin browser behavior: `pnpm run test:browser`; Playwright Chromium is required
 - All package tests: `pnpm run test:all`
 - Both published packages: `pnpm run build`
-- Playground integration: `pnpm run build:playground`
+- Playground integration: `pnpm run build:playground`; the SSR playground builds both client and server output
 - Documentation: `pnpm run build:docs`
 
 For a single-package change, run that package's own `typecheck`, `test`, and `build` scripts first. Escalate to workspace commands only for cross-package or publication boundaries.

@@ -4,7 +4,7 @@ This reference describes the current main-branch contract of `packages/svg-icon-
 
 ## Package and Module Ownership
 
-- The package is ESM-only, built with `unbuild`, and depends at runtime on `svgo v4`, `css-tree`, `fast-xml-parser`, and `fast-xml-builder`.
+- The package is ESM-only, built with `tsdown` as `.js` plus `.d.ts` under `type: module`, and depends at runtime on `svgo v4`, `css-tree`, `fast-xml-parser`, and `fast-xml-builder`.
 - `src/index.ts` exports the public API only.
 - `src/types.ts` defines `BakeSource`, `Options`, `BakeResult`, `BakeIssue`, `BakeError`, `Baker`, and related types.
 - `src/options.ts` resolves defaults and creates the safely filtered SVGO configuration.

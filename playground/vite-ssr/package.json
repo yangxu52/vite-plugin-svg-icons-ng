@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "vite build --outDir dist/client --emptyOutDir",
+    "build": "pnpm run build:client && pnpm run build:ssr",
+    "build:client": "vite build --outDir dist/client --emptyOutDir",
     "build:ssr": "vite build --ssr src/entry-server.ts --outDir dist/server --emptyOutDir false",
     "preview": "node server.js --prod",
     "typecheck": "vue-tsc -b",

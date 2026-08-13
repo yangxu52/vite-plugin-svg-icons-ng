@@ -66,3 +66,4 @@ export default defineConfig({
 
 - 前往 [使用指南](/zh/guide/usage) 查看如何后续使用。
 - 插件配置选项细节见 [插件选项](/zh/guide/options)。
+- Coding agents 可使用配套的插件技能：`npx skills add yangxu52/vite-plugin-svg-icons-ng`

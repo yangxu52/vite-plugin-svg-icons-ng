@@ -68,3 +68,4 @@ At this point, the SVG sprite can already be generated from your icon directorie
 
 - Go to [Usage](/guide/usage) to see how to use it next.
 - Check [Options](/guide/options) for plugin configuration details.
+- For coding agents, install the companion skill: `npx skills add yangxu52/vite-plugin-svg-icons-ng`

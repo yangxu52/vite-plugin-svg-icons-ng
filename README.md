@@ -11,6 +11,12 @@
 
 [Documentation](https://vite-plugin-svg-icons-ng.yangxu.cc) | [中文文档](https://vite-plugin-svg-icons-ng.yangxu.cc/zh/) | [npm](https://www.npmjs.com/package/vite-plugin-svg-icons-ng)
 
+> For coding agents, install the companion skill:
+
+```sh
+npx skills add yangxu52/vite-plugin-svg-icons-ng # For global installation, add -g
+```
+
 ## Highlights
 
 - File-based SVG icons with automatic sprite generation

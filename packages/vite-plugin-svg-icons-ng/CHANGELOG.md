@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.10.0](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.3...v1.10.0) (2026-09-28)
+
+### Features
+
+- customize sprite root class and style ([1c8e7d4](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/1c8e7d4714b67a27f1b82aee382d1e85d9f0a233)), closes [#28](https://github.com/yangxu52/vite-plugin-svg-icons-ng/issues/28)
+
+### Miscellaneous Chores
+
+- add plugin usage guide ([4c697dc](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/4c697dc8b0da22a749290668ee86ab6d0adde4d1))
+
 ## [1.9.3](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/v1.9.2...v1.9.3) (2026-08-10)
 
 ### Miscellaneous Chores

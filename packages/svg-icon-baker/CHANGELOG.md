@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.2](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@2.1.1...svg-icon-baker@2.1.2) (2026-09-28)
+
+### Miscellaneous Chores
+
+- update runtime dependencies ([1854688](https://github.com/yangxu52/vite-plugin-svg-icons-ng/commit/1854688a8de1d6f8a26a37534eaa00f2482ecdf5))
+
 ## [2.1.1](https://github.com/yangxu52/vite-plugin-svg-icons-ng/compare/svg-icon-baker@2.1.0...svg-icon-baker@2.1.1) (2026-08-10)
 
 ### Miscellaneous Chores

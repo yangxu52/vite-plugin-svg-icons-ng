@@ -99,6 +99,41 @@ src/icons/
 
 自定义注入的精灵的根节点 `<svg>` 的 `id` 属性。
 
+## customDomClass
+
+- 类型: `string | false`
+- 默认值: `svg-icons__sprite`
+
+自定义精灵根节点 `<svg>` 的 `class` 属性。设置为 `false` 时不输出该属性。`customDomClass` 与 `customDomStyle` 独立生效。
+
+## customDomStyle
+
+- 类型: `string | false`
+- 默认值: `position:absolute;width:0;height:0`
+
+自定义精灵根节点 `<svg>` 的内联 `style` 属性。设置为 `false` 时不输出该属性。
+
+> [!INFO] 提示！
+> 严格 CSP 项目应关闭内联样式，并在外部 CSS 中提供等效规则：
+>
+> ```ts{3}
+> createSvgIconsPlugin({
+>   iconDirs: ['src/icons'],
+>   customDomStyle: false,
+> })
+> ```
+>
+> ```css
+> .svg-icons__sprite {
+>   position: absolute;
+>   width: 0;
+>   height: 0;
+>   overflow: hidden;
+> }
+> ```
+
+> 该选项控制插件生成的 sprite 根节点样式，与通过 `bakerOptions` 配置的 `SVGO` `inlineStyles` 插件无关。
+
 ## strokeOverride
 
 - 类型: `boolean | string`

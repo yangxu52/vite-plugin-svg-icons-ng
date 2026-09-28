@@ -2,15 +2,21 @@ import { isAbsolute, resolve } from 'node:path'
 import { normalizePath } from 'vite'
 import type { Options, ResolvedOptions, ResolvedStrokeOverride, ResolveOptionsContext } from '../types'
 import {
+  ERR_CUSTOM_DOM_CLASS_SYNTAX,
   ERR_CUSTOM_DOM_ID_SYNTAX,
+  ERR_CUSTOM_DOM_STYLE_SYNTAX,
   ERR_HTML_MODE,
   ERR_ICON_DIRS_REQUIRED,
   ERR_INJECT_MODE,
   ERR_SYMBOL_ID_NO_NAME,
   ERR_SYMBOL_ID_SYNTAX,
   REGEXP_DOM_ID,
+  REGEXP_DOM_CLASS,
+  REGEXP_DOM_STYLE,
   REGEXP_SYMBOL_ID,
+  SVG_DOM_CLASS,
   SVG_DOM_ID,
+  SVG_DOM_STYLE,
 } from '../constants'
 import { renderSymbolIdTemplate } from './path'
 
@@ -19,6 +25,8 @@ const defaultOptions = {
   inject: 'body-last',
   htmlMode: 'inline',
   customDomId: SVG_DOM_ID,
+  customDomClass: SVG_DOM_CLASS,
+  customDomStyle: SVG_DOM_STYLE,
   strokeOverride: false,
   failOnError: false,
   bakerOptions: {},
@@ -34,6 +42,16 @@ function normalizeStrokeOverride(value: Options['strokeOverride']): ResolvedStro
   return false
 }
 
+function hasAsciiControlCharacter(value: string): boolean {
+  for (const char of value) {
+    const code = char.codePointAt(0)
+    if (code !== undefined && (code <= 0x1f || code === 0x7f)) {
+      return true
+    }
+  }
+  return false
+}
+
 export function resolveOptions(userOptions: Options): ResolvedOptions {
   return {
     iconDirs: userOptions.iconDirs.map((dir) => resolveIconDir(dir, process.cwd())),
@@ -41,6 +59,8 @@ export function resolveOptions(userOptions: Options): ResolvedOptions {
     inject: userOptions.inject ?? defaultOptions.inject,
     htmlMode: userOptions.htmlMode ?? defaultOptions.htmlMode,
     customDomId: userOptions.customDomId ?? defaultOptions.customDomId,
+    customDomClass: userOptions.customDomClass ?? defaultOptions.customDomClass,
+    customDomStyle: userOptions.customDomStyle ?? defaultOptions.customDomStyle,
     strokeOverride: normalizeStrokeOverride(userOptions.strokeOverride),
     failOnError: userOptions.failOnError ?? defaultOptions.failOnError,
     bakerOptions: userOptions.bakerOptions ?? defaultOptions.bakerOptions,
@@ -83,5 +103,19 @@ export function validateOptions(opt: Options) {
   // customDomId must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline
   if (opt.customDomId && !REGEXP_DOM_ID.test(opt.customDomId)) {
     throw new Error(ERR_CUSTOM_DOM_ID_SYNTAX)
+  }
+  if (
+    opt.customDomClass !== undefined &&
+    opt.customDomClass !== false &&
+    (typeof opt.customDomClass !== 'string' || !REGEXP_DOM_CLASS.test(opt.customDomClass) || hasAsciiControlCharacter(opt.customDomClass))
+  ) {
+    throw new Error(ERR_CUSTOM_DOM_CLASS_SYNTAX)
+  }
+  if (
+    opt.customDomStyle !== undefined &&
+    opt.customDomStyle !== false &&
+    (typeof opt.customDomStyle !== 'string' || !REGEXP_DOM_STYLE.test(opt.customDomStyle) || hasAsciiControlCharacter(opt.customDomStyle))
+  ) {
+    throw new Error(ERR_CUSTOM_DOM_STYLE_SYNTAX)
   }
 }

@@ -40,7 +40,15 @@ export async function createTempProject(options: FixtureAppOptions): Promise<Tem
 async function writeFixtureFiles(root: string, options: FixtureAppOptions): Promise<void> {
   const html = await readFile(appTemplateHtml, 'utf8')
   const spritePlaceholder = options.spritePlaceholder ? '<div id="__svg__icons__dom__"></div>' : ''
-  await writeFile(path.join(root, 'index.html'), html.replace('<!-- sprite-placeholder -->', spritePlaceholder), 'utf8')
+  const externalSpriteCss = options.externalSpriteCss ? '<link rel="stylesheet" href="/sprite.css" />' : ''
+  const strictCsp = options.strictCsp
+    ? "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; style-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' ws:;\" />"
+    : ''
+  const fixtureHtml = html.replace('</head>', `${strictCsp}${externalSpriteCss}</head>`).replace('<!-- sprite-placeholder -->', spritePlaceholder)
+  await writeFile(path.join(root, 'index.html'), fixtureHtml, 'utf8')
+  if (options.externalSpriteCss) {
+    await writeFile(path.join(root, 'sprite.css'), '.svg-icons__sprite { position: absolute; width: 0; height: 0; overflow: hidden; }\n', 'utf8')
+  }
   await writeFile(path.join(root, 'src/main.ts'), renderMainSource(options), 'utf8')
 }
 

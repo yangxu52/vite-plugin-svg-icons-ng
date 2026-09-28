@@ -5,6 +5,10 @@ export type FixtureAppOptions = {
   registerRuntime: boolean
   iconsFixture: string
   spritePlaceholder?: boolean
+  customDomClass?: string | false
+  customDomStyle?: string | false
+  externalSpriteCss?: boolean
+  strictCsp?: boolean
 }
 
 export type ResolvedFixtureAppOptions = FixtureAppOptions & {

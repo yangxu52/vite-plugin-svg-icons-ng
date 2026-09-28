@@ -23,10 +23,14 @@ export const VIRTUAL_IDS_URL = `/@id/__x00__${VIRTUAL_IDS}`
 export const VIRTUAL_SPRITE_URL = `/@id/__x00__${VIRTUAL_SPRITE}`
 export const HMR_EVENT_SVG_ICONS_UPDATE = 'svg-icons:update'
 export const SVG_DOM_ID = '__svg__icons__dom__'
+export const SVG_DOM_CLASS = 'svg-icons__sprite'
+export const SVG_DOM_STYLE = 'position:absolute;width:0;height:0'
 export const XMLNS = 'http://www.w3.org/2000/svg'
 
 export const REGEXP_SYMBOL_ID = /^[A-Za-z][A-Za-z0-9_-]*$/
 export const REGEXP_DOM_ID = /^[a-zA-Z_][a-zA-Z0-9_-]*$/
+export const REGEXP_DOM_CLASS = /^[A-Za-z_][A-Za-z0-9_-]*$/
+export const REGEXP_DOM_STYLE = /^(?:[A-Za-z-][A-Za-z0-9-]*\s*:\s*[^"'<>`&;{}]+;?\s*)+$/
 
 export const PLUGIN_NAME = 'vite-plugin-svg-icons-ng'
 export const ERR_ICON_DIRS_REQUIRED = `[${PLUGIN_NAME}]: 'iconDirs' is required!`
@@ -35,3 +39,5 @@ export const ERR_SYMBOL_ID_SYNTAX = `[${PLUGIN_NAME}]: 'symbolId' must produce a
 export const ERR_INJECT_MODE = `[${PLUGIN_NAME}]: 'inject' must be 'body-first' or 'body-last'!`
 export const ERR_HTML_MODE = `[${PLUGIN_NAME}]: 'htmlMode' must be 'script', 'inline', or 'none'!`
 export const ERR_CUSTOM_DOM_ID_SYNTAX = `[${PLUGIN_NAME}]: 'customDomId' must be a valid ASCII letter, number, underline, hyphen, and starting with a letter or underline!`
+export const ERR_CUSTOM_DOM_CLASS_SYNTAX = `[${PLUGIN_NAME}]: 'customDomClass' must be a valid single CSS class name!`
+export const ERR_CUSTOM_DOM_STYLE_SYNTAX = `[${PLUGIN_NAME}]: 'customDomStyle' must be false or a valid CSS declaration list!`

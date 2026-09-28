@@ -46,6 +46,8 @@ function createCompilerContext(iconDir: string): CompilerContext {
       inject: 'body-last',
       htmlMode: 'inline',
       customDomId: '__svg__icons__dom__',
+      customDomClass: 'svg-icons__sprite',
+      customDomStyle: 'position:absolute;width:0;height:0',
       strokeOverride: false,
       failOnError: true,
       bakerOptions: {},

@@ -13,5 +13,7 @@ export function buildCompileResult(compiledIcons: CompiledIconEntry[], options: 
 }
 
 function renderSprite(symbols: string[], options: ResolvedOptions): string {
-  return `<svg id="${options.customDomId}" xmlns="${XMLNS}" aria-hidden="true" style="position:absolute;width:0;height:0">${symbols.join('')}</svg>`
+  const classAttribute = options.customDomClass === false ? '' : ` class="${options.customDomClass}"`
+  const styleAttribute = options.customDomStyle === false ? '' : ` style="${options.customDomStyle}"`
+  return `<svg id="${options.customDomId}"${classAttribute} xmlns="${XMLNS}" aria-hidden="true" width="0" height="0"${styleAttribute}>${symbols.join('')}</svg>`
 }

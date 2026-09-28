@@ -4,6 +4,9 @@ import {
   expectSingleSpriteRoot,
   expectSpriteChildAppendCount,
   expectSpriteDesc,
+  expectSpriteRootAttribute,
+  expectSpriteRootClass,
+  expectSpriteRootHidden,
   expectSpriteRootTag,
   expectSpriteSymbols,
   trackSpriteChildAppends,
@@ -64,4 +67,32 @@ test('htmlMode script replaces a non-svg placeholder and keeps HMR updates worki
 
   await waitForSpriteDesc(harness.page, 'icon-02-after', 'after-v2')
   await expectSingleSpriteRoot(harness.page)
+})
+
+test('customDomStyle false keeps the BEM root and dimensions after HMR', async () => {
+  const harness = await createBrowserHarness({
+    htmlMode: 'none',
+    registerRuntime: true,
+    iconsFixture: 'mixed-foreign-object',
+    customDomStyle: false,
+    externalSpriteCss: true,
+    strictCsp: true,
+  })
+
+  await harness.open()
+  await expectSingleSpriteRoot(harness.page)
+  await expectSpriteRootClass(harness.page, 'svg-icons__sprite')
+  await expectSpriteRootHidden(harness.page)
+  await expectSpriteSymbols(harness.page, ['icon-01-foreign', 'icon-02-after'])
+  await expectSpriteRootAttribute(harness.page, 'width', '0')
+  await expectSpriteRootAttribute(harness.page, 'height', '0')
+
+  await harness.project.updateIcon('02-after.svg', UPDATED_AFTER_ICON)
+
+  await waitForSpriteDesc(harness.page, 'icon-02-after', 'after-v2')
+  await expectSpriteRootClass(harness.page, 'svg-icons__sprite')
+  await expectSpriteRootHidden(harness.page)
+  await expectSpriteSymbols(harness.page, ['icon-01-foreign', 'icon-02-after'])
+  await expectSpriteRootAttribute(harness.page, 'width', '0')
+  await expectSpriteRootAttribute(harness.page, 'height', '0')
 })

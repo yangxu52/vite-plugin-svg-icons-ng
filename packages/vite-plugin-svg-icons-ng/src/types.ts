@@ -35,6 +35,18 @@ export type Options = {
    */
   customDomId?: string
   /**
+   * custom sprite root dom class
+   * set to `false` to omit the class attribute
+   * @default 'svg-icons__sprite'
+   */
+  customDomClass?: string | false
+  /**
+   * custom sprite root inline style
+   * set to `false` to omit the style attribute
+   * @default 'position:absolute;width:0;height:0'
+   */
+  customDomStyle?: string | false
+  /**
    * override `stroke` attribute
    * `false` to disable, `true` to override as `currentColor`, or an object `{ color: '#fff' }`
    * @default false

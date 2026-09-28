@@ -1,6 +1,14 @@
 import { test } from 'vitest'
 import { createBrowserHarness } from './support/harness'
-import { expectSingleSpriteRoot, expectSpriteMarkupContains, expectSpriteSelectorCount, expectSpriteSymbols } from './support/domAssertions'
+import {
+  expectSingleSpriteRoot,
+  expectSpriteMarkupContains,
+  expectSpriteRootClass,
+  expectSpriteRootHidden,
+  expectSpriteSelectorCount,
+  expectSpriteSymbols,
+  expectSpriteUses,
+} from './support/domAssertions'
 
 const cases = [
   {
@@ -36,4 +44,28 @@ test.each(cases)('$title', async ({ options, marker, ids, foreignObjectCount }) 
   if (foreignObjectCount !== undefined) {
     await expectSpriteSelectorCount(harness.page, 'foreignObject', foreignObjectCount)
   }
+})
+
+const cspCases = [
+  { title: 'inline', htmlMode: 'inline' as const, registerRuntime: false },
+  { title: 'script', htmlMode: 'script' as const, registerRuntime: false },
+  { title: 'none with register', htmlMode: 'none' as const, registerRuntime: true },
+]
+
+test.each(cspCases)('strict CSP mounts a hidden sprite through $title', async ({ htmlMode, registerRuntime }) => {
+  const harness = await createBrowserHarness({
+    htmlMode,
+    registerRuntime,
+    iconsFixture: 'normal',
+    customDomStyle: false,
+    externalSpriteCss: true,
+    strictCsp: true,
+  })
+
+  await harness.open()
+  await expectSingleSpriteRoot(harness.page)
+  await expectSpriteRootClass(harness.page, 'svg-icons__sprite')
+  await expectSpriteRootHidden(harness.page)
+  await expectSpriteSymbols(harness.page, ['icon-01-alpha', 'icon-02-beta'])
+  await expectSpriteUses(harness.page, ['icon-01-alpha', 'icon-02-beta'])
 })

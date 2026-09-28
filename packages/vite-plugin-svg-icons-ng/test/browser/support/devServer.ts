@@ -24,6 +24,8 @@ export async function startViteDevServer(options: ResolvedFixtureAppOptions): Pr
         iconDirs: [options.iconDir],
         symbolId: 'icon-[name]',
         htmlMode: options.htmlMode,
+        customDomClass: options.customDomClass,
+        customDomStyle: options.customDomStyle,
       }),
     ],
     resolve: {
